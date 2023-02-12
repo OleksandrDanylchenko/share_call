@@ -13,6 +13,7 @@ export const page = (theme: Theme): SerializedStyles => css`
 
 export const pageContent = css`
   height: 100vh;
+  gap: 7rem;
 `;
 
 export const catchphrase = css`

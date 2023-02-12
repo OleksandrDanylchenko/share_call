@@ -3,6 +3,7 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import { getSession, GetSessionParams } from 'next-auth/react';
 
+import ConferenceJoinForm from '@/components/ConferenceJoinForm';
 import { catchphrase, page, pageContent } from '@/pages/styles';
 
 const Home: NextPage = () => {
@@ -30,7 +31,7 @@ const Home: NextPage = () => {
               {/*TODO Make the text traverse with different words*/}
               talk
             </Typography>
-            <Stack>Hello there!</Stack>
+            <ConferenceJoinForm />
           </Stack>
         </Container>
       </main>

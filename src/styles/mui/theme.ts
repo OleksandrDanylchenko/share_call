@@ -12,6 +12,9 @@ export const poppins = Poppins({
 const defaultTheme = createTheme({
   typography: {
     fontFamily: poppins.style.fontFamily,
+    h4: {
+      fontSize: '2.5rem',
+    },
   },
   components: {
     MuiButton: {
