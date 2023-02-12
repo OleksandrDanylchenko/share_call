@@ -1,3 +1,4 @@
+import { lighten } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { Poppins } from '@next/font/google';
 
@@ -44,4 +45,19 @@ const defaultTheme = createTheme({
   },
 });
 
-export const theme = createTheme(defaultTheme);
+export const theme = createTheme({
+  ...defaultTheme,
+  components: {
+    ...defaultTheme.components,
+    MuiCssBaseline: {
+      styleOverrides: `
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 100px ${defaultTheme.palette.grey[700]} inset !important;
+        }
+      `,
+    },
+  },
+});
