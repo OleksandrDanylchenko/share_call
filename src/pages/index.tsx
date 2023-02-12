@@ -1,7 +1,9 @@
-import { Container, Stack } from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { getSession, GetSessionParams } from 'next-auth/react';
+
+import { catchphrase, page, pageContent } from '@/pages/styles';
 
 const Home: NextPage = () => {
   return (
@@ -14,10 +16,23 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <Stack>
-          <Container>Hello there!</Container>
-        </Stack>
+      <main css={page}>
+        <Container>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-around"
+            css={pageContent}
+          >
+            <Typography variant="h1" css={catchphrase}>
+              Let&apos;s
+              <br />
+              {/*TODO Make the text traverse with different words*/}
+              talk
+            </Typography>
+            <Stack>Hello there!</Stack>
+          </Stack>
+        </Container>
       </main>
     </>
   );

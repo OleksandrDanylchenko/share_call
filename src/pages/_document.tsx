@@ -88,6 +88,5 @@ MyDocument.getInitialProps = async (ctx) => {
 };
 
 const bodyStyles = css`
-  background-color: ${theme.palette.grey[100]};
   overflow-x: hidden;
 `;
