@@ -1,6 +1,7 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
+import { Box } from '@mui/material';
 
 interface Props {
   strings: string[];
@@ -16,7 +17,10 @@ const StringsRotator: FC<Props> = (props) => {
 
   return (
     <span css={rotateWrapper}>
-      <span css={placeholder}>&nbsp;</span> {/* Takes a line of space */}
+      <Box css={placeholder} textAlign={{ md: 'center', lg: 'left' }}>
+        {/* Takes a line of space */}
+        &nbsp;
+      </Box>
       {strings.map((str, index, arr) => {
         const isLast = index === arr.length - 1;
         return (

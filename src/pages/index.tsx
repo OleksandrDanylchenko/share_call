@@ -30,6 +30,7 @@ const Home: NextPage = () => {
             <Typography
               variant="h1"
               css={catchphrase}
+              textAlign={{ md: 'center', lg: 'left' }}
               flex={{
                 md: 0,
                 lg: 1,
