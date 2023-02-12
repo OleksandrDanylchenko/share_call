@@ -5,14 +5,14 @@ import createEmotionServer from '@emotion/server/create-instance';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 import { createEmotionCache } from '@/styles/mui/create-emotion-cache';
-import { theme, lato } from '@/styles/mui/theme';
+import { theme, poppins } from '@/styles/mui/theme';
 
 export default class MyDocument extends Document<{
   emotionStyleTags: Array<ReactElement>;
 }> {
   render() {
     return (
-      <Html lang="en" className={lato.className}>
+      <Html lang="en" className={poppins.className}>
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />

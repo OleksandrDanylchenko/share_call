@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
-import { Lato } from '@next/font/google';
+import { Poppins } from '@next/font/google';
 
-export const lato = Lato({
+export const poppins = Poppins({
   weight: ['300', '400', '700', '900'],
   subsets: ['latin'],
   display: 'swap',
@@ -10,7 +10,7 @@ export const lato = Lato({
 
 const defaultTheme = createTheme({
   typography: {
-    fontFamily: lato.style.fontFamily,
+    fontFamily: poppins.style.fontFamily,
     h1: {
       fontSize: '3.6rem',
       fontWeight: 800,
@@ -120,6 +120,7 @@ const defaultTheme = createTheme({
     },
   },
   palette: {
+    mode: 'dark',
     primary: {
       main: '#3765ff',
       light: '#7f8dbf',
