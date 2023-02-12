@@ -17,6 +17,7 @@ export const pageContent = css`
 `;
 
 export const catchphrase = css`
+  flex: 1;
   font-size: 11rem;
   font-weight: 400;
 `;

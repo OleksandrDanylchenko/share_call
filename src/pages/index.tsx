@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { getSession, GetSessionParams } from 'next-auth/react';
 
 import ConferenceJoinForm from '@/components/ConferenceJoinForm';
+import StringsRotator from '@/components/StringsRotator';
 import { catchphrase, page, pageContent } from '@/pages/styles';
 
 const Home: NextPage = () => {
@@ -28,8 +29,7 @@ const Home: NextPage = () => {
             <Typography variant="h1" css={catchphrase}>
               Let&apos;s
               <br />
-              {/*TODO Make the text traverse with different words*/}
-              talk
+              <StringsRotator strings={['chat', 'babble', 'prat', 'talk']} />
             </Typography>
             <ConferenceJoinForm />
           </Stack>
