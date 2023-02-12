@@ -16,7 +16,7 @@ const StringsRotator: FC<Props> = (props) => {
 
   return (
     <span css={rotateWrapper}>
-      &nbsp; {/* Takes a line of space */}
+      <span css={placeholder}>&nbsp;</span> {/* Takes a line of space */}
       {strings.map((str, index, arr) => {
         const isLast = index === arr.length - 1;
         return (
@@ -36,6 +36,12 @@ const rotateWrapper = css`
   position: relative;
 `;
 
+const placeholder = css`
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+`;
+
 const rotateString = (options: {
   index: number;
   isLast: boolean;
@@ -51,12 +57,10 @@ const rotateString = (options: {
     right: 0;
     opacity: 0;
 
-    &:nth-of-type(${index + 1}) {
-      animation-name: ${isLast ? 'rotate-last' : 'rotate'};
-      animation-duration: ${duration}s;
-      animation-delay: ${index * duration!}s;
-      animation-fill-mode: ${isLast && !infinite ? 'forwards' : 'none'};
-    }
+    animation-name: ${isLast ? 'rotate-last' : 'rotate'};
+    animation-duration: ${duration}s;
+    animation-delay: ${index * duration!}s;
+    animation-fill-mode: ${isLast && !infinite ? 'forwards' : 'none'};
 
     @keyframes rotate {
       0% {

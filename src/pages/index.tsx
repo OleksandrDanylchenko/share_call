@@ -21,15 +21,25 @@ const Home: NextPage = () => {
       <main css={page}>
         <Container>
           <Stack
-            direction="row"
+            direction={{ md: 'column', lg: 'row' }}
             alignItems="center"
-            justifyContent="space-around"
+            justifyContent={{ md: 'center', lg: 'space-around' }}
             css={pageContent}
+            gap={{ md: 4, lg: 14 }}
           >
-            <Typography variant="h1" css={catchphrase}>
+            <Typography
+              variant="h1"
+              css={catchphrase}
+              flex={{
+                md: 0,
+                lg: 1,
+              }}
+            >
               Let&apos;s
               <br />
-              <StringsRotator strings={['chat', 'babble', 'prat', 'talk']} />
+              <StringsRotator
+                strings={['chat', 'babble', 'give voice', 'share']}
+              />
             </Typography>
             <ConferenceJoinForm />
           </Stack>

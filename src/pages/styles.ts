@@ -13,11 +13,11 @@ export const page = (theme: Theme): SerializedStyles => css`
 
 export const pageContent = css`
   height: 100vh;
-  gap: 7rem;
 `;
 
 export const catchphrase = css`
-  flex: 1;
+  width: 100%;
+  text-align: center;
   font-size: 11rem;
   font-weight: 400;
 `;
