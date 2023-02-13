@@ -24,6 +24,7 @@ specifiers:
   '@types/react-dom': ^18.0.10
   '@typescript-eslint/eslint-plugin': ^5.47.1
   '@typescript-eslint/parser': ^5.47.1
+  agora-rtc-sdk-ng: ^4.16.1
   clsx: ^1.2.1
   editorconfig-checker: ^5.0.1
   eslint: ^8.30.0
@@ -44,6 +45,7 @@ specifiers:
   superjson: 1.9.1
   swiper: ^8.4.7
   typescript: ^4.9.4
+  use-async-effect: ^2.2.7
   usehooks-ts: ^2.9.1
   zod: ^3.20.2
 
@@ -64,6 +66,7 @@ dependencies:
   '@trpc/react-query': 10.9.0_qw4miir7nnxijwjta54q3esyeq
   '@trpc/server': 10.9.0
   '@types/lodash': 4.14.191
+  agora-rtc-sdk-ng: 4.16.1
   clsx: 1.2.1
   lodash: 4.17.21
   material-ui-popup-state: 5.0.4_lskpmcsdi7ipu6qpuapyu56ihm
@@ -76,6 +79,7 @@ dependencies:
   react-hook-form-mui: 5.12.4_xrywxjzanuhsfug6qavuciyfdq
   superjson: 1.9.1
   swiper: 8.4.7
+  use-async-effect: 2.2.7_react@18.2.0
   usehooks-ts: 2.9.1_biqbaboplfbrettd7655fr4n2y
   zod: 3.20.2
 
@@ -1149,6 +1153,16 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
+
+  /agora-rtc-sdk-ng/4.16.1:
+    resolution: {integrity: sha512-9ccs22X/BEAGe5tIGx2OqWkGpdvuGoB7xq72BouuR5HhP0WVBIBimixOvXXftlY9SwDWsBfKhBV23EtA7jtrTA==}
+    dependencies:
+      agora-rte-extension: 1.2.3
+    dev: false
+
+  /agora-rte-extension/1.2.3:
+    resolution: {integrity: sha512-k3yNrYVyzJRoQJjaJUktKUI1XRtf8J1XsW8OzYKFqGlS8WQRMsES1+Phj2rfuEriiLObfuyuCimG6KHQCt5tiw==}
+    dev: false
 
   /ajv/6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
@@ -3359,6 +3373,14 @@ packages:
     dependencies:
       punycode: 2.2.0
     dev: true
+
+  /use-async-effect/2.2.7_react@18.2.0:
+    resolution: {integrity: sha512-Vq94tKPyo/9Nok4LOapV0GoGgZPhbeDW/bP6bulLPV4+lIoftaBRBBbGjTbM+j5W1Bm2EkUHJgapeu5YnQvKEA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /use-sync-external-store/1.2.0_react@18.2.0:
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
