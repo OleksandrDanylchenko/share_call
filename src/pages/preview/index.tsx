@@ -11,6 +11,7 @@ import {
   fullHeight,
   viewportHeight,
 } from '@/styles/mixins';
+import { AgoraRTCErrorCode } from '@/types/agora';
 
 import { audioConfig, videoConfig } from '@/constants/index';
 
@@ -18,6 +19,9 @@ const Preview: FC = () => {
   const [localTracks, setLocalTracks] = useState<
     [IMicrophoneAudioTrack, ICameraVideoTrack] | null
   >(null);
+
+  const [tracksErrorCode, setTracksErrorCode] =
+    useState<AgoraRTCErrorCode | null>(null);
 
   useAsyncEffect(async () => {
     try {
@@ -27,9 +31,11 @@ const Preview: FC = () => {
         videoConfig,
       );
       setLocalTracks(tracks);
-    } catch (error) {
+    } catch (error: any) {
       // Check if the user has denied access to the camera and mic.
-      console.log(error);
+      if (error.name === 'AgoraRTCException') {
+        setTracksErrorCode(error.code);
+      }
     }
   }, []);
 
