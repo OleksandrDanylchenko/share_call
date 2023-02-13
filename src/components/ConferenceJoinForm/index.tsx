@@ -5,7 +5,7 @@ import { Stack, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import {
-  joinFormContainer,
+  joinFormWrapper,
   nameForm,
 } from '@/components/ConferenceJoinForm/styles';
 import { useLocalStorage } from '@/hooks/index';
@@ -24,7 +24,7 @@ const ConferenceJoinForm: FC = () => {
   };
 
   return (
-    <Stack css={joinFormContainer} alignItems="center" justifyContent="center">
+    <Stack css={joinFormWrapper} alignItems="center" justifyContent="center">
       <form css={nameForm} onSubmit={handleNameSubmit}>
         <Typography variant="h4" component="label" htmlFor="name-field">
           How may we address you?

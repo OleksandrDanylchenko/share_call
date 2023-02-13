@@ -25,3 +25,9 @@ export const doubleColorGradient = (
     );
   `;
 };
+
+export const blurBackgroundContainer = (theme: Theme): SerializedStyles => css`
+  border-radius: 5px;
+  backdrop-filter: blur(60px) hue-rotate(180deg) saturate(40%);
+  padding: ${theme.spacing(4, 6)};
+`;
