@@ -1,20 +1,24 @@
+import { css } from '@emotion/react';
 import { Container, Stack, Typography } from '@mui/material';
 import { type NextPage } from 'next';
-import Head from 'next/head';
 import { getSession, GetSessionParams } from 'next-auth/react';
 
 import ConferenceJoinForm from '@/components/ConferenceJoinForm';
 import StringsRotator from '@/components/StringsRotator';
-import { catchphrase, page, pageContent } from '@/pages/styles';
+import {
+  doubleColorGradient,
+  fullHeight,
+  viewportHeight,
+} from '@/styles/mixins';
 
 const Home: NextPage = () => (
-  <main css={page}>
-    <Container>
+  <main css={[viewportHeight, doubleColorGradient]}>
+    <Container css={fullHeight}>
       <Stack
+        css={fullHeight}
         direction={{ md: 'column', lg: 'row' }}
         alignItems="center"
         justifyContent={{ md: 'center', lg: 'space-around' }}
-        css={pageContent}
         gap={{ md: 4, lg: 14 }}
       >
         <Typography
@@ -35,6 +39,13 @@ const Home: NextPage = () => (
     </Container>
   </main>
 );
+
+const catchphrase = css`
+  width: 100%;
+  text-align: center;
+  font-size: 11rem;
+  font-weight: 400;
+`;
 
 export const getServerSideProps = async (ctx: GetSessionParams) => {
   const session = await getSession(ctx);
