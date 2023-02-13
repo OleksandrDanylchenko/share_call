@@ -32,7 +32,14 @@ const MyApp: AppType<Props> = ({
     <CacheProvider value={emotionCache}>
       <SessionProvider session={session}>
         <Head>
+          <title>ShareCall</title>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
+          <meta
+            name="description"
+            content="Application for the video conferences"
+          />
+          <link rel="icon" href="/favicon.ico" />
+          <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
         <ThemeProvider theme={theme}>
           <CssBaseline />
