@@ -2,12 +2,12 @@ import React, { FC, FormEventHandler } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { Stack, TextField, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
 import {
   joinFormContainer,
   nameForm,
 } from '@/components/ConferenceJoinForm/styles';
-
 import { useLocalStorage } from '@/hooks/index';
 
 const nameStoreKey = 'user-name';
@@ -15,10 +15,12 @@ const nameStoreKey = 'user-name';
 const ConferenceJoinForm: FC = () => {
   // TODO Store name in the indexed store with all the other users
 
+  const router = useRouter();
+
   const [name, setName] = useLocalStorage(nameStoreKey, '');
   const handleNameSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
     event.preventDefault();
-    console.log('Submitted!');
+    router.push('/preview');
   };
 
   return (
