@@ -48,6 +48,7 @@ const Preview: FC = () => {
         videoConfig,
       );
       setLocalTracks(tracks);
+      setTracksErrorCode(null);
     } catch (error: any) {
       if (error.name === 'AgoraRTCException') {
         setTracksErrorCode(error.code);
@@ -88,7 +89,7 @@ const Preview: FC = () => {
               variant="h4"
               css={(theme) => previewTitle(theme, { error: !!tracksErrorCode })}
             >
-              {isLoading && 'Loading media devices'}
+              {isLoading && 'Loading media devices...'}
               {tracksErrorCode && 'Cannot obtain devices'}
               {localTracks && 'Preview'}
             </Typography>
