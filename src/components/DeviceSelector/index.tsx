@@ -1,6 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useId, useState } from 'react';
 
 import {
+  capitalize,
   FormControl,
   InputLabel,
   MenuItem,
@@ -12,18 +13,24 @@ import { Dictionary, keyBy } from 'lodash';
 import useAsyncEffect from 'use-async-effect';
 
 interface Props {
-  // The device id cannot be obtained from the video track
-  initialDeviceLabel?: string;
+  deviceType: 'microphone' | 'camera';
+  initialDeviceLabel?: string; // The device id cannot be obtained from the video track
   onChange: (device: MediaDeviceInfo) => void;
 }
 
-const CameraSelector: FC<Props> = (props) => {
-  const { initialDeviceLabel, onChange } = props;
+const DeviceSelector: FC<Props> = (props) => {
+  const { deviceType, initialDeviceLabel, onChange } = props;
+
+  const selectorId = useId();
+
+  console.log({ selectorId });
 
   const [devices, setDevices] = useState<Dictionary<MediaDeviceInfo>>();
   useAsyncEffect(async () => {
     const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
-    const agoraDevices = await AgoraRTC.getCameras();
+    const agoraDevices = await (deviceType === 'microphone'
+      ? AgoraRTC.getMicrophones()
+      : AgoraRTC.getCameras());
 
     const devicesDictionary = keyBy(agoraDevices, ({ label }) => label);
     setDevices(devicesDictionary);
@@ -49,12 +56,12 @@ const CameraSelector: FC<Props> = (props) => {
 
   return (
     <FormControl size="small" fullWidth>
-      <InputLabel id="camera-select" style={visuallyHidden}>
-        Camera
+      <InputLabel id={selectorId} style={visuallyHidden}>
+        {capitalize(deviceType)}
       </InputLabel>
       <Select
-        id="camera-select"
-        labelId="camera-select"
+        id={selectorId}
+        labelId={selectorId}
         value={device?.label || ''}
         onChange={handleDeviceChange}
       >
@@ -68,4 +75,4 @@ const CameraSelector: FC<Props> = (props) => {
   );
 };
 
-export default CameraSelector;
+export default DeviceSelector;
