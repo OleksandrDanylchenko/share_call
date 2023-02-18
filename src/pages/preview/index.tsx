@@ -1,10 +1,21 @@
 import { FC, useState } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
-import { Container, Stack, Theme } from '@mui/material';
+import MicIcon from '@mui/icons-material/Mic';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import ReportIcon from '@mui/icons-material/Report';
+import {
+  Box,
+  Container,
+  Skeleton,
+  Stack,
+  Theme,
+  Typography,
+} from '@mui/material';
 import { ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import useAsyncEffect from 'use-async-effect';
 
+import { audioConfig, videoConfig } from '@/constants/index';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
@@ -13,9 +24,9 @@ import {
 } from '@/styles/mixins';
 import { AgoraRTCErrorCode } from '@/types/agora';
 
-import { audioConfig, videoConfig } from '@/constants/index';
-
 const Preview: FC = () => {
+  const [isLoading, setLoading] = useState(true);
+
   const [localTracks, setLocalTracks] = useState<
     [IMicrophoneAudioTrack, ICameraVideoTrack] | null
   >(null);
@@ -36,18 +47,80 @@ const Preview: FC = () => {
       if (error.name === 'AgoraRTCException') {
         setTracksErrorCode(error.code);
       }
+    } finally {
+      setLoading(false);
     }
   }, []);
+
+  // Create component with copy to clipboard area with the error code
 
   return (
     <main css={[viewportHeight, doubleColorGradient]}>
       <Container css={fullHeight}>
         <Stack css={fullHeight} alignItems="center" justifyContent="center">
-          <Stack
-            css={previewWrapper}
-            alignItems="center"
-            justifyContent="center"
-          ></Stack>
+          <Stack css={previewWrapper} alignItems="center" gap="1em">
+            <Typography
+              variant="h4"
+              css={(theme) => previewTitle(theme, { error: !!tracksErrorCode })}
+            >
+              {isLoading && 'Loading media devices'}
+              {tracksErrorCode && 'Cannot obtain devices'}
+              {localTracks && 'Preview'}
+            </Typography>
+            <Box width="90%" height="300px">
+              {isLoading && (
+                <Skeleton variant="rounded" width="100%" height="100%" />
+              )}
+              {tracksErrorCode && (
+                <Stack
+                  alignItems="center"
+                  justifyContent="center"
+                  gap="12px"
+                  width="100%"
+                  height="100%"
+                >
+                  <ReportIcon fontSize="large" color="error" />
+                  <Typography variant="body1" color="error" textAlign="center">
+                    We couldn&apos;t obtain your media devices. <br />
+                    Please check your browser&apos;s permissions and try again.
+                  </Typography>
+                  <Typography variant="body2" color="error">
+                    Error code: {tracksErrorCode}
+                  </Typography>
+                </Stack>
+              )}
+            </Box>
+            {!tracksErrorCode && (
+              <>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  gap="10px"
+                  width="90%"
+                >
+                  <PhotoCameraIcon />
+                  <Skeleton
+                    variant="text"
+                    width="100%"
+                    sx={{ fontSize: '2.2rem' }}
+                  />
+                </Stack>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  gap="10px"
+                  width="90%"
+                >
+                  <MicIcon />
+                  <Skeleton
+                    variant="text"
+                    width="100%"
+                    sx={{ fontSize: '2.2rem' }}
+                  />
+                </Stack>
+              </>
+            )}
+          </Stack>
         </Stack>
       </Container>
     </main>
@@ -57,8 +130,25 @@ const Preview: FC = () => {
 const previewWrapper = (theme: Theme): SerializedStyles => css`
   width: 90%;
   max-width: 777px;
-  height: 500px;
   ${blurBackgroundContainer(theme)};
 `;
+
+const previewTitle = (
+  theme: Theme,
+  options: { error: boolean },
+): SerializedStyles => {
+  const { error } = options;
+
+  const {
+    palette: {
+      error: { main: errorColor },
+      common: { white: whiteColor },
+    },
+  } = theme;
+
+  return css`
+    color: ${error ? errorColor : whiteColor};
+  `;
+};
 
 export default Preview;
