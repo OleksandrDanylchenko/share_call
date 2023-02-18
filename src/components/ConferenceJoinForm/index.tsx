@@ -8,7 +8,7 @@ import {
   joinFormWrapper,
   nameForm,
 } from '@/components/ConferenceJoinForm/styles';
-import { useLocalStorage } from '@/hooks/index';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const nameStoreKey = 'user-name';
 
@@ -18,6 +18,7 @@ const ConferenceJoinForm: FC = () => {
   const router = useRouter();
 
   const [name, setName] = useLocalStorage(nameStoreKey, '');
+
   const handleNameSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
     event.preventDefault();
     router.push('/preview');

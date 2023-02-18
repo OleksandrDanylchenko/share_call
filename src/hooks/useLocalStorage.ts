@@ -1,22 +1,16 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState, useEffect } from 'react';
 
-import { useUpdateEffect } from 'usehooks-ts';
+import { useLocalStorage as useHooksLocalStorage } from 'usehooks-ts';
 
 export const useLocalStorage = <T>(
   key: string,
   fallbackValue: T,
 ): readonly [T, Dispatch<SetStateAction<T>>] => {
-  const [value, setValue] = useState(fallbackValue);
+  const [value, setValue] = useHooksLocalStorage(key, fallbackValue);
 
-  useEffect(() => {
-    const stored = localStorage.getItem(key);
-    setValue(stored ? JSON.parse(stored) : fallbackValue);
-  }, [key, fallbackValue]);
+  // Needed to prevent mismatch between the first render on server and client
+  const [outputValue, setOutputValue] = useState(fallbackValue);
+  useEffect(() => setOutputValue(value), [value]);
 
-  useUpdateEffect(
-    () => localStorage.setItem(key, JSON.stringify(value)),
-    [key, value],
-  );
-
-  return [value, setValue] as const;
+  return [outputValue, setValue] as const;
 };
