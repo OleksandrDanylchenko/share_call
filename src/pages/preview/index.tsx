@@ -21,7 +21,6 @@ import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
 import { audioConfig, videoConfig } from '@/constants/index';
 import { useCompliment } from '@/hooks/useCompliment';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
@@ -29,6 +28,8 @@ import {
   viewportHeight,
 } from '@/styles/mixins';
 import { AgoraRTCErrorCode } from '@/types/agora';
+
+import { useCallMediaPermissions } from '@/store/index';
 
 const Preview: FC = () => {
   const previewCameraContainerRef = useRef<HTMLDivElement>(null);
@@ -76,15 +77,13 @@ const Preview: FC = () => {
       track?.setDevice(device.deviceId);
     };
 
-  const [
-    { camera: cameraAllowed, microphone: microphoneAllowed },
-    setCallPermissions,
-  ] = useLocalStorage('callPermissions', { camera: true, microphone: true });
-
+  const microphoneAllowed = useCallMediaPermissions.use.microphone();
+  const cameraAllowed = useCallMediaPermissions.use.camera();
+  const setMediaPermissions = useCallMediaPermissions.use.setPermissions();
   const handleCallPermissionChange =
     (deviceType: 'microphone' | 'camera') =>
     (enabled: boolean): void =>
-      setCallPermissions((prev) => ({ ...prev, [deviceType]: enabled }));
+      setMediaPermissions({ [deviceType]: enabled });
 
   const compliment = useCompliment();
 
@@ -156,6 +155,7 @@ const Preview: FC = () => {
                         helperText={`${
                           cameraAllowed ? 'Disable' : 'Enable'
                         } camera for the call`}
+                        checked={cameraAllowed}
                         defaultChecked
                         onChange={handleCallPermissionChange('camera')}
                       />
@@ -178,6 +178,7 @@ const Preview: FC = () => {
                         helperText={`${
                           microphoneAllowed ? 'Disable' : 'Enable'
                         } microphone for the call`}
+                        checked={microphoneAllowed}
                         defaultChecked
                         onChange={handleCallPermissionChange('microphone')}
                       />

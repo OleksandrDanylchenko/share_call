@@ -31,6 +31,7 @@
     "@trpc/server": "^10.8.1",
     "@types/lodash": "^4.14.191",
     "agora-rtc-sdk-ng": "^4.16.1",
+    "auto-zustand-selectors-hook": "^2.0.0",
     "clsx": "^1.2.1",
     "lodash": "^4.17.21",
     "material-ui-popup-state": "^5.0.4",
@@ -46,7 +47,8 @@
     "swiper": "^8.4.7",
     "use-async-effect": "^2.2.7",
     "usehooks-ts": "^2.9.1",
-    "zod": "^3.20.2"
+    "zod": "^3.20.2",
+    "zustand": "^4.3.3"
   },
   "devDependencies": {
     "@ls-lint/ls-lint": "^1.11.2",

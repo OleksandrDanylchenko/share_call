@@ -26,6 +26,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.47.1
   '@typescript-eslint/parser': ^5.47.1
   agora-rtc-sdk-ng: ^4.16.1
+  auto-zustand-selectors-hook: ^2.0.0
   clsx: ^1.2.1
   editorconfig-checker: ^5.0.1
   eslint: ^8.30.0
@@ -50,6 +51,7 @@ specifiers:
   use-async-effect: ^2.2.7
   usehooks-ts: ^2.9.1
   zod: ^3.20.2
+  zustand: ^4.3.3
 
 dependencies:
   '@emotion/cache': 11.10.5
@@ -70,6 +72,7 @@ dependencies:
   '@trpc/server': 10.9.0
   '@types/lodash': 4.14.191
   agora-rtc-sdk-ng: 4.16.1
+  auto-zustand-selectors-hook: 2.0.0_zustand@4.3.3
   clsx: 1.2.1
   lodash: 4.17.21
   material-ui-popup-state: 5.0.4_lskpmcsdi7ipu6qpuapyu56ihm
@@ -86,6 +89,7 @@ dependencies:
   use-async-effect: 2.2.7_react@18.2.0
   usehooks-ts: 2.9.1_biqbaboplfbrettd7655fr4n2y
   zod: 3.20.2
+  zustand: 4.3.3_react@18.2.0
 
 devDependencies:
   '@ls-lint/ls-lint': 1.11.2
@@ -1260,6 +1264,15 @@ packages:
   /ast-types-flow/0.0.7:
     resolution: {integrity: sha512-eBvWn1lvIApYMhzQMsu9ciLfkBY499mFZlNqG+/9WR7PVlroQw0vG30cOQQbaKz3sCEc44TAOu2ykzqXSNnwag==}
     dev: true
+
+  /auto-zustand-selectors-hook/2.0.0_zustand@4.3.3:
+    resolution: {integrity: sha512-QPmI3PUgTW3np6coV+ffIP/yygYPvi8qWXezPW82u9cVLr79Tsf2TkH5/auFdhnL5iAyLOk4Sjk7XQwnmDsbSw==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      zustand: '>=4'
+    dependencies:
+      zustand: 4.3.3_react@18.2.0
+    dev: false
 
   /available-typed-arrays/1.0.5:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
@@ -3494,4 +3507,20 @@ packages:
 
   /zod/3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
+    dev: false
+
+  /zustand/4.3.3_react@18.2.0:
+    resolution: {integrity: sha512-x2jXq8S0kfLGNwGh87nhRfEc2eZy37tSatpSoSIN+O6HIaBhgQHSONV/F9VNrNcBcKQu/E80K1DeHDYQC/zCrQ==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      immer: '>=9.0'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
