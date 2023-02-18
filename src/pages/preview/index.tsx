@@ -155,7 +155,6 @@ const Preview: FC = () => {
                           cameraAllowed ? 'Disable' : 'Enable'
                         } camera for the call`}
                         checked={cameraAllowed}
-                        defaultChecked
                         onChange={handleCallPermissionChange('camera')}
                       />
                     </>
@@ -178,7 +177,6 @@ const Preview: FC = () => {
                           microphoneAllowed ? 'Disable' : 'Enable'
                         } microphone for the call`}
                         checked={microphoneAllowed}
-                        defaultChecked
                         onChange={handleCallPermissionChange('microphone')}
                       />
                     </>
