@@ -1,6 +1,13 @@
 import { FC } from 'react';
 
-import { Box, Switch, SwitchProps, Typography } from '@mui/material';
+import {
+  Box,
+  Switch,
+  SwitchProps,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import {
   bindHover,
   bindPopover,
@@ -17,6 +24,10 @@ const SwitchWithPopover: FC<Props> = (props) => {
   const { helperText, onChange, ...switchProps } = props;
 
   const popoverState = usePopupState({ variant: 'popover' });
+
+  const { breakpoints } = useTheme();
+  const isMd = useMediaQuery(breakpoints.down('md'));
+
   return (
     <>
       <Box {...bindHover(popoverState)}>
@@ -24,13 +35,14 @@ const SwitchWithPopover: FC<Props> = (props) => {
       </Box>
       <HoverPopover
         {...bindPopover(popoverState)}
+        sx={{ pointerEvents: 'none' }}
         anchorOrigin={{
-          vertical: 'center',
+          vertical: isMd ? 'bottom' : 'center',
           horizontal: 'right',
         }}
         transformOrigin={{
-          vertical: 'center',
-          horizontal: 'left',
+          vertical: isMd ? 'top' : 'center',
+          horizontal: isMd ? 'right' : 'left',
         }}
       >
         <Typography style={{ padding: '8px' }}>{helperText}</Typography>

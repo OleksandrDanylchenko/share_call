@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
 import MicIcon from '@mui/icons-material/Mic';
@@ -28,6 +28,8 @@ import {
 import { AgoraRTCErrorCode } from '@/types/agora';
 
 const Preview: FC = () => {
+  const previewCameraContainerRef = useRef<HTMLDivElement>(null);
+
   const [isLoading, setLoading] = useState(true);
 
   const [localTracks, setLocalTracks] = useState<
@@ -54,6 +56,14 @@ const Preview: FC = () => {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    const { current: previewCameraContainer } = previewCameraContainerRef;
+    if (!cameraTrack || !previewCameraContainer) return;
+
+    cameraTrack.play(previewCameraContainer);
+    return () => cameraTrack.stop();
+  }, [cameraTrack]);
 
   const handleDeviceChange =
     (deviceType: 'microphone' | 'camera') =>
@@ -82,7 +92,16 @@ const Preview: FC = () => {
               {tracksErrorCode && 'Cannot obtain devices'}
               {localTracks && 'Preview'}
             </Typography>
-            <Box sx={{ position: 'relative' }} width="90%" height="300px">
+            <Box
+              ref={previewCameraContainerRef}
+              sx={{
+                position: 'relative',
+                borderRadius: '10px',
+                overflow: 'hidden',
+              }}
+              width="90%"
+              height="300px"
+            >
               <Skeleton
                 sx={{ position: 'absolute' }}
                 variant="rounded"
