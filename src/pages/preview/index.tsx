@@ -45,7 +45,6 @@ const Preview: FC = () => {
       );
       setLocalTracks(tracks);
     } catch (error: any) {
-      // Check if the user has denied access to the camera and mic.
       if (error.name === 'AgoraRTCException') {
         setTracksErrorCode(error.code);
       }
@@ -108,11 +107,7 @@ const Preview: FC = () => {
                 >
                   <PhotoCameraIcon />
                   {isLoading && (
-                    <Skeleton
-                      variant="text"
-                      width="100%"
-                      sx={{ fontSize: '2.2rem' }}
-                    />
+                    <Skeleton variant="rounded" width="100%" height={40} />
                   )}
                   {cameraTrack && (
                     <CameraSelector
