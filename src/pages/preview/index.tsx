@@ -76,20 +76,15 @@ const Preview: FC = () => {
       track?.setDevice(device.deviceId);
     };
 
-  const [callPermissions, setCallPermissions] = useLocalStorage(
-    'callPermissions',
-    {
-      video: true,
-      audio: true,
-    },
-  );
+  const [
+    { camera: cameraAllowed, microphone: microphoneAllowed },
+    setCallPermissions,
+  ] = useLocalStorage('callPermissions', { camera: true, microphone: true });
 
-  const handleDeviceEnabledChange =
+  const handleCallPermissionChange =
     (deviceType: 'microphone' | 'camera') =>
-    (enabled: boolean): void => {
-      const track = deviceType === 'microphone' ? audioTrack : cameraTrack;
-      track?.setEnabled(enabled);
-    };
+    (enabled: boolean): void =>
+      setCallPermissions((prev) => ({ ...prev, [deviceType]: enabled }));
 
   const compliment = useCompliment();
 
@@ -158,9 +153,11 @@ const Preview: FC = () => {
                         onChange={handleDeviceChange('camera')}
                       />
                       <SwitchWithPopover
-                        helperText="Enable/disable camera for the call"
+                        helperText={`${
+                          cameraAllowed ? 'Disable' : 'Enable'
+                        } camera for the call`}
                         defaultChecked
-                        onChange={handleDeviceEnabledChange('camera')}
+                        onChange={handleCallPermissionChange('camera')}
                       />
                     </>
                   )}
@@ -178,9 +175,11 @@ const Preview: FC = () => {
                         onChange={handleDeviceChange('microphone')}
                       />
                       <SwitchWithPopover
-                        helperText="Enable/disable camera for the call"
+                        helperText={`${
+                          microphoneAllowed ? 'Disable' : 'Enable'
+                        } microphone for the call`}
                         defaultChecked
-                        onChange={handleDeviceEnabledChange('microphone')}
+                        onChange={handleCallPermissionChange('microphone')}
                       />
                     </>
                   )}

@@ -26,7 +26,7 @@ const SwitchWithPopover: FC<Props> = (props) => {
   const popoverState = usePopupState({ variant: 'popover' });
 
   const { breakpoints } = useTheme();
-  const isMd = useMediaQuery(breakpoints.down('md'));
+  const isLg = useMediaQuery(breakpoints.down('lg'));
 
   return (
     <>
@@ -37,12 +37,12 @@ const SwitchWithPopover: FC<Props> = (props) => {
         {...bindPopover(popoverState)}
         sx={{ pointerEvents: 'none' }}
         anchorOrigin={{
-          vertical: isMd ? 'bottom' : 'center',
+          vertical: isLg ? 'bottom' : 'center',
           horizontal: 'right',
         }}
         transformOrigin={{
-          vertical: isMd ? 'top' : 'center',
-          horizontal: isMd ? 'right' : 'left',
+          vertical: isLg ? 'top' : 'center',
+          horizontal: isLg ? 'right' : 'left',
         }}
       >
         <Typography style={{ padding: '8px' }}>{helperText}</Typography>
