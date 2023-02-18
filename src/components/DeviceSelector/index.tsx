@@ -23,8 +23,6 @@ const DeviceSelector: FC<Props> = (props) => {
 
   const selectorId = useId();
 
-  console.log({ selectorId });
-
   const [devices, setDevices] = useState<Dictionary<MediaDeviceInfo>>();
   useAsyncEffect(async () => {
     const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;

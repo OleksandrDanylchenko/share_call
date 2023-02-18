@@ -16,7 +16,7 @@ import {
 import { ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import useAsyncEffect from 'use-async-effect';
 
-import CameraSelector from '@/components/CameraSelector';
+import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
 import { audioConfig, videoConfig } from '@/constants/index';
 import {
@@ -55,9 +55,19 @@ const Preview: FC = () => {
     }
   }, []);
 
-  const handleCameraChange = (device: MediaDeviceInfo): void => {
-    cameraTrack?.setDevice(device.deviceId);
-  };
+  const handleDeviceChange =
+    (deviceType: 'microphone' | 'camera') =>
+    (device: MediaDeviceInfo): void => {
+      const track = deviceType === 'microphone' ? audioTrack : cameraTrack;
+      track?.setDevice(device.deviceId);
+    };
+
+  const handleDeviceEnabledChange =
+    (deviceType: 'microphone' | 'camera') =>
+    (enabled: boolean): void => {
+      const track = deviceType === 'microphone' ? audioTrack : cameraTrack;
+      track?.setEnabled(enabled);
+    };
 
   return (
     <main css={[viewportHeight, doubleColorGradient]}>
@@ -113,13 +123,15 @@ const Preview: FC = () => {
                   )}
                   {cameraTrack && (
                     <>
-                      <CameraSelector
+                      <DeviceSelector
+                        deviceType="camera"
                         initialDeviceLabel={cameraTrack.getTrackLabel()}
-                        onChange={handleCameraChange}
+                        onChange={handleDeviceChange('camera')}
                       />
                       <SwitchWithPopover
-                        defaultChecked
                         helperText="Enable/disable camera for the call"
+                        defaultChecked
+                        onChange={handleDeviceEnabledChange('camera')}
                       />
                     </>
                   )}
@@ -131,11 +143,23 @@ const Preview: FC = () => {
                   width="90%"
                 >
                   <MicIcon />
-                  <Skeleton
-                    variant="text"
-                    width="100%"
-                    sx={{ fontSize: '2.2rem' }}
-                  />
+                  {isLoading && (
+                    <Skeleton variant="rounded" width="100%" height={40} />
+                  )}
+                  {audioTrack && (
+                    <>
+                      <DeviceSelector
+                        deviceType="microphone"
+                        initialDeviceLabel={audioTrack.getTrackLabel()}
+                        onChange={handleDeviceChange('microphone')}
+                      />
+                      <SwitchWithPopover
+                        helperText="Enable/disable camera for the call"
+                        defaultChecked
+                        onChange={handleDeviceEnabledChange('microphone')}
+                      />
+                    </>
+                  )}
                 </Stack>
               </>
             )}
