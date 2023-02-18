@@ -18,7 +18,6 @@ const compliments = [
   'great',
   'handsome',
   'incredible',
-  'insane',
   'intelligent',
   'lovely',
   'marvelous',
