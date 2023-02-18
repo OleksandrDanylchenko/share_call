@@ -67,10 +67,14 @@ const Preview: FC = () => {
               {tracksErrorCode && 'Cannot obtain devices'}
               {localTracks && 'Preview'}
             </Typography>
-            <Box width="90%" height="300px">
-              {isLoading && (
-                <Skeleton variant="rounded" width="100%" height="100%" />
-              )}
+            <Box sx={{ position: 'relative' }} width="90%" height="300px">
+              <Skeleton
+                sx={{ position: 'absolute' }}
+                variant="rounded"
+                width="100%"
+                height="100%"
+                animation={tracksErrorCode ? false : 'pulse'}
+              />
               {tracksErrorCode && (
                 <Stack
                   alignItems="center"
