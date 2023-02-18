@@ -7,6 +7,7 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import { Dictionary, keyBy } from 'lodash';
 import useAsyncEffect from 'use-async-effect';
 
@@ -24,7 +25,7 @@ const CameraSelector: FC<Props> = (props) => {
     const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
     const agoraDevices = await AgoraRTC.getCameras();
 
-    const devicesDictionary = keyBy(agoraDevices, (device) => device.label);
+    const devicesDictionary = keyBy(agoraDevices, ({ label }) => label);
     setDevices(devicesDictionary);
   }, []);
 
@@ -47,13 +48,14 @@ const CameraSelector: FC<Props> = (props) => {
   };
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-      <InputLabel id="camera-select">Camera</InputLabel>
+    <FormControl size="small" fullWidth>
+      <InputLabel id="camera-select" style={visuallyHidden}>
+        Camera
+      </InputLabel>
       <Select
-        labelId="camera-select"
         id="camera-select"
+        labelId="camera-select"
         value={device?.label || ''}
-        label=""
         onChange={handleDeviceChange}
       >
         {Object.values(devices || {})?.map(({ deviceId, label }) => (

@@ -9,6 +9,7 @@ import {
   Container,
   Skeleton,
   Stack,
+  Switch,
   Theme,
   Typography,
 } from '@mui/material';
@@ -110,10 +111,13 @@ const Preview: FC = () => {
                     <Skeleton variant="rounded" width="100%" height={40} />
                   )}
                   {cameraTrack && (
-                    <CameraSelector
-                      initialDeviceLabel={cameraTrack.getTrackLabel()}
-                      onChange={handleCameraChange}
-                    />
+                    <>
+                      <CameraSelector
+                        initialDeviceLabel={cameraTrack.getTrackLabel()}
+                        onChange={handleCameraChange}
+                      />
+                      <Switch defaultChecked />
+                    </>
                   )}
                 </Stack>
                 <Stack
