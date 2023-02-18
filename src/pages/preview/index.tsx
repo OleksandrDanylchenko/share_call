@@ -17,6 +17,7 @@ import { ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import useAsyncEffect from 'use-async-effect';
 
 import CameraSelector from '@/components/CameraSelector';
+import SwitchWithPopover from '@/components/SwitchWithPopover';
 import { audioConfig, videoConfig } from '@/constants/index';
 import {
   blurBackgroundContainer,
@@ -116,7 +117,10 @@ const Preview: FC = () => {
                         initialDeviceLabel={cameraTrack.getTrackLabel()}
                         onChange={handleCameraChange}
                       />
-                      <Switch defaultChecked />
+                      <SwitchWithPopover
+                        defaultChecked
+                        helperText="Enable/disable camera for the call"
+                      />
                     </>
                   )}
                 </Stack>
