@@ -8,16 +8,15 @@ import {
   joinFormWrapper,
   nameForm,
 } from '@/components/ConferenceJoinForm/styles';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useClientSideValue } from '@/hooks/useClientSideValue';
 
-const nameStoreKey = 'user-name';
+import { useUserInfo } from '@/store/userInfo';
 
 const ConferenceJoinForm: FC = () => {
-  // TODO Store name in the indexed store with all the other users
-
   const router = useRouter();
 
-  const [name, setName] = useLocalStorage(nameStoreKey, '');
+  const persistedName = useUserInfo.use.name();
+  const name = useClientSideValue(persistedName, '');
 
   const handleNameSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
     event.preventDefault();
@@ -39,7 +38,7 @@ const ConferenceJoinForm: FC = () => {
           required
           hiddenLabel
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => useUserInfo.setState({ name: e.target.value })}
         />
         <LoadingButton
           type="submit"
