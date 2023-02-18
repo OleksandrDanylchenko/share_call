@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
 import MicIcon from '@mui/icons-material/Mic';
@@ -6,14 +6,15 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import ReportIcon from '@mui/icons-material/Report';
 import {
   Box,
+  Button,
   Container,
   Skeleton,
   Stack,
-  Switch,
   Theme,
   Typography,
 } from '@mui/material';
 import { ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import Link from 'next/link';
 import useAsyncEffect from 'use-async-effect';
 
 import DeviceSelector from '@/components/DeviceSelector';
@@ -96,10 +97,11 @@ const Preview: FC = () => {
     <main css={[viewportHeight, doubleColorGradient]}>
       <Container css={fullHeight}>
         <Stack css={fullHeight} alignItems="center" justifyContent="center">
-          <Stack css={previewWrapper} alignItems="center" gap="1em">
+          <Stack css={previewWrapper} alignItems="center" gap={2}>
             <Typography
               variant="h4"
               css={(theme) => previewTitle(theme, { error: !!tracksErrorCode })}
+              mb={3}
             >
               {isLoading && 'Loading media devices...'}
               {tracksErrorCode && 'Cannot obtain devices'}
@@ -109,11 +111,11 @@ const Preview: FC = () => {
               ref={previewCameraContainerRef}
               sx={{
                 position: 'relative',
-                borderRadius: '10px',
+                borderRadius: 2,
                 overflow: 'hidden',
               }}
               width="90%"
-              height="300px"
+              height={300}
             >
               <Skeleton
                 sx={{ position: 'absolute' }}
@@ -126,7 +128,7 @@ const Preview: FC = () => {
                 <Stack
                   alignItems="center"
                   justifyContent="center"
-                  gap="12px"
+                  gap={3}
                   width="100%"
                   height="100%"
                 >
@@ -143,12 +145,7 @@ const Preview: FC = () => {
             </Box>
             {!tracksErrorCode && (
               <>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  gap="10px"
-                  width="90%"
-                >
+                <Stack direction="row" alignItems="center" gap={2} width="90%">
                   <PhotoCameraIcon />
                   {isLoading && (
                     <Skeleton variant="rounded" width="100%" height={40} />
@@ -168,12 +165,7 @@ const Preview: FC = () => {
                     </>
                   )}
                 </Stack>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  gap="10px"
-                  width="90%"
-                >
+                <Stack direction="row" alignItems="center" gap={2} width="90%">
                   <MicIcon />
                   {isLoading && (
                     <Skeleton variant="rounded" width="100%" height={40} />
@@ -195,6 +187,44 @@ const Preview: FC = () => {
                 </Stack>
               </>
             )}
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-around"
+              gap={5}
+              width="90%"
+              mt={3}
+            >
+              {isLoading ? (
+                <>
+                  <Skeleton
+                    variant="rounded"
+                    height={44}
+                    sx={{ borderRadius: 30, flex: 0.5 }}
+                  />
+                  <Skeleton
+                    variant="rounded"
+                    height={44}
+                    sx={{ borderRadius: 30, flex: 1 }}
+                  />
+                </>
+              ) : (
+                <>
+                  <Link href="/" css={cancelLink}>
+                    <Button variant="outlined" color="inherit" fullWidth>
+                      Cancel
+                    </Button>
+                  </Link>
+                  {!tracksErrorCode && (
+                    <Link href="/conference" css={joinLink}>
+                      <Button variant="contained" fullWidth>
+                        Join
+                      </Button>
+                    </Link>
+                  )}
+                </>
+              )}
+            </Stack>
           </Stack>
         </Stack>
       </Container>
@@ -225,5 +255,13 @@ const previewTitle = (
     color: ${error ? errorColor : whiteColor};
   `;
 };
+
+const cancelLink = css`
+  flex: 0.5;
+`;
+
+const joinLink = css`
+  flex: 1;
+`;
 
 export default Preview;
