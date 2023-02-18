@@ -79,11 +79,10 @@ const Preview: FC = () => {
 
   const microphoneAllowed = useCallMediaPermissions.use.microphone();
   const cameraAllowed = useCallMediaPermissions.use.camera();
-  const setMediaPermissions = useCallMediaPermissions.use.setPermissions();
   const handleCallPermissionChange =
     (deviceType: 'microphone' | 'camera') =>
     (enabled: boolean): void =>
-      setMediaPermissions({ [deviceType]: enabled });
+      useCallMediaPermissions.setState({ [deviceType]: enabled });
 
   const compliment = useCompliment();
 

@@ -8,16 +8,14 @@ import { persist } from 'zustand/middleware';
 export interface CallMediaPermissionsState {
   microphone: boolean;
   camera: boolean;
-  setPermissions: (permissions: Partial<CallMediaPermissionsState>) => void;
 }
 
 // Create zustand store for call media permissions including microphone and camera. Persist to local storage.
 const useCallMediaPermissionsBase = create<CallMediaPermissionsState>()(
   persist(
-    (set) => ({
+    (_set) => ({
       microphone: false,
       camera: false,
-      setPermissions: (permissions) => set(permissions),
     }),
     {
       name: 'call-media-permissions-storage',
