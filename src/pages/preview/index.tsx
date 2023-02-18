@@ -19,6 +19,8 @@ import useAsyncEffect from 'use-async-effect';
 import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
 import { audioConfig, videoConfig } from '@/constants/index';
+import { useCompliment } from '@/hooks/useCompliment';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
@@ -73,12 +75,22 @@ const Preview: FC = () => {
       track?.setDevice(device.deviceId);
     };
 
+  const [callPermissions, setCallPermissions] = useLocalStorage(
+    'callPermissions',
+    {
+      video: true,
+      audio: true,
+    },
+  );
+
   const handleDeviceEnabledChange =
     (deviceType: 'microphone' | 'camera') =>
     (enabled: boolean): void => {
       const track = deviceType === 'microphone' ? audioTrack : cameraTrack;
       track?.setEnabled(enabled);
     };
+
+  const compliment = useCompliment();
 
   return (
     <main css={[viewportHeight, doubleColorGradient]}>
@@ -91,7 +103,7 @@ const Preview: FC = () => {
             >
               {isLoading && 'Loading media devices...'}
               {tracksErrorCode && 'Cannot obtain devices'}
-              {localTracks && 'Preview'}
+              {localTracks && `You look ${compliment} ✨`}
             </Typography>
             <Box
               ref={previewCameraContainerRef}
