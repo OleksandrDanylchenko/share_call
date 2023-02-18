@@ -36,6 +36,7 @@ specifiers:
   next: 13.1.1
   next-auth: ^4.18.7
   nodemailer: ^6.9.1
+  object-typed: ^1.0.0
   prettier: ^2.8.3
   prisma: ^4.10.1
   react: 18.2.0
@@ -73,6 +74,7 @@ dependencies:
   next: 13.1.1_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.18.8_kcrisbppuh4uplzrocihcy7jcu
   nodemailer: 6.9.1
+  object-typed: 1.0.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.42.1_react@18.2.0
@@ -2697,6 +2699,11 @@ packages:
     resolution: {integrity: sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==}
     engines: {node: '>= 0.4'}
     dev: true
+
+  /object-typed/1.0.0:
+    resolution: {integrity: sha512-Uwqzj9SO7e191kJYnH2FDVdNtijv087ihIjgppJtoFK14T6TcMY12H3HFFV/ZlS0jbej12Y37yNSbGKcCcdVXg==}
+    engines: {node: '>=10'}
+    dev: false
 
   /object.assign/4.1.4:
     resolution: {integrity: sha512-1mxKf0e58bvyjSCtKYY4sRe9itRk3PJpquJOjeIkz885CczcI4IvJJDLPS72oowuSh+pBxUFROpX+TU++hxhZQ==}

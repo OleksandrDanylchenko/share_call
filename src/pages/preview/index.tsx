@@ -15,6 +15,7 @@ import {
 import { ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import useAsyncEffect from 'use-async-effect';
 
+import CameraSelector from '@/components/CameraSelector';
 import { audioConfig, videoConfig } from '@/constants/index';
 import {
   blurBackgroundContainer,
@@ -30,6 +31,7 @@ const Preview: FC = () => {
   const [localTracks, setLocalTracks] = useState<
     [IMicrophoneAudioTrack, ICameraVideoTrack] | null
   >(null);
+  const [audioTrack, cameraTrack] = localTracks ? localTracks : [null, null];
 
   const [tracksErrorCode, setTracksErrorCode] =
     useState<AgoraRTCErrorCode | null>(null);
@@ -52,7 +54,9 @@ const Preview: FC = () => {
     }
   }, []);
 
-  // Create component with copy to clipboard area with the error code
+  const handleCameraChange = (device: MediaDeviceInfo): void => {
+    cameraTrack?.setDevice(device.deviceId);
+  };
 
   return (
     <main css={[viewportHeight, doubleColorGradient]}>
@@ -103,11 +107,19 @@ const Preview: FC = () => {
                   width="90%"
                 >
                   <PhotoCameraIcon />
-                  <Skeleton
-                    variant="text"
-                    width="100%"
-                    sx={{ fontSize: '2.2rem' }}
-                  />
+                  {isLoading && (
+                    <Skeleton
+                      variant="text"
+                      width="100%"
+                      sx={{ fontSize: '2.2rem' }}
+                    />
+                  )}
+                  {cameraTrack && (
+                    <CameraSelector
+                      initialDeviceLabel={cameraTrack.getTrackLabel()}
+                      onChange={handleCameraChange}
+                    />
+                  )}
                 </Stack>
                 <Stack
                   direction="row"
