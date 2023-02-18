@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Switch, SwitchProps, Typography } from '@mui/material';
+import { Box, Switch, SwitchProps, Typography } from '@mui/material';
 import {
   bindHover,
   bindPopover,
@@ -17,7 +17,9 @@ const SwitchWithPopover: FC<Props> = ({ helperText, ...props }) => {
 
   return (
     <>
-      <Switch {...props} {...bindHover(popoverState)} />
+      <Box {...bindHover(popoverState)}>
+        <Switch {...props} />
+      </Box>
       <HoverPopover
         {...bindPopover(popoverState)}
         anchorOrigin={{
