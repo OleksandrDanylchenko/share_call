@@ -39,12 +39,12 @@ const Preview: FC = () => {
   } = useLocalTracks();
   const [microphoneTrack, cameraTrack] = localTracks || [null, null];
 
-  const cameraAllowed = useClientValue(
-    useMediaSettings.use.camera().allowed,
+  const cameraEnabled = useClientValue(
+    useMediaSettings.use.camera().enabled,
     true,
   );
-  const microphoneAllowed = useClientValue(
-    useMediaSettings.use.microphone().allowed,
+  const microphoneEnabled = useClientValue(
+    useMediaSettings.use.microphone().enabled,
     true,
   );
 
@@ -64,12 +64,12 @@ const Preview: FC = () => {
     const { current: previewCameraContainer } = previewCameraContainerRef;
     if (!cameraTrack || !previewCameraContainer) return;
 
-    if (cameraAllowed) {
+    if (cameraEnabled) {
       cameraTrack.play(previewCameraContainer);
     } else {
       cameraTrack.stop();
     }
-  }, [cameraAllowed, cameraTrack]);
+  }, [cameraEnabled, cameraTrack]);
 
   const compliment = useCompliment();
 
@@ -114,10 +114,10 @@ const Preview: FC = () => {
                 variant="rounded"
                 width="100%"
                 height="100%"
-                animation={tracksErrorCode || !cameraAllowed ? false : 'pulse'}
+                animation={tracksErrorCode || !cameraEnabled ? false : 'pulse'}
                 sx={{ position: 'absolute' }}
               />
-              {!cameraAllowed && (
+              {!cameraEnabled && (
                 <Typography variant="h5">Camera is disabled</Typography>
               )}
               {tracksErrorCode && (
@@ -149,9 +149,9 @@ const Preview: FC = () => {
                       />
                       <SwitchWithPopover
                         helperText={`${
-                          cameraAllowed ? 'Disable' : 'Enable'
+                          cameraEnabled ? 'Disable' : 'Enable'
                         } camera for the call`}
-                        checked={cameraAllowed}
+                        checked={cameraEnabled}
                         onChange={handleCallPermissionChange('camera')}
                       />
                     </>
@@ -171,9 +171,9 @@ const Preview: FC = () => {
                       />
                       <SwitchWithPopover
                         helperText={`${
-                          microphoneAllowed ? 'Disable' : 'Enable'
+                          microphoneEnabled ? 'Disable' : 'Enable'
                         } microphone for the call`}
-                        checked={microphoneAllowed}
+                        checked={microphoneEnabled}
                         onChange={handleCallPermissionChange('microphone')}
                       />
                     </>

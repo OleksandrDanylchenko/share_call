@@ -56,16 +56,16 @@ export const useLocalTracks = (): {
     });
   }, [localTracks]);
 
-  const cameraAllowed = useMediaSettings.use.camera().allowed;
+  const cameraEnabled = useMediaSettings.use.camera().enabled;
   useAsyncEffect(
-    () => cameraTrack?.setEnabled(cameraAllowed),
-    [cameraAllowed, cameraTrack],
+    () => cameraTrack?.setEnabled(cameraEnabled),
+    [cameraEnabled, cameraTrack],
   );
 
-  const microphoneAllowed = useMediaSettings.use.microphone().allowed;
+  const microphoneEnabled = useMediaSettings.use.microphone().enabled;
   useAsyncEffect(
-    () => microphoneTrack?.setEnabled(microphoneAllowed),
-    [microphoneAllowed, microphoneTrack],
+    () => microphoneTrack?.setEnabled(microphoneEnabled),
+    [microphoneEnabled, microphoneTrack],
   );
 
   return { isLoading, localTracks, errorCode, stopTracks };

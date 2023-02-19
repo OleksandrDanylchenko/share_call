@@ -10,19 +10,17 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface State {
-  microphone: MicrophoneAudioTrackInitConfig & { allowed: boolean };
-  camera: CameraVideoTrackInitConfig & { allowed: boolean };
+  microphone: MicrophoneAudioTrackInitConfig & { enabled: boolean };
+  camera: CameraVideoTrackInitConfig & { enabled: boolean };
 }
 
 // Create zustand store for call media permissions including microphone and camera. Persist to local storage.
 const useMediaSettingsBase = create<State>()(
   persist(
     (_set) => ({
-      microphone: {
-        allowed: true,
-      },
+      microphone: { enabled: true },
       camera: {
-        allowed: true,
+        enabled: true,
         encoderConfig: {
           width: { min: 640, ideal: 1920, max: 1920 },
           height: { min: 480, ideal: 1080, max: 1080 },
