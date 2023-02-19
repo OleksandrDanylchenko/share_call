@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
 import MicIcon from '@mui/icons-material/Mic';
@@ -13,54 +13,29 @@ import {
   Theme,
   Typography,
 } from '@mui/material';
-import { ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import Link from 'next/link';
-import useAsyncEffect from 'use-async-effect';
 
 import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
-import { audioConfig, videoConfig } from '@/constants/index';
-import { useCompliment } from '@/hooks/index';
+import { useCompliment, useLocalTracks } from '@/hooks/index';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
   fullHeight,
   viewportHeight,
 } from '@/styles/mixins';
-import { AgoraRTCErrorCode } from '@/types/agora';
 
 import { useCallMediaPermissions } from '@/store/index';
 
 const Preview: FC = () => {
   const previewCameraContainerRef = useRef<HTMLDivElement>(null);
 
-  const [isLoading, setLoading] = useState(true);
-
-  const [localTracks, setLocalTracks] = useState<
-    [IMicrophoneAudioTrack, ICameraVideoTrack] | null
-  >(null);
-  const [audioTrack, cameraTrack] = localTracks ? localTracks : [null, null];
-
-  const [tracksErrorCode, setTracksErrorCode] =
-    useState<AgoraRTCErrorCode | null>(null);
-
-  useAsyncEffect(async () => {
-    try {
-      const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
-      const tracks = await AgoraRTC.createMicrophoneAndCameraTracks(
-        audioConfig,
-        videoConfig,
-      );
-      setLocalTracks(tracks);
-      setTracksErrorCode(null);
-    } catch (error: any) {
-      if (error.name === 'AgoraRTCException') {
-        setTracksErrorCode(error.code);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const {
+    isLoading: isLoadingTracks,
+    localTracks,
+    errorCode: tracksErrorCode,
+  } = useLocalTracks();
+  const [audioTrack, cameraTrack] = localTracks || [null, null];
 
   useEffect(() => {
     const { current: previewCameraContainer } = previewCameraContainerRef;
@@ -96,7 +71,7 @@ const Preview: FC = () => {
               css={(theme) => previewTitle(theme, { error: !!tracksErrorCode })}
               mb={3}
             >
-              {isLoading && 'Loading media devices...'}
+              {isLoadingTracks && 'Loading media devices...'}
               {tracksErrorCode && 'Cannot obtain devices'}
               {localTracks && `You look ${compliment} ✨`}
             </Typography>
@@ -140,7 +115,7 @@ const Preview: FC = () => {
               <>
                 <Stack direction="row" alignItems="center" gap={2} width="90%">
                   <PhotoCameraIcon />
-                  {isLoading && (
+                  {isLoadingTracks && (
                     <Skeleton variant="rounded" width="100%" height={40} />
                   )}
                   {cameraTrack && (
@@ -162,7 +137,7 @@ const Preview: FC = () => {
                 </Stack>
                 <Stack direction="row" alignItems="center" gap={2} width="90%">
                   <MicIcon />
-                  {isLoading && (
+                  {isLoadingTracks && (
                     <Skeleton variant="rounded" width="100%" height={40} />
                   )}
                   {audioTrack && (
@@ -192,7 +167,7 @@ const Preview: FC = () => {
               width="90%"
               mt={3}
             >
-              {isLoading ? (
+              {isLoadingTracks ? (
                 <>
                   <Skeleton
                     variant="rounded"

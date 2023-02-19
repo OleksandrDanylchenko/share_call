@@ -1,4 +1,6 @@
 // Re-exported from the AgoraRTC package
+import { ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+
 export enum AgoraRTCErrorCode {
   UNEXPECTED_ERROR = 'UNEXPECTED_ERROR',
   UNEXPECTED_RESPONSE = 'UNEXPECTED_RESPONSE',
@@ -89,3 +91,5 @@ export enum AgoraRTCErrorCode {
   INIT_DATACHANNEL_TIMEOUT = 'INIT_DATACHANNEL_TIMEOUT',
   DATACHANNEL_CONNECTION_TIMEOUT = 'DATACHANNEL_CONNECTION_TIMEOUT',
 }
+
+export type AgoraTracks = [IMicrophoneAudioTrack, ICameraVideoTrack];
