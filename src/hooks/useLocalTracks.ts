@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import useAsyncEffect from 'use-async-effect';
 
@@ -63,7 +63,7 @@ export const useLocalTracks = (): {
   );
 
   const cameraId = useMediaSettings.use.camera().cameraId;
-  useAsyncEffect(() => {
+  useEffect(() => {
     if (cameraId) {
       cameraTrack?.setDevice(cameraId);
     }
@@ -76,7 +76,7 @@ export const useLocalTracks = (): {
   );
 
   const microphoneId = useMediaSettings.use.microphone().microphoneId;
-  useAsyncEffect(() => {
+  useEffect(() => {
     if (microphoneId) {
       microphoneTrack?.setDevice(microphoneId);
     }
