@@ -10,13 +10,12 @@ import {
 } from '@/components/ConferenceJoinForm/styles';
 import { useClientSideValue } from '@/hooks/useClientSideValue';
 
-import { useUserInfo } from '@/store/userInfo';
+import { useGuestUserInfo } from '@/store/guestUserInfo';
 
 const ConferenceJoinForm: FC = () => {
   const router = useRouter();
 
-  const persistedName = useUserInfo.use.name();
-  const name = useClientSideValue(persistedName, '');
+  const name = useClientSideValue(useGuestUserInfo.use.name(), '');
 
   const handleNameSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
     event.preventDefault();
@@ -38,7 +37,7 @@ const ConferenceJoinForm: FC = () => {
           required
           hiddenLabel
           value={name}
-          onChange={(e) => useUserInfo.setState({ name: e.target.value })}
+          onChange={(e) => useGuestUserInfo.setState({ name: e.target.value })}
         />
         <LoadingButton
           type="submit"

@@ -1,2 +1,2 @@
 export * from './callMediaPermissions';
-export * from './userInfo';
+export * from './guestUserInfo';
