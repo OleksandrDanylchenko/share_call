@@ -47,9 +47,4 @@ const catchphrase = css`
   font-weight: 400;
 `;
 
-export const getServerSideProps = async (ctx: GetSessionParams) => {
-  const session = await getSession(ctx);
-  return { props: { session } };
-};
-
 export default Home;
