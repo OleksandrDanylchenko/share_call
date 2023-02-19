@@ -33,6 +33,7 @@
     "agora-rtc-sdk-ng": "^4.16.1",
     "auto-zustand-selectors-hook": "^2.0.0",
     "clsx": "^1.2.1",
+    "immer": "^9.0.19",
     "lodash": "^4.17.21",
     "material-ui-popup-state": "^5.0.4",
     "next": "13.1.1",

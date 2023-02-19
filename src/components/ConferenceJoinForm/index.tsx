@@ -15,7 +15,10 @@ import { useGuestUserInfo } from '@/store/guestUserInfo';
 const ConferenceJoinForm: FC = () => {
   const router = useRouter();
 
-  const name = useClientSideValue(useGuestUserInfo.use.name(), '');
+  const guestName = useGuestUserInfo.use.guest?.()?.name;
+  const createOrUpdateGuest = useGuestUserInfo.use.createOrUpdateGuest();
+
+  const name = useClientSideValue(guestName, '');
 
   const handleNameSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
     event.preventDefault();
@@ -37,7 +40,7 @@ const ConferenceJoinForm: FC = () => {
           required
           hiddenLabel
           value={name}
-          onChange={(e) => useGuestUserInfo.setState({ name: e.target.value })}
+          onChange={(e) => createOrUpdateGuest(e.target.value)}
         />
         <LoadingButton
           type="submit"
