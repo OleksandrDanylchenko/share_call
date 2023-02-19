@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import useAsyncEffect from 'use-async-effect';
 
@@ -15,15 +15,24 @@ export const useLocalTracks = (): {
   const [localTracks, setLocalTracks] = useState<AgoraTracks>();
   const [errorCode, setErrorCode] = useState<AgoraRTCErrorCode>();
 
+  const localTracksRequested = useRef(false);
+
   useAsyncEffect(async () => {
+    /**
+     * Prevents the tracks from being requested multiple times
+     * and having unreached zombie tracks
+     */
+    if (localTracksRequested.current) return;
+    localTracksRequested.current = true;
+
     try {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
       const tracks = await AgoraRTC.createMicrophoneAndCameraTracks(
         audioConfig,
         videoConfig,
       );
+
       setLocalTracks(tracks);
-      setErrorCode(undefined); // Resets the error when permissions are granted on retry
     } catch (error: any) {
       if (error.name === 'AgoraRTCException') {
         setErrorCode(error.code);
