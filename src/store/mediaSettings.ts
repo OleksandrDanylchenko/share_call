@@ -8,16 +8,25 @@ import {
 } from 'auto-zustand-selectors-hook';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
+
+import { DeviceType } from '@/types/agora';
 
 interface State {
   microphone: MicrophoneAudioTrackInitConfig & { enabled: boolean };
   camera: CameraVideoTrackInitConfig & { enabled: boolean };
 }
 
+interface Actions {
+  setEnabled(deviceType: DeviceType, enabled: boolean): void;
+}
+
+type Store = State & Actions;
+
 // Create zustand store for call media permissions including microphone and camera. Persist to local storage.
-const useMediaSettingsBase = create<State>()(
+const useMediaSettingsBase = create<Store>()(
   persist(
-    (_set) => ({
+    immer((set) => ({
       microphone: { enabled: true },
       camera: {
         enabled: true,
@@ -26,7 +35,11 @@ const useMediaSettingsBase = create<State>()(
           height: { min: 480, ideal: 1080, max: 1080 },
         },
       },
-    }),
+      setEnabled: (deviceType, enabled) =>
+        set((state) => {
+          state[deviceType].enabled = enabled;
+        }),
+    })),
     {
       name: 'media-settings-storage',
       partialize: (state) => {
@@ -44,4 +57,4 @@ const useMediaSettingsBase = create<State>()(
 
 export const useMediaSettings = createSelectorFunctions(
   useMediaSettingsBase,
-) as typeof useMediaSettingsBase & ZustandFuncSelectors<State>;
+) as typeof useMediaSettingsBase & ZustandFuncSelectors<Store>;

@@ -23,6 +23,7 @@ import {
   fullHeight,
   viewportHeight,
 } from '@/styles/mixins';
+import { DeviceType } from '@/types/agora';
 
 import { useMediaSettings } from '@/store/index';
 
@@ -47,18 +48,19 @@ const Preview: FC = () => {
     useMediaSettings.use.microphone().enabled,
     true,
   );
+  const setEnabled = useMediaSettings.use.setEnabled();
 
   const handleDeviceChange =
-    (deviceType: 'microphone' | 'camera') =>
+    (deviceType: DeviceType) =>
     (device: MediaDeviceInfo): void => {
       const track = deviceType === 'microphone' ? microphoneTrack : cameraTrack;
       track?.setDevice(device.deviceId);
     };
 
   const handleCallPermissionChange =
-    (deviceType: 'microphone' | 'camera') =>
+    (deviceType: DeviceType) =>
     (enabled: boolean): void =>
-      useMediaSettings.setState({ [deviceType]: enabled });
+      setEnabled(deviceType, enabled);
 
   useEffect(() => {
     const { current: previewCameraContainer } = previewCameraContainerRef;

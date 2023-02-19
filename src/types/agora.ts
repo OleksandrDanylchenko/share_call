@@ -93,3 +93,5 @@ export enum AgoraRTCErrorCode {
 }
 
 export type AgoraTracks = [IMicrophoneAudioTrack, ICameraVideoTrack];
+
+export type DeviceType = 'microphone' | 'camera';
