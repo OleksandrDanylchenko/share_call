@@ -5,7 +5,6 @@ import MicIcon from '@mui/icons-material/Mic';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import ReportIcon from '@mui/icons-material/Report';
 import {
-  Box,
   Button,
   Container,
   Skeleton,
@@ -38,9 +37,12 @@ const Preview: FC = () => {
     errorCode: tracksErrorCode,
     stopTracks,
   } = useLocalTracks();
-  const [audioTrack, cameraTrack] = localTracks || [null, null];
+  const [microphoneTrack, cameraTrack] = localTracks || [null, null];
 
-  const microphoneAllowed = useCallMediaPermissions.use.microphone();
+  const microphoneAllowed = useClientValue(
+    useCallMediaPermissions.use.microphone(),
+    true,
+  );
   const cameraAllowed = useClientValue(
     useCallMediaPermissions.use.camera(),
     true,
@@ -49,14 +51,14 @@ const Preview: FC = () => {
   const handleDeviceChange =
     (deviceType: 'microphone' | 'camera') =>
     (device: MediaDeviceInfo): void => {
-      const track = deviceType === 'microphone' ? audioTrack : cameraTrack;
+      const track = deviceType === 'microphone' ? microphoneTrack : cameraTrack;
       track?.setDevice(device.deviceId);
     };
 
   const handleCallPermissionChange =
     (deviceType: 'microphone' | 'camera') =>
     (enabled: boolean): void => {
-      const track = deviceType === 'microphone' ? audioTrack : cameraTrack;
+      const track = deviceType === 'microphone' ? microphoneTrack : cameraTrack;
       track?.setEnabled(enabled);
       useCallMediaPermissions.setState({ [deviceType]: enabled });
     };
@@ -163,11 +165,11 @@ const Preview: FC = () => {
                   {isLoadingTracks && (
                     <Skeleton variant="rounded" width="100%" height={40} />
                   )}
-                  {audioTrack && (
+                  {microphoneTrack && (
                     <>
                       <DeviceSelector
                         deviceType="microphone"
-                        initialDeviceLabel={audioTrack.getTrackLabel()}
+                        initialDeviceLabel={microphoneTrack.getTrackLabel()}
                         onChange={handleDeviceChange('microphone')}
                       />
                       <SwitchWithPopover
