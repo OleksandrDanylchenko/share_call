@@ -62,11 +62,25 @@ export const useLocalTracks = (): {
     [cameraEnabled, cameraTrack],
   );
 
+  const cameraId = useMediaSettings.use.camera().cameraId;
+  useAsyncEffect(() => {
+    if (cameraId) {
+      cameraTrack?.setDevice(cameraId);
+    }
+  }, [cameraId, cameraTrack]);
+
   const microphoneEnabled = useMediaSettings.use.microphone().enabled;
   useAsyncEffect(
     () => microphoneTrack?.setEnabled(microphoneEnabled),
     [microphoneEnabled, microphoneTrack],
   );
+
+  const microphoneId = useMediaSettings.use.microphone().microphoneId;
+  useAsyncEffect(() => {
+    if (microphoneId) {
+      microphoneTrack?.setDevice(microphoneId);
+    }
+  }, [microphoneEnabled, microphoneTrack]);
 
   return { isLoading, localTracks, errorCode, stopTracks };
 };

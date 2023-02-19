@@ -19,6 +19,7 @@ interface State {
 
 interface Actions {
   setEnabled(deviceType: DeviceType, enabled: boolean): void;
+  setDeviceId(deviceType: DeviceType, id: string): void;
 }
 
 type Store = State & Actions;
@@ -39,18 +40,21 @@ const useMediaSettingsBase = create<Store>()(
         set((state) => {
           state[deviceType].enabled = enabled;
         }),
+      setDeviceId(deviceType, id) {
+        set((state) => {
+          switch (deviceType) {
+            case 'microphone':
+              state.microphone.microphoneId = id;
+              break;
+            case 'camera':
+              state.camera.cameraId = id;
+              break;
+          }
+        });
+      },
     })),
     {
       name: 'media-settings-storage',
-      partialize: (state) => {
-        const { microphone, camera } = state;
-
-        // Don't store devices ids as the likely to change
-        const { microphoneId: _mid, ...microphoneSettings } = microphone;
-        const { cameraId: _cid, facingMode: _fm, ...cameraSettings } = camera;
-
-        return { microphone: microphoneSettings, camera: cameraSettings };
-      },
     },
   ),
 );

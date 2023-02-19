@@ -49,13 +49,12 @@ const Preview: FC = () => {
     true,
   );
   const setEnabled = useMediaSettings.use.setEnabled();
+  const setDeviceId = useMediaSettings.use.setDeviceId();
 
   const handleDeviceChange =
     (deviceType: DeviceType) =>
-    (device: MediaDeviceInfo): void => {
-      const track = deviceType === 'microphone' ? microphoneTrack : cameraTrack;
-      track?.setDevice(device.deviceId);
-    };
+    (device: MediaDeviceInfo): void =>
+      setDeviceId(deviceType, device.deviceId);
 
   const handleCallPermissionChange =
     (deviceType: DeviceType) =>
