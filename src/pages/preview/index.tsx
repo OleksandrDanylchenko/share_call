@@ -24,7 +24,7 @@ import {
   viewportHeight,
 } from '@/styles/mixins';
 
-import { useCallMediaPermissions } from '@/store/index';
+import { useMediaSettings } from '@/store/index';
 
 const Preview: FC = () => {
   const router = useRouter();
@@ -39,12 +39,12 @@ const Preview: FC = () => {
   } = useLocalTracks();
   const [microphoneTrack, cameraTrack] = localTracks || [null, null];
 
-  const microphoneAllowed = useClientValue(
-    useCallMediaPermissions.use.microphone(),
+  const cameraAllowed = useClientValue(
+    useMediaSettings.use.camera().allowed,
     true,
   );
-  const cameraAllowed = useClientValue(
-    useCallMediaPermissions.use.camera(),
+  const microphoneAllowed = useClientValue(
+    useMediaSettings.use.microphone().allowed,
     true,
   );
 
@@ -58,7 +58,7 @@ const Preview: FC = () => {
   const handleCallPermissionChange =
     (deviceType: 'microphone' | 'camera') =>
     (enabled: boolean): void =>
-      useCallMediaPermissions.setState({ [deviceType]: enabled });
+      useMediaSettings.setState({ [deviceType]: enabled });
 
   useEffect(() => {
     const { current: previewCameraContainer } = previewCameraContainerRef;

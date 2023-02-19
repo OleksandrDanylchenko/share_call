@@ -2,10 +2,9 @@ import { useCallback, useRef, useState } from 'react';
 
 import useAsyncEffect from 'use-async-effect';
 
-import { audioConfig, videoConfig } from '@/constants/index';
 import { AgoraRTCErrorCode, AgoraTracks } from '@/types/agora';
 
-import { useCallMediaPermissions } from '@/store/callMediaPermissions';
+import { useMediaSettings } from '@/store/mediaSettings';
 
 export const useLocalTracks = (): {
   isLoading: boolean;
@@ -22,6 +21,9 @@ export const useLocalTracks = (): {
 
   const [errorCode, setErrorCode] = useState<AgoraRTCErrorCode>();
 
+  const microphoneSettings = useMediaSettings.use.microphone();
+  const cameraSettings = useMediaSettings.use.camera();
+
   useAsyncEffect(async () => {
     /**
      * Prevents the tracks from being requested multiple times
@@ -33,8 +35,8 @@ export const useLocalTracks = (): {
     try {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
       const tracks = await AgoraRTC.createMicrophoneAndCameraTracks(
-        audioConfig,
-        videoConfig,
+        microphoneSettings,
+        cameraSettings,
       );
 
       setLocalTracks(tracks);
@@ -45,7 +47,7 @@ export const useLocalTracks = (): {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [microphoneSettings, cameraSettings]);
 
   const stopTracks = useCallback(() => {
     localTracks?.forEach((track) => {
@@ -54,13 +56,13 @@ export const useLocalTracks = (): {
     });
   }, [localTracks]);
 
-  const cameraAllowed = useCallMediaPermissions.use.camera();
+  const cameraAllowed = useMediaSettings.use.camera().allowed;
   useAsyncEffect(
     () => cameraTrack?.setEnabled(cameraAllowed),
     [cameraAllowed, cameraTrack],
   );
 
-  const microphoneAllowed = useCallMediaPermissions.use.microphone();
+  const microphoneAllowed = useMediaSettings.use.microphone().allowed;
   useAsyncEffect(
     () => microphoneTrack?.setEnabled(microphoneAllowed),
     [microphoneAllowed, microphoneTrack],
