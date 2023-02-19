@@ -57,11 +57,8 @@ const Preview: FC = () => {
 
   const handleCallPermissionChange =
     (deviceType: 'microphone' | 'camera') =>
-    (enabled: boolean): void => {
-      const track = deviceType === 'microphone' ? microphoneTrack : cameraTrack;
-      track?.setEnabled(enabled);
+    (enabled: boolean): void =>
       useCallMediaPermissions.setState({ [deviceType]: enabled });
-    };
 
   useEffect(() => {
     const { current: previewCameraContainer } = previewCameraContainerRef;
