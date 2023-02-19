@@ -1,20 +1,18 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import useAsyncEffect from 'use-async-effect';
 
 import { audioConfig, videoConfig } from '@/constants/index';
 import { AgoraRTCErrorCode, AgoraTracks } from '@/types/agora';
 
-// Local tracks should be obtained only once and then cached as singletons
-let localTracksCache: AgoraTracks;
-
 export const useLocalTracks = (): {
   isLoading: boolean;
   localTracks?: AgoraTracks;
   errorCode?: AgoraRTCErrorCode;
+  stopTracks: () => void;
 } => {
-  const [isLoading, setLoading] = useState(!localTracksCache);
-  const [localTracks, setLocalTracks] = useState<AgoraTracks>(localTracksCache);
+  const [isLoading, setLoading] = useState(true);
+  const [localTracks, setLocalTracks] = useState<AgoraTracks>();
   const [errorCode, setErrorCode] = useState<AgoraRTCErrorCode>();
 
   useAsyncEffect(async () => {
@@ -26,8 +24,6 @@ export const useLocalTracks = (): {
       );
       setLocalTracks(tracks);
       setErrorCode(undefined); // Resets the error when permissions are granted on retry
-
-      localTracksCache = tracks;
     } catch (error: any) {
       if (error.name === 'AgoraRTCException') {
         setErrorCode(error.code);
@@ -37,5 +33,12 @@ export const useLocalTracks = (): {
     }
   }, []);
 
-  return { isLoading, localTracks, errorCode };
+  const stopTracks = useCallback(() => {
+    localTracks?.forEach((track) => {
+      track.stop();
+      track.close();
+    });
+  }, [localTracks]);
+
+  return { isLoading, localTracks, errorCode, stopTracks };
 };
