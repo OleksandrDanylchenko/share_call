@@ -32,14 +32,11 @@ export const useLocalTracks = (): {
     if (localTracksRequested.current) return;
     localTracksRequested.current = true;
 
-    const { enabled: _eMic, ...microphoneConfig } = microphoneSettings;
-    const { enabled: _eCam, ...cameraConfig } = cameraSettings;
-
     try {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
       const tracks = await AgoraRTC.createMicrophoneAndCameraTracks(
-        microphoneConfig,
-        cameraConfig,
+        microphoneSettings,
+        cameraSettings,
       );
 
       setLocalTracks(tracks);
