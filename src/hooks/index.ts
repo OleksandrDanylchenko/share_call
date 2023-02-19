@@ -1,4 +1,4 @@
-export * from './useClientSideValue';
+export * from './useClientValue';
 export * from './useCurrentUser';
 export * from './useCompliment';
 export * from './useLocalStorage';

@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 
 import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
-import { useCompliment, useLocalTracks } from '@/hooks/index';
+import { useClientValue, useCompliment, useLocalTracks } from '@/hooks/index';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
@@ -40,12 +40,11 @@ const Preview: FC = () => {
   } = useLocalTracks();
   const [audioTrack, cameraTrack] = localTracks || [null, null];
 
-  useEffect(() => {
-    const { current: previewCameraContainer } = previewCameraContainerRef;
-    if (!cameraTrack || !previewCameraContainer) return;
-
-    cameraTrack.play(previewCameraContainer);
-  }, [cameraTrack]);
+  const microphoneAllowed = useCallMediaPermissions.use.microphone();
+  const cameraAllowed = useClientValue(
+    useCallMediaPermissions.use.camera(),
+    true,
+  );
 
   const handleDeviceChange =
     (deviceType: 'microphone' | 'camera') =>
@@ -54,12 +53,24 @@ const Preview: FC = () => {
       track?.setDevice(device.deviceId);
     };
 
-  const microphoneAllowed = useCallMediaPermissions.use.microphone();
-  const cameraAllowed = useCallMediaPermissions.use.camera();
   const handleCallPermissionChange =
     (deviceType: 'microphone' | 'camera') =>
-    (enabled: boolean): void =>
+    (enabled: boolean): void => {
+      const track = deviceType === 'microphone' ? audioTrack : cameraTrack;
+      track?.setEnabled(enabled);
       useCallMediaPermissions.setState({ [deviceType]: enabled });
+    };
+
+  useEffect(() => {
+    const { current: previewCameraContainer } = previewCameraContainerRef;
+    if (!cameraTrack || !previewCameraContainer) return;
+
+    if (cameraAllowed) {
+      cameraTrack.play(previewCameraContainer);
+    } else {
+      cameraTrack.stop();
+    }
+  }, [cameraAllowed, cameraTrack]);
 
   const compliment = useCompliment();
 
@@ -87,31 +98,31 @@ const Preview: FC = () => {
               {tracksErrorCode && 'Cannot obtain devices'}
               {localTracks && `You look ${compliment} ✨`}
             </Typography>
-            <Box
+            <Stack
               ref={previewCameraContainerRef}
+              alignItems="center"
+              justifyContent="center"
+              gap={3}
+              width="90%"
+              height={300}
               sx={{
                 position: 'relative',
                 borderRadius: 2,
                 overflow: 'hidden',
               }}
-              width="90%"
-              height={300}
             >
               <Skeleton
-                sx={{ position: 'absolute' }}
                 variant="rounded"
                 width="100%"
                 height="100%"
-                animation={tracksErrorCode ? false : 'pulse'}
+                animation={tracksErrorCode || !cameraAllowed ? false : 'pulse'}
+                sx={{ position: 'absolute' }}
               />
+              {!cameraAllowed && (
+                <Typography variant="h5">Camera is disabled</Typography>
+              )}
               {tracksErrorCode && (
-                <Stack
-                  alignItems="center"
-                  justifyContent="center"
-                  gap={3}
-                  width="100%"
-                  height="100%"
-                >
+                <>
                   <ReportIcon fontSize="large" color="error" />
                   <Typography variant="body1" color="error" textAlign="center">
                     We couldn&apos;t obtain your media devices. <br />
@@ -120,9 +131,9 @@ const Preview: FC = () => {
                   <Typography variant="body2" color="error">
                     Error code: {tracksErrorCode}
                   </Typography>
-                </Stack>
+                </>
               )}
-            </Box>
+            </Stack>
             {!tracksErrorCode && (
               <>
                 <Stack direction="row" alignItems="center" gap={2} width="90%">

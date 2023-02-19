@@ -8,7 +8,7 @@ import {
   joinFormWrapper,
   nameForm,
 } from '@/components/ConferenceJoinForm/styles';
-import { useClientSideValue } from '@/hooks/index';
+import { useClientValue } from '@/hooks/index';
 
 import { useGuestUserInfo } from '@/store/guestUserInfo';
 
@@ -18,7 +18,7 @@ const ConferenceJoinForm: FC = () => {
   const guestName = useGuestUserInfo.use.guest?.()?.name;
   const createOrUpdateGuest = useGuestUserInfo.use.createOrUpdateGuest();
 
-  const name = useClientSideValue(guestName, '');
+  const name = useClientValue(guestName, '');
 
   const handleNameSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
     event.preventDefault();
