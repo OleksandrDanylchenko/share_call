@@ -13,7 +13,7 @@ import {
   Theme,
   Typography,
 } from '@mui/material';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
@@ -28,12 +28,15 @@ import {
 import { useCallMediaPermissions } from '@/store/index';
 
 const Preview: FC = () => {
+  const router = useRouter();
+
   const previewCameraContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     isLoading: isLoadingTracks,
     localTracks,
     errorCode: tracksErrorCode,
+    stopTracks,
   } = useLocalTracks();
   const [audioTrack, cameraTrack] = localTracks || [null, null];
 
@@ -42,7 +45,6 @@ const Preview: FC = () => {
     if (!cameraTrack || !previewCameraContainer) return;
 
     cameraTrack.play(previewCameraContainer);
-    return () => cameraTrack.stop();
   }, [cameraTrack]);
 
   const handleDeviceChange =
@@ -60,6 +62,10 @@ const Preview: FC = () => {
       useCallMediaPermissions.setState({ [deviceType]: enabled });
 
   const compliment = useCompliment();
+
+  const handleCancelClick = (): void => {
+    router.push('/').finally(stopTracks);
+  };
 
   return (
     <main css={[viewportHeight, doubleColorGradient]}>
@@ -177,28 +183,31 @@ const Preview: FC = () => {
                 <>
                   <Skeleton
                     variant="rounded"
+                    width="50%"
                     height={44}
-                    sx={{ borderRadius: 30, flex: 0.5 }}
+                    sx={{ borderRadius: 30 }}
                   />
                   <Skeleton
                     variant="rounded"
+                    width="100%"
                     height={44}
-                    sx={{ borderRadius: 30, flex: 1 }}
+                    sx={{ borderRadius: 30 }}
                   />
                 </>
               ) : (
                 <>
-                  <Link href="/" css={cancelLink}>
-                    <Button variant="outlined" color="inherit" fullWidth>
-                      Cancel
-                    </Button>
-                  </Link>
+                  <Button
+                    variant="outlined"
+                    color="inherit"
+                    onClick={handleCancelClick}
+                    sx={{ width: '50%' }}
+                  >
+                    Cancel
+                  </Button>
                   {!tracksErrorCode && (
-                    <Link href="/conference" css={joinLink}>
-                      <Button variant="contained" fullWidth>
-                        Join
-                      </Button>
-                    </Link>
+                    <Button variant="contained" fullWidth>
+                      Join
+                    </Button>
                   )}
                 </>
               )}
@@ -227,13 +236,5 @@ const previewTitle = (
     color: ${error ? errorColor : whiteColor};
   `;
 };
-
-const cancelLink = css`
-  flex: 0.5;
-`;
-
-const joinLink = css`
-  flex: 1;
-`;
 
 export default Preview;
