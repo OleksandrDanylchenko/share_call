@@ -65,7 +65,13 @@ const Preview: FC = () => {
     <main css={[viewportHeight, doubleColorGradient]}>
       <Container css={fullHeight}>
         <Stack css={fullHeight} alignItems="center" justifyContent="center">
-          <Stack css={previewWrapper} alignItems="center" gap={2}>
+          <Stack
+            css={blurBackgroundContainer}
+            alignItems="center"
+            gap={2}
+            width="90%"
+            maxWidth={777}
+          >
             <Typography
               variant="h4"
               css={(theme) => previewTitle(theme, { error: !!tracksErrorCode })}
@@ -203,12 +209,6 @@ const Preview: FC = () => {
     </main>
   );
 };
-
-const previewWrapper = (theme: Theme): SerializedStyles => css`
-  width: 90%;
-  max-width: 777px;
-  ${blurBackgroundContainer(theme)};
-`;
 
 const previewTitle = (
   theme: Theme,
