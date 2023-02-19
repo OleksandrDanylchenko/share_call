@@ -20,7 +20,7 @@ import useAsyncEffect from 'use-async-effect';
 import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
 import { audioConfig, videoConfig } from '@/constants/index';
-import { useCompliment } from '@/hooks/useCompliment';
+import { useCompliment } from '@/hooks/index';
 import {
   blurBackgroundContainer,
   doubleColorGradient,

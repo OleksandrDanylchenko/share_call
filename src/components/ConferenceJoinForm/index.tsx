@@ -8,7 +8,7 @@ import {
   joinFormWrapper,
   nameForm,
 } from '@/components/ConferenceJoinForm/styles';
-import { useClientSideValue } from '@/hooks/useClientSideValue';
+import { useClientSideValue } from '@/hooks/index';
 
 import { useGuestUserInfo } from '@/store/guestUserInfo';
 
