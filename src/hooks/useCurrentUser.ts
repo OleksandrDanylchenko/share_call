@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 
 import { User } from 'next-auth';
 import { SessionContextValue, useSession } from 'next-auth/react';
@@ -13,23 +13,29 @@ export const useCurrentUser = <R extends boolean>(
   status: SessionContextValue['status'];
   isLoading: boolean;
 } => {
+  const [isLoading, setLoading] = useState(true);
   const [user, setUser] = useState<User>();
 
   const { data: session, status } = useSession();
-  const isLoading = status === 'loading';
-
   const guest = useGuestUserInfo.use.guest?.();
 
   useEffect(() => {
-    if (isLoading || user) return;
+    if (status === 'loading' || user) return;
 
+    /**
+     * Setting values on the same render cycle
+     * Ensures that when isLoading === false -> user is set
+     */
     const currentUser = session?.user || guest;
-    setUser(currentUser);
+    startTransition(() => {
+      setUser(currentUser);
+      setLoading(false);
+    });
 
     if (options?.required && !currentUser?.name) {
       options.onUnauthenticated?.();
     }
-  }, [guest, isLoading, options, session?.user, user]);
+  }, [guest, options, session?.user, status, user]);
 
   return { user, status, isLoading };
 };
