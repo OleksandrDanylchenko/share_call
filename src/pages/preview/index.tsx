@@ -37,7 +37,7 @@ const Preview: FC = () => {
 
   const previewCameraContainerRef = useRef<HTMLDivElement>(null);
 
-  const { isLoading: isLoadingUser } = useCurrentUser({
+  const { isLoading: isLoadingUser, user } = useCurrentUser({
     required: true,
     onUnauthenticated: () => router.replace('/'),
   });
@@ -88,9 +88,12 @@ const Preview: FC = () => {
     router.push('/').finally(stopTracks);
   };
 
-  // const updateUserTracks = useCallTracks.use.updateUserTracks();
+  const updateUserTracks = useCallTracks.use.updateUserTracks();
   const handleJoinClick = (): void => {
-    router.push('/call');
+    if (user?.id && localTracks) {
+      updateUserTracks(user.id, localTracks);
+      router.push('/call');
+    }
   };
 
   return (
