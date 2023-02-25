@@ -51,7 +51,7 @@ export const doubleColorGradient = (
   `;
 };
 
-export const borderInset = (
+export const shadowInset = (
   theme: Theme,
   options: { blurRadius?: string; spreadRadius?: string; color?: string } = {},
 ): SerializedStyles => {
