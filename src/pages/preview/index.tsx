@@ -122,11 +122,9 @@ const Preview: FC = () => {
               gap={3}
               width="90%"
               height={300}
-              sx={{
-                position: 'relative',
-                borderRadius: 2,
-                overflow: 'hidden',
-              }}
+              position="relative"
+              borderRadius={8}
+              overflow="hidden"
             >
               <Skeleton
                 variant="rounded"
