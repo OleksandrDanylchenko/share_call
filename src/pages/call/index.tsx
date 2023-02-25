@@ -1,11 +1,11 @@
 import { FC, useEffect } from 'react';
 
+import { Container, LinearProgress, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import { useAgoraRtcClient } from '@/hooks/useAgoraRtcClient';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useCallTracks } from '@/store/callTracks';
-import { doubleColorGradient, fullViewport } from '@/styles/mixins';
+import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
 
 const Call: FC = () => {
   const router = useRouter();
@@ -27,8 +27,20 @@ const Call: FC = () => {
   }, [currentUserTracks, isLoadingUser, router]);
 
   return (
-    <main css={[fullViewport, doubleColorGradient]}>
-      {isLoadingUser ? 'Loading user' : 'User'}
+    <main
+      css={(theme) => [
+        fullViewport,
+        doubleColorGradient(theme, { centerOffset: 25 }),
+      ]}
+    >
+      <Container css={fullHeight}>
+        <Stack css={fullHeight} alignItems="center" justifyContent="center">
+          <Stack gap={5} padding={10} borderRadius={5}>
+            <Typography variant="h2">Joining the call...</Typography>
+            <LinearProgress color="inherit" />
+          </Stack>
+        </Stack>
+      </Container>
     </main>
   );
 };

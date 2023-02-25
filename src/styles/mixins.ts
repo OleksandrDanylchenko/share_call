@@ -12,16 +12,22 @@ export const fullViewport = css`
 
 export const doubleColorGradient = (
   theme: Theme,
-  options: { colorStart?: string; colorEnd?: string; deg?: number } = {},
+  options: {
+    colorStart?: string;
+    colorEnd?: string;
+    deg?: number;
+    centerOffset?: number; // How far from the center the gradient should be
+  } = {},
 ): SerializedStyles => {
   const {
     palette: { warning, primary },
   } = theme;
 
-  const { colorStart, colorEnd, deg } = {
+  const { colorStart, colorEnd, deg, centerOffset } = {
     colorStart: warning.light,
     colorEnd: primary.dark,
     deg: 30,
+    centerOffset: 0,
     ...options,
   };
 
@@ -29,10 +35,30 @@ export const doubleColorGradient = (
     background: linear-gradient(
       ${deg}deg,
       ${colorStart} -60%,
-      transparent 50%,
-      transparent 50%,
+      transparent ${50 - centerOffset}%,
+      transparent ${50 + centerOffset}%,
       ${colorEnd} 160%
     );
+  `;
+};
+
+export const borderInset = (
+  theme: Theme,
+  options: { blurRadius?: string; spreadRadius?: string; color?: string } = {},
+): SerializedStyles => {
+  const {
+    palette: { primary },
+  } = theme;
+
+  const { blurRadius, spreadRadius, color } = {
+    color: primary.main,
+    blurRadius: '20px',
+    spreadRadius: '2px',
+    ...options,
+  };
+
+  return css`
+    box-shadow: inset 0 0 ${blurRadius} ${spreadRadius} ${color};
   `;
 };
 

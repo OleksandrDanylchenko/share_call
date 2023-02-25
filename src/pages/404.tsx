@@ -1,15 +1,7 @@
 import React, { FC } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
-import {
-  Box,
-  Button,
-  Divider,
-  Stack,
-  Theme,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Box, Button, Divider, Stack, Theme, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -20,20 +12,13 @@ import { doubleColorGradient, fullViewport } from '@/styles/mixins';
 const Autoline404: FC = () => {
   const router = useRouter();
 
-  const {
-    palette: {
-      warning: { dark: warningColor },
-      error: { light: errorColor },
-    },
-  } = useTheme();
-
   return (
     <Stack
       css={(theme) => [
         fullViewport,
         doubleColorGradient(theme, {
-          colorStart: warningColor,
-          colorEnd: errorColor,
+          colorStart: theme.palette.warning.dark,
+          colorEnd: theme.palette.error.light,
         }),
       ]}
       alignItems="center"
