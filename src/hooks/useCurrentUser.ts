@@ -33,7 +33,7 @@ export const useCurrentUser = (
      */
     const currentUser = session?.user || guest;
     startTransition(() => {
-      if (!currentUser?.name) {
+      if (currentUser?.name) {
         setUser(currentUser);
         setLoading(false);
       } else {
