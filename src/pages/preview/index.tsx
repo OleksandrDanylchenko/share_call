@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
 import { useClientValue, useCompliment, useLocalTracks } from '@/hooks/index';
+import { useMediaSettings } from '@/store/index';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
@@ -24,8 +25,6 @@ import {
   viewportHeight,
 } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
-
-import { useMediaSettings } from '@/store/index';
 
 const Preview: FC = () => {
   const router = useRouter();

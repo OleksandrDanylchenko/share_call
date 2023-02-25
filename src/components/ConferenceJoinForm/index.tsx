@@ -1,4 +1,4 @@
-import React, { FC, FormEventHandler, useLayoutEffect } from 'react';
+import React, { FC, FormEventHandler, useEffect } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { Stack, TextField, Typography } from '@mui/material';
@@ -9,7 +9,6 @@ import {
   nameForm,
 } from '@/components/ConferenceJoinForm/styles';
 import { useClientValue } from '@/hooks/index';
-
 import { useGuestUserInfo } from '@/store/guestUserInfo';
 
 const ConferenceJoinForm: FC = () => {
@@ -18,10 +17,12 @@ const ConferenceJoinForm: FC = () => {
   const guestName = useGuestUserInfo.use.guest?.()?.name;
   const createOrUpdateGuest = useGuestUserInfo.use.createOrUpdateGuest();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     // TODO Make this happen on "Continue as guest" click
-    createOrUpdateGuest('');
-  }, [createOrUpdateGuest]);
+    if (!guestName) {
+      createOrUpdateGuest('');
+    }
+  }, [createOrUpdateGuest, guestName]);
 
   const name = useClientValue(guestName, '');
 
