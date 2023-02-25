@@ -26,7 +26,7 @@ export const useCurrentUser = <R extends boolean>(
     const currentUser = session?.user || guest;
     setUser(currentUser);
 
-    if (options?.required && !currentUser) {
+    if (options?.required && !currentUser?.name) {
       options.onUnauthenticated?.();
     }
   }, [guest, isLoading, options, session?.user, user]);
