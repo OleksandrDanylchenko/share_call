@@ -28,13 +28,15 @@ export const useCurrentUser = <R extends boolean>(
      */
     const currentUser = session?.user || guest;
     startTransition(() => {
-      setUser(currentUser);
-      setLoading(false);
-    });
+      if (currentUser?.name) {
+        setUser(currentUser);
+        setLoading(false);
+      }
 
-    if (options?.required && !currentUser?.name) {
-      options.onUnauthenticated?.();
-    }
+      if (options?.required) {
+        options.onUnauthenticated?.();
+      }
+    });
   }, [guest, options, session?.user, status, user]);
 
   return { user, status, isLoading };
