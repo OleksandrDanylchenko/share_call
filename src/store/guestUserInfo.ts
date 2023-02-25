@@ -8,14 +8,14 @@ import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
 interface State {
-  guest?: {
+  guest: {
     id: string;
     name: string;
   };
 }
 
 interface Actions {
-  createOrUpdateGuest: (name: string) => void;
+  updateGuestName: (name: string) => void;
 }
 
 type Store = State & Actions;
@@ -23,9 +23,12 @@ type Store = State & Actions;
 const useGuestUserInfoBase = create<Store>()(
   persist(
     immer((set) => ({
-      createOrUpdateGuest: (name) =>
+      guest: {
+        id: uuidv4(),
+        name: '',
+      },
+      updateGuestName: (name) =>
         set((state) => {
-          state.guest ||= { id: uuidv4(), name: '' };
           state.guest.name = name;
         }),
     })),

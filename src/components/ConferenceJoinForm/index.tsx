@@ -1,4 +1,4 @@
-import React, { FC, FormEventHandler, useEffect } from 'react';
+import React, { FC, FormEventHandler } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { Stack, TextField, Typography } from '@mui/material';
@@ -15,14 +15,7 @@ const ConferenceJoinForm: FC = () => {
   const router = useRouter();
 
   const guestName = useGuestUserInfo.use.guest?.()?.name;
-  const createOrUpdateGuest = useGuestUserInfo.use.createOrUpdateGuest();
-
-  useEffect(() => {
-    // TODO Make this happen on "Continue as guest" click
-    if (!guestName) {
-      createOrUpdateGuest('');
-    }
-  }, [createOrUpdateGuest, guestName]);
+  const updateGuestName = useGuestUserInfo.use.updateGuestName();
 
   const name = useClientValue(guestName, '');
 
@@ -45,8 +38,8 @@ const ConferenceJoinForm: FC = () => {
           fullWidth
           required
           hiddenLabel
-          value={name || ''}
-          onChange={(e) => createOrUpdateGuest(e.target.value)}
+          value={name}
+          onChange={(e) => updateGuestName(e.target.value)}
         />
         <LoadingButton
           type="submit"
