@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import logo from '@/assets/logo.png';
-import { doubleColorGradient } from '@/styles/mixins';
+import { doubleColorGradient, fullViewport } from '@/styles/mixins';
 
 const Autoline404: FC = () => {
   const router = useRouter();
@@ -29,16 +29,15 @@ const Autoline404: FC = () => {
 
   return (
     <Stack
-      css={(theme) =>
+      css={(theme) => [
+        fullViewport,
         doubleColorGradient(theme, {
           colorStart: warningColor,
           colorEnd: errorColor,
-        })
-      }
+        }),
+      ]}
       alignItems="center"
       justifyContent="center"
-      width="100vw"
-      height="100vh"
     >
       <Link css={logoStyles} href="/">
         <Image

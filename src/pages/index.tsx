@@ -4,14 +4,10 @@ import { type NextPage } from 'next';
 
 import ConferenceJoinForm from '@/components/ConferenceJoinForm';
 import StringsRotator from '@/components/StringsRotator';
-import {
-  doubleColorGradient,
-  fullHeight,
-  viewportHeight,
-} from '@/styles/mixins';
+import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
 
 const Home: NextPage = () => (
-  <main css={[viewportHeight, doubleColorGradient]}>
+  <main css={[fullViewport, doubleColorGradient]}>
     <Container css={fullHeight}>
       <Stack
         css={fullHeight}

@@ -5,7 +5,8 @@ export const fullHeight = css`
   height: 100%;
 `;
 
-export const viewportHeight = css`
+export const fullViewport = css`
+  width: 100vw;
   height: 100vh;
 `;
 

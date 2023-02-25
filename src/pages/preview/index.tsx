@@ -22,7 +22,7 @@ import {
   blurBackgroundContainer,
   doubleColorGradient,
   fullHeight,
-  viewportHeight,
+  fullViewport,
 } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
 
@@ -78,7 +78,7 @@ const Preview: FC = () => {
   };
 
   return (
-    <main css={[viewportHeight, doubleColorGradient]}>
+    <main css={[fullViewport, doubleColorGradient]}>
       <Container css={fullHeight}>
         <Stack css={fullHeight} alignItems="center" justifyContent="center">
           <Stack
