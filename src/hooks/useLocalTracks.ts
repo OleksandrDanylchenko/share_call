@@ -2,9 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import useAsyncEffect from 'use-async-effect';
 
-import { AgoraRTCErrorCode, AgoraTracks } from '@/types/agora';
-
 import { useMediaSettings } from '@/store/mediaSettings';
+import { AgoraRTCErrorCode, AgoraTracks } from '@/types/agora';
 
 export const useLocalTracks = (): {
   isLoading: boolean;
@@ -80,7 +79,7 @@ export const useLocalTracks = (): {
     if (microphoneId) {
       microphoneTrack?.setDevice(microphoneId);
     }
-  }, [microphoneEnabled, microphoneTrack]);
+  }, [microphoneId, microphoneTrack]);
 
   return { isLoading, localTracks, errorCode, stopTracks };
 };
