@@ -7,20 +7,20 @@ import useAsyncEffect from 'use-async-effect';
  * Creates a singleton instance of the AgoraRTC client
  * that can be used throughout the app w/ the same hook
  */
-let singletonClient: IAgoraRTCClient;
+let cachedClient: IAgoraRTCClient;
 
 export const useAgoraRtcClient = (
   config: ClientConfig = { mode: 'rtc', codec: 'vp9' },
 ): { isLoading: boolean; client: IAgoraRTCClient } => {
-  const [isLoading, setLoading] = useState(!singletonClient); // Load when missing client
-  const [client, setClient] = useState(singletonClient);
+  const [isLoading, setLoading] = useState(!cachedClient); // Load when missing client
+  const [client, setClient] = useState(cachedClient);
 
   useAsyncEffect(async () => {
     if (client) return;
 
     const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
     const newClient = AgoraRTC.createClient(config);
-    singletonClient = newClient;
+    cachedClient = newClient;
 
     setClient(newClient);
     setLoading(false);
