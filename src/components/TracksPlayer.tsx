@@ -50,11 +50,12 @@ const TracksPlayer: FC<Props> = (props) => {
   return (
     <Box
       ref={playerContainerRef}
-      css={[fullParent, playerContainer]}
+      css={fullParent}
       className={className}
       position="relative"
       borderRadius={8}
       overflow="hidden"
+      sx={{ containerType: 'inline-size' }}
     >
       {showName && (
         <Typography
@@ -83,10 +84,6 @@ const TracksPlayer: FC<Props> = (props) => {
     </Box>
   );
 };
-
-const playerContainer = css`
-  container-type: inline-size;
-`;
 
 const nameLabel = css`
   @container (max-width: 400px) {
