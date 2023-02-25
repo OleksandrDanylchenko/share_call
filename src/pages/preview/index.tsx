@@ -16,7 +16,13 @@ import { useRouter } from 'next/router';
 
 import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
-import { useClientValue, useCompliment, useLocalTracks } from '@/hooks/index';
+import {
+  useClientValue,
+  useCompliment,
+  useCurrentUser,
+  useLocalTracks,
+} from '@/hooks/index';
+import { useCallTracks } from '@/store/callTracks';
 import { useMediaSettings } from '@/store/index';
 import {
   blurBackgroundContainer,
@@ -31,12 +37,17 @@ const Preview: FC = () => {
 
   const previewCameraContainerRef = useRef<HTMLDivElement>(null);
 
+  const { isLoading: isLoadingUser } = useCurrentUser({
+    required: true,
+    onUnauthenticated: () => router.replace('/'),
+  });
+
   const {
     isLoading: isLoadingTracks,
     localTracks,
     errorCode: tracksErrorCode,
     stopTracks,
-  } = useLocalTracks();
+  } = useLocalTracks({ skip: isLoadingUser });
   const [microphoneTrack, cameraTrack] = localTracks || [null, null];
 
   const cameraEnabled = useClientValue(
@@ -75,6 +86,11 @@ const Preview: FC = () => {
 
   const handleCancelClick = (): void => {
     router.push('/').finally(stopTracks);
+  };
+
+  // const updateUserTracks = useCallTracks.use.updateUserTracks();
+  const handleJoinClick = (): void => {
+    router.push('/call');
   };
 
   return (
@@ -215,7 +231,11 @@ const Preview: FC = () => {
                     Cancel
                   </Button>
                   {!tracksErrorCode && (
-                    <Button variant="contained" fullWidth>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={handleJoinClick}
+                    >
                       Join
                     </Button>
                   )}
