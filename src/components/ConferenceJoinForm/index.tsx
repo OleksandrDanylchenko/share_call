@@ -45,7 +45,7 @@ const ConferenceJoinForm: FC = () => {
           fullWidth
           required
           hiddenLabel
-          value={name}
+          value={name || ''}
           onChange={(e) => createOrUpdateGuest(e.target.value)}
         />
         <LoadingButton
