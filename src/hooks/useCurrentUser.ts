@@ -36,9 +36,9 @@ export const useCurrentUser = (
       if (!currentUser?.name) {
         setUser(currentUser);
         setLoading(false);
+      } else {
+        redirectOnUnauthenticated?.();
       }
-
-      redirectOnUnauthenticated?.();
     });
   }, [guest, redirectOnUnauthenticated, session?.user, status, user]);
 
