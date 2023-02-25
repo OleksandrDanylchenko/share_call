@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef } from 'react';
 
+import { css } from '@emotion/react';
 import { Box, Typography } from '@mui/material';
 
 import { shadowInset, fullParent } from '@/styles/mixins';
@@ -49,7 +50,7 @@ const TracksPlayer: FC<Props> = (props) => {
   return (
     <Box
       ref={playerContainerRef}
-      css={fullParent}
+      css={[fullParent, playerContainer]}
       className={className}
       position="relative"
       borderRadius={8}
@@ -57,16 +58,17 @@ const TracksPlayer: FC<Props> = (props) => {
     >
       {showName && (
         <Typography
-          css={(theme) =>
+          css={(theme) => [
             shadowInset(theme, {
               color: theme.palette.warning.main,
               blurRadius: '60px',
-            })
-          }
+            }),
+            nameLabel,
+          ]}
           variant="subtitle1"
-          p={1}
+          p={0.6}
           pl={3}
-          pr={2}
+          pr={1}
           lineHeight={1}
           position="absolute"
           bottom={0}
@@ -81,5 +83,16 @@ const TracksPlayer: FC<Props> = (props) => {
     </Box>
   );
 };
+
+const playerContainer = css`
+  container-type: inline-size;
+`;
+
+const nameLabel = css`
+  @container (max-width: 400px) {
+    font-size: 0.7em;
+    padding: 4px 8px 4px 20px;
+  }
+`;
 
 export default TracksPlayer;

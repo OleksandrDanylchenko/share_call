@@ -21,7 +21,7 @@ const GridScene: FC = () => {
       justifyContent="center"
     >
       {Object.entries(usersTracks).map(([userId, tracks]) => (
-        <Grid key={userId} xs={16} sx={{ aspectRatio: '16 / 9' }}>
+        <Grid key={userId} xs={6} sx={{ aspectRatio: '16 / 9' }}>
           <TracksPlayer
             userId={userId}
             tracks={tracks}

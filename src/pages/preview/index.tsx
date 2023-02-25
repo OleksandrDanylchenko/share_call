@@ -124,7 +124,7 @@ const Preview: FC = () => {
               height={300}
               position="relative"
               borderRadius={8}
-              overflow="hidden"
+              sx={{ overflow: 'hidden' }} // If passed as prop - not hidden
             >
               <Skeleton
                 variant="rounded"
