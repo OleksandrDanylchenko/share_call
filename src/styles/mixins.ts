@@ -11,17 +11,25 @@ export const viewportHeight = css`
 
 export const doubleColorGradient = (
   theme: Theme,
-  options?: { deg?: number },
+  options?: { colorStart?: string; colorEnd?: string; deg?: number },
 ): SerializedStyles => {
-  const { deg } = options || { deg: 30 };
+  const {
+    palette: { warning, primary },
+  } = theme;
+
+  const { colorStart, colorEnd, deg } = options || {
+    colorStart: warning.light,
+    colorEnd: primary.dark,
+    deg: 30,
+  };
 
   return css`
     background: linear-gradient(
       ${deg}deg,
-      ${theme.palette.warning.light} -60%,
+      ${colorStart} -60%,
       transparent 50%,
       transparent 50%,
-      ${theme.palette.primary.dark} 160%
+      ${colorEnd} 160%
     );
   `;
 };
