@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { Container, Stack, Typography } from '@mui/material';
 import { type NextPage } from 'next';
-import { getSession, GetSessionParams } from 'next-auth/react';
 
 import ConferenceJoinForm from '@/components/ConferenceJoinForm';
 import StringsRotator from '@/components/StringsRotator';

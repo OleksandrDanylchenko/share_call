@@ -11,16 +11,17 @@ export const viewportHeight = css`
 
 export const doubleColorGradient = (
   theme: Theme,
-  options?: { colorStart?: string; colorEnd?: string; deg?: number },
+  options: { colorStart?: string; colorEnd?: string; deg?: number } = {},
 ): SerializedStyles => {
   const {
     palette: { warning, primary },
   } = theme;
 
-  const { colorStart, colorEnd, deg } = options || {
+  const { colorStart, colorEnd, deg } = {
     colorStart: warning.light,
     colorEnd: primary.dark,
     deg: 30,
+    ...options,
   };
 
   return css`
