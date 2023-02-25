@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useLayoutEffect, useMemo } from 'react';
 
 import { Container, LinearProgress, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -15,8 +15,8 @@ const Call: FC = () => {
     redirectOnUnauthenticated: () => router.replace('/'), // TODO Add toast
   });
 
-  const currentUserTracks = useCallTracks.use.tracks()[user?.id || ''];
-  useEffect(() => {
+  const currentUserTracks = useCallTracks.use.usersTracks()[user?.id || ''];
+  useLayoutEffect(() => {
     if (!isLoadingUser && !currentUserTracks) {
       router.replace('/preview');
     }

@@ -1,13 +1,22 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Theme } from '@mui/material';
 
+export const fullViewport = css`
+  width: 100vw;
+  height: 100vh;
+`;
+
+export const fullWidth = css`
+  width: 100%;
+`;
+
 export const fullHeight = css`
   height: 100%;
 `;
 
-export const fullViewport = css`
-  width: 100vw;
-  height: 100vh;
+export const fullParent = css`
+  ${fullWidth};
+  ${fullHeight};
 `;
 
 export const doubleColorGradient = (
