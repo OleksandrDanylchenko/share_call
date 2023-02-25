@@ -38,8 +38,7 @@ const Preview: FC = () => {
   const previewCameraContainerRef = useRef<HTMLDivElement>(null);
 
   const { isLoading: isLoadingUser, user } = useCurrentUser({
-    required: true,
-    onUnauthenticated: () => router.replace('/'),
+    redirectOnUnauthenticated: () => router.replace('/'), // TODO Add toast
   });
 
   const {

@@ -2,17 +2,22 @@ import { startTransition, useEffect, useState } from 'react';
 
 import { User } from 'next-auth';
 import { SessionContextValue, useSession } from 'next-auth/react';
-import { UseSessionOptions } from 'next-auth/react/types';
 
 import { useGuestUserInfo } from '@/store/guestUserInfo';
 
-export const useCurrentUser = <R extends boolean>(
-  options?: UseSessionOptions<R>,
+interface Props {
+  redirectOnUnauthenticated?: () => void;
+}
+
+export const useCurrentUser = (
+  props: Props,
 ): {
   user?: User;
   status: SessionContextValue['status'];
   isLoading: boolean;
 } => {
+  const { redirectOnUnauthenticated } = props;
+
   const [isLoading, setLoading] = useState(true);
   const [user, setUser] = useState<User>();
 
@@ -33,11 +38,9 @@ export const useCurrentUser = <R extends boolean>(
         setLoading(false);
       }
 
-      if (options?.required) {
-        options.onUnauthenticated?.();
-      }
+      redirectOnUnauthenticated?.();
     });
-  }, [guest, options, session?.user, status, user]);
+  }, [guest, redirectOnUnauthenticated, session?.user, status, user]);
 
   return { user, status, isLoading };
 };
