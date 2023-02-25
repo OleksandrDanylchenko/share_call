@@ -5,12 +5,20 @@ import useAsyncEffect from 'use-async-effect';
 import { useMediaSettings } from '@/store/mediaSettings';
 import { AgoraRTCErrorCode, AgoraTracks } from '@/types/agora';
 
-export const useLocalTracks = (): {
+interface Props {
+  skip?: boolean;
+}
+
+export const useLocalTracks = (
+  props: Props,
+): {
   isLoading: boolean;
   localTracks?: AgoraTracks;
   errorCode?: AgoraRTCErrorCode;
   stopTracks: () => void;
 } => {
+  const { skip = false } = props;
+
   const localTracksRequested = useRef(false);
 
   const [isLoading, setLoading] = useState(true);
@@ -24,6 +32,8 @@ export const useLocalTracks = (): {
   const cameraSettings = useMediaSettings.use.camera();
 
   useAsyncEffect(async () => {
+    if (skip) return;
+
     /**
      * Prevents the tracks from being requested multiple times
      * and having unreached zombie tracks
@@ -46,7 +56,7 @@ export const useLocalTracks = (): {
     } finally {
       setLoading(false);
     }
-  }, [microphoneSettings, cameraSettings]);
+  }, [microphoneSettings, cameraSettings, skip]);
 
   const stopTracks = useCallback(() => {
     localTracks?.forEach((track) => {
