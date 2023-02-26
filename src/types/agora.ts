@@ -92,6 +92,9 @@ export enum AgoraRTCErrorCode {
   DATACHANNEL_CONNECTION_TIMEOUT = 'DATACHANNEL_CONNECTION_TIMEOUT',
 }
 
-export type AgoraTracks = [IMicrophoneAudioTrack, ICameraVideoTrack];
+export type AgoraTracks = {
+  microphoneTrack: IMicrophoneAudioTrack;
+  cameraTrack: ICameraVideoTrack;
+};
 
 export type DeviceType = 'microphone' | 'camera';

@@ -47,7 +47,10 @@ const Preview: FC = () => {
     errorCode: tracksErrorCode,
     stopTracks,
   } = useLocalTracks({ skip: isLoadingUser });
-  const [microphoneTrack, cameraTrack] = localTracks || [null, null];
+  const { microphoneTrack, cameraTrack } = localTracks || {
+    microphoneTrack: null,
+    cameraTrack: null,
+  };
 
   const cameraEnabled = useClientValue(
     useMediaSettings.use.camera().enabled,

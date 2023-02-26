@@ -24,7 +24,10 @@ export const useLocalTracks = (
   const [isLoading, setLoading] = useState(true);
 
   const [localTracks, setLocalTracks] = useState<AgoraTracks>();
-  const [microphoneTrack, cameraTrack] = localTracks || [null, null];
+  const { microphoneTrack, cameraTrack } = localTracks || {
+    microphoneTrack: null,
+    cameraTrack: null,
+  };
 
   const [errorCode, setErrorCode] = useState<AgoraRTCErrorCode>();
 
@@ -43,12 +46,13 @@ export const useLocalTracks = (
 
     try {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
-      const tracks = await AgoraRTC.createMicrophoneAndCameraTracks(
-        microphoneSettings,
-        cameraSettings,
-      );
+      const [microphoneTrack, cameraTrack] =
+        await AgoraRTC.createMicrophoneAndCameraTracks(
+          microphoneSettings,
+          cameraSettings,
+        );
 
-      setLocalTracks(tracks);
+      setLocalTracks({ microphoneTrack, cameraTrack });
     } catch (error: any) {
       if (error.name === 'AgoraRTCException') {
         setErrorCode(error.code);
@@ -59,7 +63,7 @@ export const useLocalTracks = (
   }, [microphoneSettings, cameraSettings, skip]);
 
   const stopTracks = useCallback(() => {
-    localTracks?.forEach((track) => {
+    Object.values(localTracks || {}).forEach((track) => {
       track.stop();
       track.close();
     });
