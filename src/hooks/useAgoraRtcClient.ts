@@ -10,7 +10,7 @@ import useAsyncEffect from 'use-async-effect';
 let cachedClient: IAgoraRTCClient;
 
 export const useAgoraRtcClient = (
-  config: ClientConfig = { mode: 'rtc', codec: 'vp9' },
+  config: ClientConfig = { mode: 'rtc', codec: 'vp8' },
 ): { isLoading: boolean; client: IAgoraRTCClient } => {
   const [isLoading, setLoading] = useState(!cachedClient); // Load when missing client
   const [client, setClient] = useState(cachedClient);
