@@ -76,6 +76,8 @@ export const useLocalTracks = (
     [cameraEnabled, videoTrack],
   );
 
+  // TODO Move this actions into a callState store to mutate state everywhere
+  // This hook will just populate it
   const cameraId = useMediaSettings.use.camera().cameraId;
   useEffect(() => {
     if (cameraId) {
@@ -84,10 +86,10 @@ export const useLocalTracks = (
   }, [cameraId, videoTrack]);
 
   const microphoneEnabled = useMediaSettings.use.microphone().enabled;
-  useAsyncEffect(
-    () => audioTrack?.setEnabled(microphoneEnabled),
-    [microphoneEnabled, audioTrack],
-  );
+  useAsyncEffect(() => {
+    console.log('setting microphone enabled', microphoneEnabled);
+    return audioTrack?.setEnabled(microphoneEnabled);
+  }, [microphoneEnabled, audioTrack]);
 
   const microphoneId = useMediaSettings.use.microphone().microphoneId;
   useEffect(() => {

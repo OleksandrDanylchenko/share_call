@@ -3,12 +3,12 @@ import { FC, useEffect, useRef } from 'react';
 import { css } from '@emotion/react';
 import { Box, Typography } from '@mui/material';
 
-import { shadowInset, fullParent } from '@/styles/mixins';
-import { AgoraLocalTracks } from '@/types/agora';
+import { fullParent, shadowInset } from '@/styles/mixins';
+import { AgoraTracks } from '@/types/agora';
 
 interface Props {
   userId: string;
-  tracks: Partial<AgoraLocalTracks>;
+  tracks: Partial<AgoraTracks>;
   playVideo?: boolean;
   playAudio?: boolean;
   showName?: boolean;
@@ -75,7 +75,7 @@ const TracksPlayer: FC<Props> = (props) => {
           color="black"
           sx={{ borderTopRightRadius: '10px' }}
         >
-          Oleksandr Danylchenko
+          {userId}
         </Typography>
       )}
     </Box>

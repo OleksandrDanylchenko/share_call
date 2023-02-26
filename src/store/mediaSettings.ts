@@ -38,6 +38,7 @@ const useMediaSettingsBase = create<Store>()(
       },
       setEnabled: (deviceType, enabled) =>
         set((state) => {
+          console.log('SEting here', enabled);
           state[deviceType].enabled = enabled;
         }),
       setDeviceId(deviceType, id) {
