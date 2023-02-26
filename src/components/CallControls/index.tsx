@@ -1,7 +1,9 @@
-import { FC } from 'react';
+import { FC, ReactElement } from 'react';
 
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
+import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { IconButton, Stack } from '@mui/material';
 
 import { useClientValue } from '@/hooks/useClientValue';
@@ -26,26 +28,59 @@ const CallControls: FC = () => {
     setEnabled(deviceType, !enabled);
   };
 
-  return (
-    <Stack direction="row" alignItems="center" justifyContent="center" p={2}>
+  const getControlIcon = (deviceType: DeviceType): ReactElement => {
+    let enabled: boolean;
+    let ariaLabel: string;
+    let icon: ReactElement;
+
+    switch (deviceType) {
+      case 'microphone':
+        enabled = microphoneEnabled;
+        ariaLabel = `${enabled ? 'Unmute' : 'Mute'} microphone`;
+        icon = enabled ? (
+          <MicIcon fontSize="large" />
+        ) : (
+          <MicOffIcon fontSize="large" />
+        );
+        break;
+      case 'camera':
+        enabled = cameraEnabled;
+        ariaLabel = `${enabled ? 'Disable' : 'Enable'} camera`;
+        icon = enabled ? (
+          <PhotoCameraIcon fontSize="large" />
+        ) : (
+          <NoPhotographyIcon fontSize="large" />
+        );
+    }
+
+    return (
       <IconButton
         css={(theme) => {
           const { warning, error } = theme.palette;
           return shadowInset(theme, {
-            blurRadius: '35px',
-            color: microphoneEnabled ? warning.light : error.main,
+            blurRadius: '40px',
+            color: enabled ? warning.main : error.main,
           });
         }}
         size="large"
-        aria-label={`${microphoneEnabled ? 'Unmute' : 'Mute'} microphone`}
-        onClick={handleToggleCallPermission('microphone')}
+        aria-label={ariaLabel}
+        onClick={handleToggleCallPermission(deviceType)}
       >
-        {microphoneEnabled ? (
-          <MicIcon fontSize="large" />
-        ) : (
-          <MicOffIcon fontSize="large" />
-        )}
+        {icon}
       </IconButton>
+    );
+  };
+
+  return (
+    <Stack
+      direction="row"
+      alignItems="center"
+      justifyContent="center"
+      p={2}
+      gap={4}
+    >
+      {getControlIcon('microphone')}
+      {getControlIcon('camera')}
     </Stack>
   );
 };
