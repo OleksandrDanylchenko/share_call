@@ -1,6 +1,15 @@
 import { FC, useEffect, useMemo, useRef } from 'react';
 
-import { Container, LinearProgress, Stack, Typography } from '@mui/material';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import {
+  Box,
+  Container,
+  IconButton,
+  LinearProgress,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 import useAsyncEffect from 'use-async-effect';
 import { useEventListener } from 'usehooks-ts';
@@ -8,10 +17,17 @@ import { useEventListener } from 'usehooks-ts';
 import CallScene, { CallSceneType } from '@/components/CallScene';
 import { clientEnv } from '@/env/schema.mjs';
 import { useAgoraRtcClient } from '@/hooks/useAgoraRtcClient';
+import { useClientValue } from '@/hooks/useClientValue';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useCallState } from '@/store/callState';
-import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
-import { AgoraLocalTracks } from '@/types/agora';
+import { useMediaSettings } from '@/store/mediaSettings';
+import {
+  doubleColorGradient,
+  fullHeight,
+  fullViewport,
+  shadowInset,
+} from '@/styles/mixins';
+import { AgoraLocalTracks, DeviceType } from '@/types/agora';
 
 const Call: FC = () => {
   const router = useRouter();
@@ -85,26 +101,64 @@ const Call: FC = () => {
     }
   }, []);
 
+  const cameraEnabled = useClientValue(
+    useMediaSettings.use.camera().enabled,
+    true,
+  );
+  const microphoneEnabled = useClientValue(
+    useMediaSettings.use.microphone().enabled,
+    true,
+  );
+
+  const setEnabled = useMediaSettings.use.setEnabled();
+  const handleToggleCallPermission = (deviceType: DeviceType) => (): void => {
+    const enabled =
+      deviceType === 'microphone' ? microphoneEnabled : cameraEnabled;
+    setEnabled(deviceType, !enabled);
+  };
+
   return (
-    <main
+    <Stack
       css={(theme) => [
         fullViewport,
         doubleColorGradient(theme, { centerOffset: 26 }),
       ]}
     >
-      <Container css={fullHeight}>
-        <Stack css={fullHeight} alignItems="center" justifyContent="center">
-          {isLoading ? (
-            <Stack gap={5} padding={10} borderRadius={5}>
-              <Typography variant="h2">Joining the call...</Typography>
-              <LinearProgress color="inherit" />
-            </Stack>
+      <Box flex={1}>
+        <Container css={fullHeight}>
+          <Stack css={fullHeight} alignItems="center" justifyContent="center">
+            {isLoading ? (
+              <Stack gap={5} padding={10} borderRadius={5}>
+                <Typography variant="h2">Joining the call...</Typography>
+                <LinearProgress color="inherit" />
+              </Stack>
+            ) : (
+              sceneView
+            )}
+          </Stack>
+        </Container>
+      </Box>
+      <Stack direction="row" alignItems="center" justifyContent="center" p={2}>
+        <IconButton
+          css={(theme) => {
+            const { warning, error } = theme.palette;
+            return shadowInset(theme, {
+              blurRadius: '35px',
+              color: microphoneEnabled ? warning.light : error.main,
+            });
+          }}
+          size="large"
+          aria-label={`${microphoneEnabled ? 'Unmute' : 'Mute'} microphone`}
+          onClick={handleToggleCallPermission('microphone')}
+        >
+          {microphoneEnabled ? (
+            <MicIcon fontSize="large" />
           ) : (
-            sceneView
+            <MicOffIcon fontSize="large" />
           )}
-        </Stack>
-      </Container>
-    </main>
+        </IconButton>
+      </Stack>
+    </Stack>
   );
 };
 
