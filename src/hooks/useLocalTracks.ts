@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import useAsyncEffect from 'use-async-effect';
 
 import { useMediaSettings } from '@/store/mediaSettings';
-import { AgoraRTCErrorCode, AgoraTracks } from '@/types/agora';
+import { AgoraRTCErrorCode, AgoraLocalTracks } from '@/types/agora';
 
 interface Props {
   skip?: boolean;
@@ -13,7 +13,7 @@ export const useLocalTracks = (
   props: Props,
 ): {
   isLoading: boolean;
-  localTracks?: AgoraTracks;
+  localTracks?: AgoraLocalTracks;
   errorCode?: AgoraRTCErrorCode;
   stopTracks: () => void;
 } => {
@@ -23,10 +23,10 @@ export const useLocalTracks = (
 
   const [isLoading, setLoading] = useState(true);
 
-  const [localTracks, setLocalTracks] = useState<AgoraTracks>();
-  const { microphoneTrack, cameraTrack } = localTracks || {
-    microphoneTrack: null,
-    cameraTrack: null,
+  const [localTracks, setLocalTracks] = useState<AgoraLocalTracks>();
+  const { audioTrack, videoTrack } = localTracks || {
+    audioTrack: null,
+    videoTrack: null,
   };
 
   const [errorCode, setErrorCode] = useState<AgoraRTCErrorCode>();
@@ -46,13 +46,13 @@ export const useLocalTracks = (
 
     try {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
-      const [microphoneTrack, cameraTrack] =
+      const [audioTrack, videoTrack] =
         await AgoraRTC.createMicrophoneAndCameraTracks(
           microphoneSettings,
           cameraSettings,
         );
 
-      setLocalTracks({ microphoneTrack, cameraTrack });
+      setLocalTracks({ audioTrack: audioTrack, videoTrack: videoTrack });
     } catch (error: any) {
       if (error.name === 'AgoraRTCException') {
         setErrorCode(error.code);
@@ -71,29 +71,29 @@ export const useLocalTracks = (
 
   const cameraEnabled = useMediaSettings.use.camera().enabled;
   useAsyncEffect(
-    () => cameraTrack?.setEnabled(cameraEnabled),
-    [cameraEnabled, cameraTrack],
+    () => videoTrack?.setEnabled(cameraEnabled),
+    [cameraEnabled, videoTrack],
   );
 
   const cameraId = useMediaSettings.use.camera().cameraId;
   useEffect(() => {
     if (cameraId) {
-      cameraTrack?.setDevice(cameraId);
+      videoTrack?.setDevice(cameraId);
     }
-  }, [cameraId, cameraTrack]);
+  }, [cameraId, videoTrack]);
 
   const microphoneEnabled = useMediaSettings.use.microphone().enabled;
   useAsyncEffect(
-    () => microphoneTrack?.setEnabled(microphoneEnabled),
-    [microphoneEnabled, microphoneTrack],
+    () => audioTrack?.setEnabled(microphoneEnabled),
+    [microphoneEnabled, audioTrack],
   );
 
   const microphoneId = useMediaSettings.use.microphone().microphoneId;
   useEffect(() => {
     if (microphoneId) {
-      microphoneTrack?.setDevice(microphoneId);
+      audioTrack?.setDevice(microphoneId);
     }
-  }, [microphoneId, microphoneTrack]);
+  }, [microphoneId, audioTrack]);
 
   return { isLoading, localTracks, errorCode, stopTracks };
 };

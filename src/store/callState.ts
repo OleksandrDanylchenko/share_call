@@ -2,7 +2,6 @@ import {
   createSelectorFunctions,
   ZustandFuncSelectors,
 } from 'auto-zustand-selectors-hook';
-import { merge } from 'lodash';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
@@ -33,12 +32,12 @@ const useCallStateBase = create<Store>()(
 
         state.usersTracks[userId] ||= {};
 
-        const { microphoneTrack, cameraTrack } = tracks;
-        if (microphoneTrack !== undefined) {
-          state.usersTracks[userId]!.microphoneTrack = microphoneTrack;
+        const { audioTrack, videoTrack } = tracks;
+        if (audioTrack !== undefined) {
+          state.usersTracks[userId]!.audioTrack = audioTrack;
         }
-        if (cameraTrack !== undefined) {
-          state.usersTracks[userId]!.cameraTrack = cameraTrack;
+        if (videoTrack !== undefined) {
+          state.usersTracks[userId]!.videoTrack = videoTrack;
         }
       }),
   })),

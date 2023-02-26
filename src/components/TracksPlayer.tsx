@@ -4,11 +4,11 @@ import { css } from '@emotion/react';
 import { Box, Typography } from '@mui/material';
 
 import { shadowInset, fullParent } from '@/styles/mixins';
-import { AgoraTracks } from '@/types/agora';
+import { AgoraLocalTracks } from '@/types/agora';
 
 interface Props {
   userId: string;
-  tracks: Partial<AgoraTracks>;
+  tracks: Partial<AgoraLocalTracks>;
   playVideo?: boolean;
   playAudio?: boolean;
   showName?: boolean;
@@ -27,22 +27,22 @@ const TracksPlayer: FC<Props> = (props) => {
 
   const playerContainerRef = useRef<HTMLDivElement>();
 
-  const { microphoneTrack, cameraTrack } = tracks;
+  const { audioTrack, videoTrack } = tracks;
 
   useEffect(() => {
     const { current: playerContainer } = playerContainerRef;
-    if (!playerContainer || !playVideo || !cameraTrack) return;
+    if (!playerContainer || !playVideo || !videoTrack) return;
 
-    cameraTrack.play(playerContainer);
-    return () => cameraTrack.stop();
-  }, [cameraTrack, playVideo]);
+    videoTrack.play(playerContainer);
+    return () => videoTrack.stop();
+  }, [videoTrack, playVideo]);
 
   useEffect(() => {
-    if (!playAudio || !microphoneTrack) return;
+    if (!playAudio || !audioTrack) return;
 
-    microphoneTrack.play();
-    return () => microphoneTrack.stop();
-  }, [microphoneTrack, playAudio]);
+    audioTrack.play();
+    return () => audioTrack.stop();
+  }, [audioTrack, playAudio]);
 
   return (
     <Box

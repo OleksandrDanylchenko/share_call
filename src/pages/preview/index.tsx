@@ -47,9 +47,9 @@ const Preview: FC = () => {
     errorCode: tracksErrorCode,
     stopTracks,
   } = useLocalTracks({ skip: isLoadingUser });
-  const { microphoneTrack, cameraTrack } = localTracks || {
-    microphoneTrack: null,
-    cameraTrack: null,
+  const { audioTrack, videoTrack } = localTracks || {
+    audioTrack: null,
+    videoTrack: null,
   };
 
   const cameraEnabled = useClientValue(
@@ -75,14 +75,14 @@ const Preview: FC = () => {
 
   useEffect(() => {
     const { current: previewCameraContainer } = previewCameraContainerRef;
-    if (!cameraTrack || !previewCameraContainer) return;
+    if (!videoTrack || !previewCameraContainer) return;
 
     if (cameraEnabled) {
-      cameraTrack.play(previewCameraContainer);
+      videoTrack.play(previewCameraContainer);
     } else {
-      cameraTrack.stop();
+      videoTrack.stop();
     }
-  }, [cameraEnabled, cameraTrack]);
+  }, [cameraEnabled, videoTrack]);
 
   const compliment = useCompliment();
 
@@ -159,11 +159,11 @@ const Preview: FC = () => {
                   {isLoadingTracks && (
                     <Skeleton variant="rounded" width="100%" height={40} />
                   )}
-                  {cameraTrack && (
+                  {videoTrack && (
                     <>
                       <DeviceSelector
                         deviceType="camera"
-                        initialDeviceLabel={cameraTrack.getTrackLabel()}
+                        initialDeviceLabel={videoTrack.getTrackLabel()}
                         onChange={handleDeviceChange('camera')}
                       />
                       <SwitchWithPopover
@@ -181,11 +181,11 @@ const Preview: FC = () => {
                   {isLoadingTracks && (
                     <Skeleton variant="rounded" width="100%" height={40} />
                   )}
-                  {microphoneTrack && (
+                  {audioTrack && (
                     <>
                       <DeviceSelector
                         deviceType="microphone"
-                        initialDeviceLabel={microphoneTrack.getTrackLabel()}
+                        initialDeviceLabel={audioTrack.getTrackLabel()}
                         onChange={handleDeviceChange('microphone')}
                       />
                       <SwitchWithPopover

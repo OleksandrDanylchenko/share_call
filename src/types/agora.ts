@@ -1,5 +1,10 @@
 // Re-exported from the AgoraRTC package
-import { ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import {
+  ICameraVideoTrack,
+  IMicrophoneAudioTrack,
+  IRemoteAudioTrack,
+  IRemoteVideoTrack,
+} from 'agora-rtc-sdk-ng';
 
 export enum AgoraRTCErrorCode {
   UNEXPECTED_ERROR = 'UNEXPECTED_ERROR',
@@ -92,9 +97,16 @@ export enum AgoraRTCErrorCode {
   DATACHANNEL_CONNECTION_TIMEOUT = 'DATACHANNEL_CONNECTION_TIMEOUT',
 }
 
-export type AgoraTracks = {
-  microphoneTrack: IMicrophoneAudioTrack;
-  cameraTrack: ICameraVideoTrack;
+export type AgoraLocalTracks = {
+  audioTrack: IMicrophoneAudioTrack;
+  videoTrack: ICameraVideoTrack;
 };
+
+export type AgoraRemoteTracks = {
+  audioTrack: IRemoteAudioTrack;
+  videoTrack: IRemoteVideoTrack;
+};
+
+export type AgoraTracks = AgoraLocalTracks | AgoraRemoteTracks;
 
 export type DeviceType = 'microphone' | 'camera';
