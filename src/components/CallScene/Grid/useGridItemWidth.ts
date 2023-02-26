@@ -1,6 +1,6 @@
-import { MutableRefObject, useCallback, useState } from 'react';
+import { MutableRefObject, useCallback, useEffect, useState } from 'react';
 
-import { useEffectOnce, useEventListener } from 'usehooks-ts';
+import { useEventListener } from 'usehooks-ts';
 
 type Dimensions = {
   width: number;
@@ -63,7 +63,7 @@ export const useGridItemDimensions = <T extends HTMLElement>(options: {
     }
   }, [containerRef, itemsCount, ratioCoef, spacing]);
 
-  useEffectOnce(resizeItem);
+  useEffect(resizeItem, [resizeItem]);
   useEventListener('resize', resizeItem);
 
   return dimensions;
