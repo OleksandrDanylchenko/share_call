@@ -8,7 +8,7 @@ import { AgoraTracks } from '@/types/agora';
 
 interface Props {
   userId: string;
-  tracks: AgoraTracks;
+  tracks: Partial<AgoraTracks>;
   playVideo?: boolean;
   playAudio?: boolean;
   showName?: boolean;
@@ -27,23 +27,20 @@ const TracksPlayer: FC<Props> = (props) => {
 
   const playerContainerRef = useRef<HTMLDivElement>();
 
-  const [microphoneTrack, cameraTrack] = tracks;
+  const { microphoneTrack, cameraTrack } = tracks;
 
   useEffect(() => {
     const { current: playerContainer } = playerContainerRef;
-    if (!playerContainer) return;
+    if (!playerContainer || !playVideo || !cameraTrack) return;
 
-    if (playVideo) {
-      cameraTrack.play(playerContainer);
-    }
-
+    cameraTrack.play(playerContainer);
     return () => cameraTrack.stop();
   }, [cameraTrack, playVideo]);
 
   useEffect(() => {
-    if (playAudio) {
-      microphoneTrack.play();
-    }
+    if (!playAudio || !microphoneTrack) return;
+
+    microphoneTrack.play();
     return () => microphoneTrack.stop();
   }, [microphoneTrack, playAudio]);
 
