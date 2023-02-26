@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { Container, Stack, Typography } from '@mui/material';
 import { type NextPage } from 'next';
 
-import ConferenceJoinForm from '@/components/ConferenceJoinForm';
+import CallJoinForm from '@/components/CallJoinForm';
 import StringsRotator from '@/components/StringsRotator';
 import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
 
@@ -29,7 +29,7 @@ const Home: NextPage = () => (
           <br />
           <StringsRotator strings={['chat', 'babble', 'give voice', 'share']} />
         </Typography>
-        <ConferenceJoinForm />
+        <CallJoinForm />
       </Stack>
     </Container>
   </main>

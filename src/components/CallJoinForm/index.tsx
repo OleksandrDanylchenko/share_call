@@ -7,11 +7,11 @@ import { useRouter } from 'next/router';
 import {
   joinFormWrapper,
   nameForm,
-} from '@/components/ConferenceJoinForm/styles';
+} from '@/components/CallJoinForm/styles';
 import { useClientValue } from '@/hooks/index';
 import { useGuestUserInfo } from '@/store/guestUserInfo';
 
-const ConferenceJoinForm: FC = () => {
+const CallJoinForm: FC = () => {
   const router = useRouter();
 
   const guestName = useGuestUserInfo.use.guest?.()?.name;
@@ -55,4 +55,4 @@ const ConferenceJoinForm: FC = () => {
   );
 };
 
-export default ConferenceJoinForm;
+export default CallJoinForm;
