@@ -22,7 +22,7 @@ import {
   useCurrentUser,
   useLocalTracks,
 } from '@/hooks/index';
-import { useCallTracks } from '@/store/callTracks';
+import { useCallState } from '@/store/callState';
 import { useMediaSettings } from '@/store/index';
 import {
   blurBackgroundContainer,
@@ -90,7 +90,7 @@ const Preview: FC = () => {
     router.push('/').finally(stopTracks);
   };
 
-  const updateUserTracks = useCallTracks.use.updateUserTracks();
+  const updateUserTracks = useCallState.use.updateUserTracks();
   const handleJoinClick = (): void => {
     if (user?.id && localTracks) {
       updateUserTracks(user.id, localTracks);

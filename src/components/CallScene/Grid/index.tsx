@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useGridItemDimensions } from '@/components/CallScene/Grid/useGridItemWidth';
 import TracksPlayer from '@/components/TracksPlayer';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { useCallTracks } from '@/store/callTracks';
+import { useCallState } from '@/store/callState';
 import { fullParent } from '@/styles/mixins';
 
 const GridScene: FC = () => {
@@ -13,7 +13,7 @@ const GridScene: FC = () => {
 
   const gridContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const usersTracks = useCallTracks.use.usersTracks();
+  const usersTracks = useCallState.use.usersTracks();
   const usersNumber = Object.keys(usersTracks).length;
 
   const itemDimensions = useGridItemDimensions({
