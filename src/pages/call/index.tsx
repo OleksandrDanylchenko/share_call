@@ -1,11 +1,8 @@
 import { FC, useEffect, useMemo, useRef } from 'react';
 
-import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/MicOff';
 import {
   Box,
   Container,
-  IconButton,
   LinearProgress,
   Stack,
   Typography,
@@ -14,20 +11,14 @@ import { useRouter } from 'next/router';
 import useAsyncEffect from 'use-async-effect';
 import { useEventListener } from 'usehooks-ts';
 
+import CallControls from '@/components/CallControls';
 import CallScene, { CallSceneType } from '@/components/CallScene';
 import { clientEnv } from '@/env/schema.mjs';
 import { useAgoraRtcClient } from '@/hooks/useAgoraRtcClient';
-import { useClientValue } from '@/hooks/useClientValue';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useCallState } from '@/store/callState';
-import { useMediaSettings } from '@/store/mediaSettings';
-import {
-  doubleColorGradient,
-  fullHeight,
-  fullViewport,
-  shadowInset,
-} from '@/styles/mixins';
-import { AgoraLocalTracks, DeviceType } from '@/types/agora';
+import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
+import { AgoraLocalTracks } from '@/types/agora';
 
 const Call: FC = () => {
   const router = useRouter();
@@ -63,7 +54,7 @@ const Call: FC = () => {
     await rtc.join(appId, 'test-channel', null, user.id);
 
     const { audioTrack, videoTrack } = currentUserTracks;
-    await rtc.publish([audioTrack, videoTrack]);
+    // await rtc.publish([audioTrack, videoTrack]);
 
     rtc.on('user-published', async (user, mediaType) => {
       await rtc.subscribe(user, mediaType);
@@ -101,22 +92,6 @@ const Call: FC = () => {
     }
   }, []);
 
-  const cameraEnabled = useClientValue(
-    useMediaSettings.use.camera().enabled,
-    true,
-  );
-  const microphoneEnabled = useClientValue(
-    useMediaSettings.use.microphone().enabled,
-    true,
-  );
-
-  const setEnabled = useMediaSettings.use.setEnabled();
-  const handleToggleCallPermission = (deviceType: DeviceType) => (): void => {
-    const enabled =
-      deviceType === 'microphone' ? microphoneEnabled : cameraEnabled;
-    setEnabled(deviceType, !enabled);
-  };
-
   return (
     <Stack
       css={(theme) => [
@@ -138,26 +113,7 @@ const Call: FC = () => {
           </Stack>
         </Container>
       </Box>
-      <Stack direction="row" alignItems="center" justifyContent="center" p={2}>
-        <IconButton
-          css={(theme) => {
-            const { warning, error } = theme.palette;
-            return shadowInset(theme, {
-              blurRadius: '35px',
-              color: microphoneEnabled ? warning.light : error.main,
-            });
-          }}
-          size="large"
-          aria-label={`${microphoneEnabled ? 'Unmute' : 'Mute'} microphone`}
-          onClick={handleToggleCallPermission('microphone')}
-        >
-          {microphoneEnabled ? (
-            <MicIcon fontSize="large" />
-          ) : (
-            <MicOffIcon fontSize="large" />
-          )}
-        </IconButton>
-      </Stack>
+      <CallControls />
     </Stack>
   );
 };
