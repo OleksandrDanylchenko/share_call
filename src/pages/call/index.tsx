@@ -3,6 +3,7 @@ import { FC, useEffect, useMemo, useRef } from 'react';
 import { Container, LinearProgress, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import useAsyncEffect from 'use-async-effect';
+import { useEventListener } from 'usehooks-ts';
 
 import CallScene, { CallSceneType } from '@/components/CallScene';
 import { clientEnv } from '@/env/schema.mjs';
@@ -65,6 +66,13 @@ const Call: FC = () => {
       updateUserTracks(String(user.uid), undefined);
     });
   }, [hasJoinRequested, rtc, updateUserTracks, user?.id, currentUserTracks]);
+
+  useEventListener('beforeunload', async () => {
+    if (!user?.id || !currentUserTracks) return;
+
+    const { audioTrack, videoTrack } = currentUserTracks;
+    await rtc.unpublish([audioTrack, videoTrack]);
+  });
 
   const sceneView = useMemo(() => {
     const scene = CallSceneType.Grid as CallSceneType; // TODO Replace w/ query

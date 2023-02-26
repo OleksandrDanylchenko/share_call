@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import useAsyncEffect from 'use-async-effect';
+import { useEventListener } from 'usehooks-ts';
 
 import { useMediaSettings } from '@/store/mediaSettings';
 import { AgoraRTCErrorCode, AgoraLocalTracks } from '@/types/agora';
@@ -94,6 +95,8 @@ export const useLocalTracks = (
       audioTrack?.setDevice(microphoneId);
     }
   }, [microphoneId, audioTrack]);
+
+  useEventListener('beforeunload', stopTracks);
 
   return { isLoading, localTracks, errorCode, stopTracks };
 };
