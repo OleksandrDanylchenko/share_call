@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 
+import { NextAuthComponentType } from '@/components/AuthWrapper';
 import DeviceSelector from '@/components/DeviceSelector';
 import SwitchWithPopover from '@/components/SwitchWithPopover';
 import {
@@ -37,16 +38,14 @@ const Preview: FC = () => {
 
   const previewCameraContainerRef = useRef<HTMLDivElement>(null);
 
-  const { isLoading: isLoadingUser, user } = useCurrentUser({
-    redirectOnUnauthenticated: () => router.replace('/'), // TODO Add toast
-  });
+  const { user } = useCurrentUser();
 
   const {
     isLoading: isLoadingTracks,
     localTracks,
     errorCode: tracksErrorCode,
     stopTracks,
-  } = useLocalTracks({ skip: isLoadingUser });
+  } = useLocalTracks({ skip: true });
   const { audioTrack, videoTrack } = localTracks || {
     audioTrack: null,
     videoTrack: null,
@@ -270,4 +269,10 @@ const previewTitle = (
   `;
 };
 
-export default Preview;
+const AuthPreview: NextAuthComponentType = Preview;
+AuthPreview.auth = {
+  required: true,
+  unauthenticatedUrl: '/',
+};
+
+export default AuthPreview;

@@ -23,10 +23,7 @@ export const useCurrentUser = (
   status: SessionContextValue['status'];
   isLoading: boolean;
 } => {
-  const { redirectOnUnauthenticated } = {
-    redirectOnUnauthenticated: () => undefined,
-    ...props,
-  };
+  const { redirectOnUnauthenticated = () => undefined } = props || {};
 
   const [isLoading, setLoading] = useState(!cachedUser);
   const [user, setUser] = useState<User>(cachedUser);

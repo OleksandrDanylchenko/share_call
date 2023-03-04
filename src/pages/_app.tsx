@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 
+import AuthWrapper, { NextAuthComponentType } from '@/components/AuthWrapper';
 import { createEmotionCache } from '@/styles/mui/create-emotion-cache';
 import { theme } from '@/styles/mui/theme';
 import { api } from '@/utils/api';
@@ -28,6 +29,7 @@ const MyApp: AppType<Props> = ({
   Component,
   pageProps: { session, emotionCache = clientSideEmotionCache, ...pageProps },
 }) => {
+  const AuthComponent = Component as NextAuthComponentType;
   return (
     <CacheProvider value={emotionCache}>
       <SessionProvider session={session}>
@@ -43,7 +45,13 @@ const MyApp: AppType<Props> = ({
         </Head>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Component {...pageProps} />
+          {AuthComponent.auth ? (
+            <AuthWrapper {...AuthComponent.auth}>
+              <AuthComponent {...pageProps} />
+            </AuthWrapper>
+          ) : (
+            <Component {...pageProps} />
+          )}
         </ThemeProvider>
       </SessionProvider>
     </CacheProvider>
