@@ -7,12 +7,7 @@ import { ObjectTyped } from 'object-typed';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-import {
-  DeviceTracksState,
-  DeviceTrackState,
-  DeviceType,
-  isLocalTrack,
-} from '@/types/agora';
+import { DeviceTracksState, DeviceType, isLocalTrack } from '@/types/agora';
 
 interface State {
   tracks: Record<string, Partial<DeviceTracksState>>; // user -> deviceType -> track
@@ -20,10 +15,10 @@ interface State {
 
 interface Actions {
   addTracks: (userId: string, tracks: DeviceTracksState) => void;
-  addTrack: (
+  addTrack: <TDeviceType extends DeviceType>(
     userId: string,
-    deviceType: DeviceType,
-    track: DeviceTrackState,
+    deviceType: TDeviceType,
+    track: DeviceTracksState[TDeviceType],
   ) => void;
   removeTracks: (userId: string) => void;
   removeTrack: (userId: string, deviceType: DeviceType) => void;
@@ -103,11 +98,11 @@ export const selectTracks = (
   userId: string,
 ): Partial<DeviceTracksState> | undefined => state.tracks[userId];
 
-export const selectTrackState = (
+export const selectTrackState = <T extends DeviceType>(
   state: State,
   userId: string,
-  deviceType: DeviceType,
-): DeviceTrackState | undefined => {
+  deviceType: T,
+): DeviceTracksState[T] | undefined => {
   const userTracks = selectTracks(state, userId);
   return userTracks?.[deviceType];
 };
