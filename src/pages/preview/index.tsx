@@ -16,6 +16,7 @@ import {
   doubleColorGradient,
   fullHeight,
   fullViewport,
+  fullWidth,
 } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
 
@@ -145,7 +146,12 @@ const Preview: FC = () => {
                   {!cameraState || !devices?.camera ? (
                     <Skeleton variant="rounded" width="100%" height={40} />
                   ) : (
-                    <Stack direction="row" alignItems="center" gap={3}>
+                    <Stack
+                      css={fullWidth}
+                      direction="row"
+                      alignItems="center"
+                      gap={3}
+                    >
                       <DeviceToggleButton
                         label={`${
                           cameraState.enabled ? 'Disable' : 'Enable'
@@ -159,6 +165,7 @@ const Preview: FC = () => {
                         deviceType="camera"
                         deviceId={cameraState.deviceId}
                         devices={devices.camera}
+                        disabled={!cameraState.enabled}
                         onChange={handleDeviceChange('camera')}
                       />
                     </Stack>

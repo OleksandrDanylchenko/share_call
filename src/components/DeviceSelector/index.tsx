@@ -15,11 +15,12 @@ interface Props {
   deviceType: 'microphone' | 'camera';
   deviceId: string;
   devices: Array<MediaDeviceInfo>;
+  disabled?: boolean;
   onChange: (device: MediaDeviceInfo) => void;
 }
 
 const DeviceSelector: FC<Props> = (props) => {
-  const { deviceType, deviceId, devices, onChange } = props;
+  const { deviceType, deviceId, devices, disabled, onChange } = props;
 
   const indexedDevices = useMemo(() => keyBy(devices, 'deviceId'), [devices]);
   const [device, setDevice] = useState(indexedDevices[deviceId]!);
@@ -34,7 +35,7 @@ const DeviceSelector: FC<Props> = (props) => {
 
   const selectorId = useId();
   return (
-    <FormControl size="small" fullWidth>
+    <FormControl fullWidth disabled={disabled}>
       <InputLabel id={selectorId} style={visuallyHidden}>
         {capitalize(deviceType)}
       </InputLabel>
