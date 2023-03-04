@@ -7,20 +7,27 @@ import { ObjectTyped } from 'object-typed';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-import {
-  AgoraTrack,
-  DeviceTracks,
-  DeviceType,
-  isLocalTrack,
-} from '@/types/agora';
+import { AgoraTrack, DeviceType, isLocalTrack } from '@/types/agora';
+
+interface DeviceTrackState {
+  track: AgoraTrack;
+  enabled: boolean;
+  deviceId: string;
+}
+
+type DeviceTracksState = Record<DeviceType, DeviceTrackState>;
 
 interface State {
-  tracks: Record<string, Partial<DeviceTracks>>; // user -> deviceType -> track
+  tracks: Record<string, Partial<DeviceTracksState>>; // user -> deviceType -> track
 }
 
 interface Actions {
-  addTracks: (userId: string, tracks: DeviceTracks) => void;
-  addTrack: (userId: string, deviceType: DeviceType, track: AgoraTrack) => void;
+  addTracks: (userId: string, tracks: DeviceTracksState) => void;
+  addTrack: (
+    userId: string,
+    deviceType: DeviceType,
+    track: DeviceTrackState,
+  ) => void;
   removeTracks: (userId: string) => void;
   removeTrack: (userId: string, deviceType: DeviceType) => void;
   setTrackEnabled: (
@@ -41,7 +48,9 @@ const useCallStateBase = create<Store>()(
   immer((set, get) => ({
     tracks: {},
     addTracks: (userId, tracks) =>
-      set((state) => (state.tracks[userId] = tracks)),
+      set((state) => {
+        state.tracks[userId] = tracks;
+      }),
     addTrack: (userId, deviceType, track) =>
       set((state) => {
         state.tracks[userId] ||= {};
@@ -59,26 +68,35 @@ const useCallStateBase = create<Store>()(
       }),
     removeTrack: (userId, deviceType) =>
       set((state) => {
-        const track = state.tracks[userId]?.[deviceType];
-        if (!track) return;
+        const trackState = state.tracks[userId]?.[deviceType];
+        if (!trackState) return;
 
+        const { track } = trackState;
         track.stop();
         isLocalTrack(track) && track.close();
         delete state.tracks[userId]![deviceType];
       }),
     setTrackEnabled: (userId, deviceType, enabled) =>
       set((state) => {
-        const track = state.tracks[userId]?.[deviceType];
-        if (!track) return;
+        const trackState = state.tracks[userId]?.[deviceType];
+        if (!trackState) return;
 
-        isLocalTrack(track) && track.setEnabled(enabled);
+        const { track } = trackState;
+        if (isLocalTrack(track)) {
+          track.setEnabled(enabled).then(() => (trackState.enabled = enabled));
+        }
       }),
     setTrackDevice: (userId, deviceType, deviceId) =>
       set((state) => {
-        const track = state.tracks[userId]?.[deviceType];
-        if (!track) return;
+        const trackState = state.tracks[userId]?.[deviceType];
+        if (!trackState) return;
 
-        isLocalTrack(track) && track.setDevice(deviceId);
+        const { track } = trackState;
+        if (isLocalTrack(track)) {
+          track
+            .setDevice(deviceId)
+            .then(() => (trackState.deviceId = deviceId));
+        }
       }),
   })),
 );
