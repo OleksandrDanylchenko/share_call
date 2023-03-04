@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef } from 'react';
 
+import { css } from '@emotion/react';
 import ReportIcon from '@mui/icons-material/Report';
 import {
   Box,
@@ -14,6 +15,7 @@ import { useRouter } from 'next/router';
 import { NextAuthComponentType } from '@/components/AuthWrapper';
 import DeviceSelector from '@/components/DeviceSelector';
 import DeviceToggleButton from '@/components/DeviceToggleButton';
+import TracksPlayer from '@/components/TracksPlayer';
 import { useCompliment, useCurrentUser, useMicCamTracks } from '@/hooks/index';
 import { useDevices } from '@/hooks/useDevices';
 import { selectTrackState, useCallTracks } from '@/store/callTracks';
@@ -21,6 +23,7 @@ import {
   blurBackgroundContainer,
   doubleColorGradient,
   fullHeight,
+  fullParent,
   fullViewport,
   fullWidth,
 } from '@/styles/mixins';
@@ -111,7 +114,6 @@ const Preview: FC = () => {
               {tracks && `You look ${compliment} ✨`}
             </Typography>
             <Stack
-              ref={previewCameraContainerRef}
               alignItems="center"
               justifyContent="center"
               gap={3}
@@ -121,10 +123,17 @@ const Preview: FC = () => {
               borderRadius={8}
               overflow="hidden"
             >
+              {cameraState?.track && (
+                <TracksPlayer
+                  css={css`
+                    z-index: 1;
+                  `}
+                  tracks={{ videoTrack: cameraState?.track }}
+                />
+              )}
               <Skeleton
+                css={fullParent}
                 variant="rounded"
-                width="100%"
-                height="100%"
                 animation={
                   tracksErrorCode || !cameraState?.enabled ? false : 'pulse'
                 }
