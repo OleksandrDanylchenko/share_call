@@ -80,7 +80,8 @@ const useCallStateBase = create<Store>()(
 
         const { track } = trackState;
         if (isLocalTrack(track)) {
-          track.setEnabled(enabled).then(() => (trackState.enabled = enabled));
+          track.setEnabled(enabled);
+          trackState.enabled = enabled;
         }
       }),
     setTrackDevice: (userId, deviceType, deviceId) =>
@@ -90,9 +91,8 @@ const useCallStateBase = create<Store>()(
 
         const { track } = trackState;
         if (isLocalTrack(track)) {
-          track
-            .setDevice(deviceId)
-            .then(() => (trackState.deviceId = deviceId));
+          track.setDevice(deviceId);
+          trackState.deviceId = deviceId;
         }
       }),
   })),
