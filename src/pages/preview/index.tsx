@@ -1,6 +1,14 @@
 import React, { FC, useEffect, useRef } from 'react';
+
 import ReportIcon from '@mui/icons-material/Report';
-import { Box, Container, Skeleton, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Skeleton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
@@ -142,7 +150,7 @@ const Preview: FC = () => {
               <>
                 <Box width="90%">
                   {!cameraState || !devices?.camera ? (
-                    <Skeleton variant="rounded" width="100%" height={40} />
+                    <Skeleton variant="rounded" width="100%" height={60} />
                   ) : (
                     <Stack
                       css={fullWidth}
@@ -171,7 +179,7 @@ const Preview: FC = () => {
                 </Box>
                 <Box width="90%">
                   {!microphoneState || !devices?.microphone ? (
-                    <Skeleton variant="rounded" width="100%" height={40} />
+                    <Skeleton variant="rounded" width="100%" height={60} />
                   ) : (
                     <Stack
                       css={fullWidth}
@@ -206,44 +214,46 @@ const Preview: FC = () => {
               justifyContent="space-around"
               gap={5}
               width="90%"
-              mt={3}
+              mt={2}
             >
-              {/*{isLoadingTracks ? (*/}
-              {/*  <>*/}
-              {/*    <Skeleton*/}
-              {/*      variant="rounded"*/}
-              {/*      width="50%"*/}
-              {/*      height={44}*/}
-              {/*      sx={{ borderRadius: 30 }}*/}
-              {/*    />*/}
-              {/*    <Skeleton*/}
-              {/*      variant="rounded"*/}
-              {/*      width="100%"*/}
-              {/*      height={44}*/}
-              {/*      sx={{ borderRadius: 30 }}*/}
-              {/*    />*/}
-              {/*  </>*/}
-              {/*) : (*/}
-              {/*  <>*/}
-              {/*    <Button*/}
-              {/*      variant="outlined"*/}
-              {/*      color="inherit"*/}
-              {/*      onClick={handleCancelClick}*/}
-              {/*      sx={{ width: '50%' }}*/}
-              {/*    >*/}
-              {/*      Cancel*/}
-              {/*    </Button>*/}
-              {/*    {!tracksErrorCode && (*/}
-              {/*      <Button*/}
-              {/*        variant="contained"*/}
-              {/*        fullWidth*/}
-              {/*        onClick={handleJoinClick}*/}
-              {/*      >*/}
-              {/*        Join*/}
-              {/*      </Button>*/}
-              {/*    )}*/}
-              {/*  </>*/}
-              {/*)}*/}
+              {isLoadingTracks ? (
+                <>
+                  <Skeleton
+                    variant="rounded"
+                    width="50%"
+                    height={44}
+                    sx={{ borderRadius: 30 }}
+                  />
+                  <Skeleton
+                    variant="rounded"
+                    width="100%"
+                    height={44}
+                    sx={{ borderRadius: 30 }}
+                  />
+                </>
+              ) : (
+                <>
+                  <Button
+                    size="large"
+                    variant="outlined"
+                    color="warning"
+                    onClick={handleCancelClick}
+                    sx={{ width: '50%', fontSize: '0.97em' }}
+                  >
+                    Cancel
+                  </Button>
+                  {!tracksErrorCode && (
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={handleJoinClick}
+                      sx={{ fontSize: '0.97em' }}
+                    >
+                      Join
+                    </Button>
+                  )}
+                </>
+              )}
             </Stack>
           </Stack>
         </Stack>
