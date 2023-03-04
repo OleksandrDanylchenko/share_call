@@ -7,15 +7,12 @@ import { ObjectTyped } from 'object-typed';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-import { AgoraTrack, DeviceType, isLocalTrack } from '@/types/agora';
-
-interface DeviceTrackState {
-  track: AgoraTrack;
-  enabled: boolean;
-  deviceId: string;
-}
-
-type DeviceTracksState = Record<DeviceType, DeviceTrackState>;
+import {
+  DeviceTracksState,
+  DeviceTrackState,
+  DeviceType,
+  isLocalTrack,
+} from '@/types/agora';
 
 interface State {
   tracks: Record<string, Partial<DeviceTracksState>>; // user -> deviceType -> track

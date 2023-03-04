@@ -122,3 +122,11 @@ export const isLocalTrack = (
   'stop' in track &&
   'setEnabled' in track &&
   'setDevice' in track;
+
+export interface DeviceTrackState {
+  track: AgoraTrack;
+  enabled: boolean;
+  deviceId: string;
+}
+
+export type DeviceTracksState = Record<DeviceType, DeviceTrackState>;

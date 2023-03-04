@@ -3,27 +3,29 @@ import { useRef, useState } from 'react';
 import useAsyncEffect from 'use-async-effect';
 
 import { audioConfig, videoConfig } from '@/constants/index';
-import { AgoraRTCErrorCode, DeviceTracks } from '@/types/agora';
-
-type MicCamTracks = Pick<DeviceTracks, 'microphone' | 'camera'>;
+import { useDevices } from '@/hooks/useDevices';
+import { AgoraRTCErrorCode, DeviceTracksState } from '@/types/agora';
 
 export const useMicCamTracks = (): {
   isLoading: boolean;
-  tracks?: MicCamTracks;
+  tracks?: DeviceTracksState;
   errorCode?: AgoraRTCErrorCode;
 } => {
   const localTracksRequested = useRef(false);
 
   const [isLoading, setLoading] = useState(true);
-  const [localTracks, setLocalTracks] = useState<MicCamTracks>();
+
+  const [localTracks, setLocalTracks] = useState<DeviceTracksState>();
   const [errorCode, setErrorCode] = useState<AgoraRTCErrorCode>();
+
+  const { devices } = useDevices();
 
   useAsyncEffect(async () => {
     /**
      * Prevents the tracks from being requested multiple times
      * and having unreachable zombie tracks
      */
-    if (localTracksRequested.current) return;
+    if (localTracksRequested.current || !devices) return;
     localTracksRequested.current = true;
 
     try {
@@ -34,7 +36,31 @@ export const useMicCamTracks = (): {
           videoConfig,
         );
 
-      setLocalTracks({ microphone: microphoneTrack, camera: cameraTrack });
+      const [microphoneLabel, cameraLabel] = [
+        microphoneTrack.getTrackLabel(),
+        cameraTrack.getTrackLabel(),
+      ];
+
+      // TODO Add handling for missing devices
+      const { deviceId: micDeviceId } = devices.microphone.find(
+        ({ label }) => label === microphoneLabel,
+      )!;
+      const { deviceId: camDeviceId } = devices.camera.find(
+        ({ label }) => label === cameraLabel,
+      )!;
+
+      setLocalTracks({
+        microphone: {
+          track: microphoneTrack,
+          enabled: true,
+          deviceId: micDeviceId,
+        },
+        camera: {
+          track: cameraTrack,
+          enabled: true,
+          deviceId: camDeviceId,
+        },
+      });
     } catch (error: any) {
       if (error.name === 'AgoraRTCException') {
         setErrorCode(error.code);
@@ -42,7 +68,7 @@ export const useMicCamTracks = (): {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [devices]);
 
   return { isLoading, tracks: localTracks, errorCode };
 };
