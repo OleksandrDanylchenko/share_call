@@ -32,8 +32,6 @@ import { DeviceType } from '@/types/agora';
 const Preview: FC = () => {
   const router = useRouter();
 
-  const previewCameraContainerRef = useRef<HTMLDivElement>(null);
-
   const user = useCurrentUser();
 
   const microphoneState = useCallTracks((state) =>
@@ -73,20 +71,6 @@ const Preview: FC = () => {
         : cameraState?.enabled;
     setTrackEnabled(user!.id, deviceType, !enabled);
   };
-
-  useEffect(() => {
-    if (!cameraState?.track) return;
-
-    const { current: previewCameraContainer } = previewCameraContainerRef;
-    if (!previewCameraContainer) return;
-
-    const { track, enabled } = cameraState;
-    if (enabled) {
-      track.play(previewCameraContainer);
-    } else {
-      track.stop();
-    }
-  }, [cameraState]);
 
   const compliment = useCompliment();
 
