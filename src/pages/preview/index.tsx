@@ -93,11 +93,7 @@ const Preview: FC = () => {
             width="90%"
             maxWidth={777}
           >
-            <Typography
-              variant="h4"
-              css={(theme) => previewTitle(theme, { error: !!tracksErrorCode })}
-              mb={3}
-            >
+            <Typography variant="h4" color={tracksErrorCode && 'error'} mb={3}>
               {isLoadingTracks && 'Loading media devices...'}
               {tracksErrorCode && 'Cannot obtain devices'}
               {tracks && `You look ${compliment} ✨`}
@@ -236,24 +232,6 @@ const Preview: FC = () => {
       </Container>
     </main>
   );
-};
-
-const previewTitle = (
-  theme: Theme,
-  options: { error: boolean },
-): SerializedStyles => {
-  const { error } = options;
-
-  const {
-    palette: {
-      error: { main: errorColor },
-      common: { white: whiteColor },
-    },
-  } = theme;
-
-  return css`
-    color: ${error ? errorColor : whiteColor};
-  `;
 };
 
 const AuthPreview: NextAuthComponentType = Preview;
