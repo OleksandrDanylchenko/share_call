@@ -23,7 +23,7 @@ const Preview: FC = () => {
 
   const previewCameraContainerRef = useRef<HTMLDivElement>(null);
 
-  const { user } = useCurrentUser();
+  const user = useCurrentUser();
 
   const microphoneState = useCallTracks((state) =>
     selectTrackState(state, user!.id, 'microphone'),
@@ -113,16 +113,18 @@ const Preview: FC = () => {
               borderRadius={8}
               overflow="hidden"
             >
-              {/*<Skeleton*/}
-              {/*  variant="rounded"*/}
-              {/*  width="100%"*/}
-              {/*  height="100%"*/}
-              {/*  animation={tracksErrorCode || !cameraEnabled ? false : 'pulse'}*/}
-              {/*  sx={{ position: 'absolute' }}*/}
-              {/*/>*/}
-              {/*{!cameraEnabled && (*/}
-              {/*  <Typography variant="h5">Camera is disabled</Typography>*/}
-              {/*)}*/}
+              <Skeleton
+                variant="rounded"
+                width="100%"
+                height="100%"
+                animation={
+                  tracksErrorCode || !cameraState?.enabled ? false : 'pulse'
+                }
+                sx={{ position: 'absolute' }}
+              />
+              {cameraState && !cameraState.enabled && (
+                <Typography variant="h5">Camera is disabled</Typography>
+              )}
               {tracksErrorCode && (
                 <>
                   <ReportIcon fontSize="large" color="error" />
