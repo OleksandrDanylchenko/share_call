@@ -108,5 +108,17 @@ export type AgoraRemoteTracks = {
 };
 
 export type AgoraTracks = AgoraLocalTracks | AgoraRemoteTracks;
+export type AgoraTrack = AgoraTracks[keyof AgoraTracks];
 
 export type DeviceType = 'microphone' | 'camera';
+
+export type DeviceTracks = Record<DeviceType, AgoraTrack>;
+
+export const isLocalTrack = (
+  track: unknown,
+): track is AgoraLocalTracks[keyof AgoraLocalTracks] =>
+  typeof track === 'object' &&
+  track !== null &&
+  'stop' in track &&
+  'setEnabled' in track &&
+  'setDevice' in track;
