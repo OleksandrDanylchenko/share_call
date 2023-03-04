@@ -1,4 +1,4 @@
-import { FC, useEffect, useId, useState } from 'react';
+import { FC, useId, useMemo, useState } from 'react';
 
 import {
   capitalize,
@@ -9,49 +9,30 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { Dictionary, keyBy } from 'lodash';
-import useAsyncEffect from 'use-async-effect';
+import { keyBy } from 'lodash';
 
 interface Props {
   deviceType: 'microphone' | 'camera';
-  initialDeviceLabel?: string; // The device id cannot be obtained from the video track
+  deviceId: string;
+  devices: Array<MediaDeviceInfo>;
   onChange: (device: MediaDeviceInfo) => void;
 }
 
 const DeviceSelector: FC<Props> = (props) => {
-  const { deviceType, initialDeviceLabel, onChange } = props;
+  const { deviceType, deviceId, devices, onChange } = props;
 
-  const selectorId = useId();
-
-  const [devices, setDevices] = useState<Dictionary<MediaDeviceInfo>>();
-  useAsyncEffect(async () => {
-    const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
-    const agoraDevices = await (deviceType === 'microphone'
-      ? AgoraRTC.getMicrophones()
-      : AgoraRTC.getCameras());
-
-    const devicesDictionary = keyBy(agoraDevices, ({ label }) => label);
-    setDevices(devicesDictionary);
-  }, []);
-
-  const [device, setDevice] = useState<MediaDeviceInfo>();
-  useEffect(() => {
-    if (initialDeviceLabel && devices) {
-      setDevice(devices[initialDeviceLabel]);
-    }
-  }, [devices, initialDeviceLabel]);
+  const indexedDevices = useMemo(() => keyBy(devices, 'deviceId'), [devices]);
+  const [device, setDevice] = useState(indexedDevices[deviceId]!);
 
   const handleDeviceChange = (event: SelectChangeEvent): void => {
-    if (!devices) return;
-
-    const deviceLabel = event.target.value;
-    const selectedDevice = devices[deviceLabel];
-    if (!selectedDevice) return;
+    const newDeviceId = event.target.value;
+    const selectedDevice = indexedDevices[newDeviceId]!;
 
     setDevice(selectedDevice);
     onChange(selectedDevice);
   };
 
+  const selectorId = useId();
   return (
     <FormControl size="small" fullWidth>
       <InputLabel id={selectorId} style={visuallyHidden}>
@@ -60,11 +41,11 @@ const DeviceSelector: FC<Props> = (props) => {
       <Select
         id={selectorId}
         labelId={selectorId}
-        value={device?.label || ''}
+        value={device?.deviceId || ''}
         onChange={handleDeviceChange}
       >
-        {Object.values(devices || {})?.map(({ deviceId, label }) => (
-          <MenuItem key={deviceId} value={label}>
+        {devices.map(({ deviceId, label }) => (
+          <MenuItem key={deviceId} value={deviceId}>
             {label}
           </MenuItem>
         ))}

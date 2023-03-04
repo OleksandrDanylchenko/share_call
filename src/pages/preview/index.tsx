@@ -1,14 +1,15 @@
 import React, { FC, useEffect, useRef } from 'react';
 
-import { css, SerializedStyles } from '@emotion/react';
 import MicIcon from '@mui/icons-material/Mic';
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import ReportIcon from '@mui/icons-material/Report';
-import { Container, Skeleton, Stack, Theme, Typography } from '@mui/material';
+import { Container, Skeleton, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
+import DeviceSelector from '@/components/DeviceSelector';
+import DeviceToggleButton from '@/components/DeviceToggleButton';
 import { useCompliment, useCurrentUser, useMicCamTracks } from '@/hooks/index';
+import { useDevices } from '@/hooks/useDevices';
 import { selectTrackState, useCallTracks } from '@/store/callTracks';
 import {
   blurBackgroundContainer,
@@ -42,6 +43,7 @@ const Preview: FC = () => {
     tracks,
     errorCode: tracksErrorCode,
   } = useMicCamTracks();
+  const { devices } = useDevices();
 
   useEffect(() => {
     if (tracks) {
@@ -54,10 +56,13 @@ const Preview: FC = () => {
     ({ deviceId }: MediaDeviceInfo): void =>
       setTrackDevice(user!.id, deviceType, deviceId);
 
-  const handleEnabledChange =
-    (deviceType: DeviceType) =>
-    (enabled: boolean): void =>
-      setTrackEnabled(user!.id, deviceType, enabled);
+  const toggleEnabledChange = (deviceType: DeviceType) => (): void => {
+    const enabled =
+      deviceType === 'microphone'
+        ? microphoneState?.enabled
+        : cameraState?.enabled;
+    setTrackEnabled(user!.id, deviceType, !enabled);
+  };
 
   useEffect(() => {
     if (!cameraState?.track) return;
@@ -137,26 +142,27 @@ const Preview: FC = () => {
             {!tracksErrorCode && (
               <>
                 <Stack direction="row" alignItems="center" gap={2} width="90%">
-                  <PhotoCameraIcon />
-                  {isLoadingTracks && (
+                  {!cameraState || !devices?.camera ? (
                     <Skeleton variant="rounded" width="100%" height={40} />
+                  ) : (
+                    <Stack direction="row" alignItems="center" gap={3}>
+                      <DeviceToggleButton
+                        label={`${
+                          cameraState.enabled ? 'Disable' : 'Enable'
+                        } camera for the call`}
+                        showTooltip
+                        deviceType={'camera'}
+                        enabled={cameraState.enabled}
+                        onClick={toggleEnabledChange('camera')}
+                      />
+                      <DeviceSelector
+                        deviceType="camera"
+                        deviceId={cameraState.deviceId}
+                        devices={devices.camera}
+                        onChange={handleDeviceChange('camera')}
+                      />
+                    </Stack>
                   )}
-                  {/*{videoTrack && (*/}
-                  {/*  <>*/}
-                  {/*    <DeviceSelector*/}
-                  {/*      deviceType="camera"*/}
-                  {/*      initialDeviceLabel={videoTrack.getTrackLabel()}*/}
-                  {/*      onChange={handleDeviceChange('camera')}*/}
-                  {/*    />*/}
-                  {/*    <SwitchWithPopover*/}
-                  {/*      helperText={`${*/}
-                  {/*        cameraEnabled ? 'Disable' : 'Enable'*/}
-                  {/*      } camera for the call`}*/}
-                  {/*      checked={cameraEnabled}*/}
-                  {/*      onChange={handleCallPermissionChange('camera')}*/}
-                  {/*    />*/}
-                  {/*  </>*/}
-                  {/*)}*/}
                 </Stack>
                 <Stack direction="row" alignItems="center" gap={2} width="90%">
                   <MicIcon />
