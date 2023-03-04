@@ -98,6 +98,20 @@ const useCallStateBase = create<Store>()(
   })),
 );
 
+export const selectTracks = (
+  state: State,
+  userId: string,
+): Partial<DeviceTracksState> | undefined => state.tracks[userId];
+
+export const selectTrackState = (
+  state: State,
+  userId: string,
+  deviceType: DeviceType,
+): DeviceTrackState | undefined => {
+  const userTracks = selectTracks(state, userId);
+  return userTracks?.[deviceType];
+};
+
 export const useCallTracks = createSelectorFunctions(
   useCallStateBase as any, // Fixes immer inferring
 ) as typeof useCallStateBase & ZustandFuncSelectors<Store>;

@@ -4,27 +4,12 @@ import { css, SerializedStyles } from '@emotion/react';
 import MicIcon from '@mui/icons-material/Mic';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import ReportIcon from '@mui/icons-material/Report';
-import {
-  Button,
-  Container,
-  Skeleton,
-  Stack,
-  Theme,
-  Typography,
-} from '@mui/material';
+import { Container, Skeleton, Stack, Theme, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
-import DeviceSelector from '@/components/DeviceSelector';
-import SwitchWithPopover from '@/components/SwitchWithPopover';
-import {
-  useClientValue,
-  useCompliment,
-  useCurrentUser,
-  useLocalTracks,
-} from '@/hooks/index';
-import { useCallState } from '@/store/callState';
-import { useMediaSettings } from '@/store/index';
+import { useCompliment, useCurrentUser, useMicCamTracks } from '@/hooks/index';
+import { selectTrackState, useCallTracks } from '@/store/callTracks';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
@@ -40,61 +25,61 @@ const Preview: FC = () => {
 
   const { user } = useCurrentUser();
 
+  const microphoneState = useCallTracks((state) =>
+    selectTrackState(state, user!.id, 'microphone'),
+  );
+  const cameraState = useCallTracks((state) =>
+    selectTrackState(state, user!.id, 'camera'),
+  );
+
+  const addTracks = useCallTracks.use.addTracks();
+  const setTrackEnabled = useCallTracks.use.setTrackEnabled();
+  const setTrackDevice = useCallTracks.use.setTrackDevice();
+  const removeTracks = useCallTracks.use.removeTracks();
+
   const {
     isLoading: isLoadingTracks,
-    localTracks,
+    tracks,
     errorCode: tracksErrorCode,
-    stopTracks,
-  } = useLocalTracks({ skip: true });
-  const { audioTrack, videoTrack } = localTracks || {
-    audioTrack: null,
-    videoTrack: null,
-  };
+  } = useMicCamTracks();
 
-  const cameraEnabled = useClientValue(
-    useMediaSettings.use.camera().enabled,
-    true,
-  );
-  const microphoneEnabled = useClientValue(
-    useMediaSettings.use.microphone().enabled,
-    true,
-  );
-  const setEnabled = useMediaSettings.use.setEnabled();
-  const setDeviceId = useMediaSettings.use.setDeviceId();
+  useEffect(() => {
+    if (tracks) {
+      addTracks(user!.id, tracks);
+    }
+  }, [addTracks, tracks, user]);
 
   const handleDeviceChange =
     (deviceType: DeviceType) =>
-    (device: MediaDeviceInfo): void =>
-      setDeviceId(deviceType, device.deviceId);
+    ({ deviceId }: MediaDeviceInfo): void =>
+      setTrackDevice(user!.id, deviceType, deviceId);
 
-  const handleCallPermissionChange =
+  const handleEnabledChange =
     (deviceType: DeviceType) =>
     (enabled: boolean): void =>
-      setEnabled(deviceType, enabled);
+      setTrackEnabled(user!.id, deviceType, enabled);
 
   useEffect(() => {
-    const { current: previewCameraContainer } = previewCameraContainerRef;
-    if (!videoTrack || !previewCameraContainer) return;
+    if (!cameraState?.track) return;
 
-    if (cameraEnabled) {
-      videoTrack.play(previewCameraContainer);
+    const { current: previewCameraContainer } = previewCameraContainerRef;
+    if (!previewCameraContainer) return;
+
+    const { track, enabled } = cameraState;
+    if (enabled) {
+      track.play(previewCameraContainer);
     } else {
-      videoTrack.stop();
+      track.stop();
     }
-  }, [cameraEnabled, videoTrack]);
+  }, [cameraState]);
 
   const compliment = useCompliment();
 
   const handleCancelClick = (): void => {
-    router.push('/').finally(stopTracks);
+    router.push('/').finally(() => removeTracks(user!.id));
   };
-
-  const updateUserTracks = useCallState.use.updateUserTracks();
   const handleJoinClick = (): void => {
-    if (user?.id && localTracks) {
-      updateUserTracks(user.id, localTracks);
-      router.push('/call');
-    }
+    router.push('/call');
   };
 
   return (
@@ -115,7 +100,7 @@ const Preview: FC = () => {
             >
               {isLoadingTracks && 'Loading media devices...'}
               {tracksErrorCode && 'Cannot obtain devices'}
-              {localTracks && `You look ${compliment} ✨`}
+              {tracks && `You look ${compliment} ✨`}
             </Typography>
             <Stack
               ref={previewCameraContainerRef}
@@ -128,16 +113,16 @@ const Preview: FC = () => {
               borderRadius={8}
               overflow="hidden"
             >
-              <Skeleton
-                variant="rounded"
-                width="100%"
-                height="100%"
-                animation={tracksErrorCode || !cameraEnabled ? false : 'pulse'}
-                sx={{ position: 'absolute' }}
-              />
-              {!cameraEnabled && (
-                <Typography variant="h5">Camera is disabled</Typography>
-              )}
+              {/*<Skeleton*/}
+              {/*  variant="rounded"*/}
+              {/*  width="100%"*/}
+              {/*  height="100%"*/}
+              {/*  animation={tracksErrorCode || !cameraEnabled ? false : 'pulse'}*/}
+              {/*  sx={{ position: 'absolute' }}*/}
+              {/*/>*/}
+              {/*{!cameraEnabled && (*/}
+              {/*  <Typography variant="h5">Camera is disabled</Typography>*/}
+              {/*)}*/}
               {tracksErrorCode && (
                 <>
                   <ReportIcon fontSize="large" color="error" />
@@ -158,44 +143,44 @@ const Preview: FC = () => {
                   {isLoadingTracks && (
                     <Skeleton variant="rounded" width="100%" height={40} />
                   )}
-                  {videoTrack && (
-                    <>
-                      <DeviceSelector
-                        deviceType="camera"
-                        initialDeviceLabel={videoTrack.getTrackLabel()}
-                        onChange={handleDeviceChange('camera')}
-                      />
-                      <SwitchWithPopover
-                        helperText={`${
-                          cameraEnabled ? 'Disable' : 'Enable'
-                        } camera for the call`}
-                        checked={cameraEnabled}
-                        onChange={handleCallPermissionChange('camera')}
-                      />
-                    </>
-                  )}
+                  {/*{videoTrack && (*/}
+                  {/*  <>*/}
+                  {/*    <DeviceSelector*/}
+                  {/*      deviceType="camera"*/}
+                  {/*      initialDeviceLabel={videoTrack.getTrackLabel()}*/}
+                  {/*      onChange={handleDeviceChange('camera')}*/}
+                  {/*    />*/}
+                  {/*    <SwitchWithPopover*/}
+                  {/*      helperText={`${*/}
+                  {/*        cameraEnabled ? 'Disable' : 'Enable'*/}
+                  {/*      } camera for the call`}*/}
+                  {/*      checked={cameraEnabled}*/}
+                  {/*      onChange={handleCallPermissionChange('camera')}*/}
+                  {/*    />*/}
+                  {/*  </>*/}
+                  {/*)}*/}
                 </Stack>
                 <Stack direction="row" alignItems="center" gap={2} width="90%">
                   <MicIcon />
                   {isLoadingTracks && (
                     <Skeleton variant="rounded" width="100%" height={40} />
                   )}
-                  {audioTrack && (
-                    <>
-                      <DeviceSelector
-                        deviceType="microphone"
-                        initialDeviceLabel={audioTrack.getTrackLabel()}
-                        onChange={handleDeviceChange('microphone')}
-                      />
-                      <SwitchWithPopover
-                        helperText={`${
-                          microphoneEnabled ? 'Disable' : 'Enable'
-                        } microphone for the call`}
-                        checked={microphoneEnabled}
-                        onChange={handleCallPermissionChange('microphone')}
-                      />
-                    </>
-                  )}
+                  {/*{audioTrack && (*/}
+                  {/*  <>*/}
+                  {/*    <DeviceSelector*/}
+                  {/*      deviceType="microphone"*/}
+                  {/*      initialDeviceLabel={audioTrack.getTrackLabel()}*/}
+                  {/*      onChange={handleDeviceChange('microphone')}*/}
+                  {/*    />*/}
+                  {/*    <SwitchWithPopover*/}
+                  {/*      helperText={`${*/}
+                  {/*        microphoneEnabled ? 'Disable' : 'Enable'*/}
+                  {/*      } microphone for the call`}*/}
+                  {/*      checked={microphoneEnabled}*/}
+                  {/*      onChange={handleCallPermissionChange('microphone')}*/}
+                  {/*    />*/}
+                  {/*  </>*/}
+                  {/*)}*/}
                 </Stack>
               </>
             )}
@@ -207,42 +192,42 @@ const Preview: FC = () => {
               width="90%"
               mt={3}
             >
-              {isLoadingTracks ? (
-                <>
-                  <Skeleton
-                    variant="rounded"
-                    width="50%"
-                    height={44}
-                    sx={{ borderRadius: 30 }}
-                  />
-                  <Skeleton
-                    variant="rounded"
-                    width="100%"
-                    height={44}
-                    sx={{ borderRadius: 30 }}
-                  />
-                </>
-              ) : (
-                <>
-                  <Button
-                    variant="outlined"
-                    color="inherit"
-                    onClick={handleCancelClick}
-                    sx={{ width: '50%' }}
-                  >
-                    Cancel
-                  </Button>
-                  {!tracksErrorCode && (
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      onClick={handleJoinClick}
-                    >
-                      Join
-                    </Button>
-                  )}
-                </>
-              )}
+              {/*{isLoadingTracks ? (*/}
+              {/*  <>*/}
+              {/*    <Skeleton*/}
+              {/*      variant="rounded"*/}
+              {/*      width="50%"*/}
+              {/*      height={44}*/}
+              {/*      sx={{ borderRadius: 30 }}*/}
+              {/*    />*/}
+              {/*    <Skeleton*/}
+              {/*      variant="rounded"*/}
+              {/*      width="100%"*/}
+              {/*      height={44}*/}
+              {/*      sx={{ borderRadius: 30 }}*/}
+              {/*    />*/}
+              {/*  </>*/}
+              {/*) : (*/}
+              {/*  <>*/}
+              {/*    <Button*/}
+              {/*      variant="outlined"*/}
+              {/*      color="inherit"*/}
+              {/*      onClick={handleCancelClick}*/}
+              {/*      sx={{ width: '50%' }}*/}
+              {/*    >*/}
+              {/*      Cancel*/}
+              {/*    </Button>*/}
+              {/*    {!tracksErrorCode && (*/}
+              {/*      <Button*/}
+              {/*        variant="contained"*/}
+              {/*        fullWidth*/}
+              {/*        onClick={handleJoinClick}*/}
+              {/*      >*/}
+              {/*        Join*/}
+              {/*      </Button>*/}
+              {/*    )}*/}
+              {/*  </>*/}
+              {/*)}*/}
             </Stack>
           </Stack>
         </Stack>
