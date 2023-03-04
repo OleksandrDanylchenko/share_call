@@ -1,8 +1,6 @@
 import React, { FC, useEffect, useRef } from 'react';
-
-import MicIcon from '@mui/icons-material/Mic';
 import ReportIcon from '@mui/icons-material/Report';
-import { Container, Skeleton, Stack, Typography } from '@mui/material';
+import { Box, Container, Skeleton, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
@@ -142,7 +140,7 @@ const Preview: FC = () => {
             </Stack>
             {!tracksErrorCode && (
               <>
-                <Stack direction="row" alignItems="center" gap={2} width="90%">
+                <Box width="90%">
                   {!cameraState || !devices?.camera ? (
                     <Skeleton variant="rounded" width="100%" height={40} />
                   ) : (
@@ -157,7 +155,7 @@ const Preview: FC = () => {
                           cameraState.enabled ? 'Disable' : 'Enable'
                         } camera for the call`}
                         showTooltip
-                        deviceType={'camera'}
+                        deviceType="camera"
                         enabled={cameraState.enabled}
                         onClick={toggleEnabledChange('camera')}
                       />
@@ -170,29 +168,36 @@ const Preview: FC = () => {
                       />
                     </Stack>
                   )}
-                </Stack>
-                <Stack direction="row" alignItems="center" gap={2} width="90%">
-                  <MicIcon />
-                  {isLoadingTracks && (
+                </Box>
+                <Box width="90%">
+                  {!microphoneState || !devices?.microphone ? (
                     <Skeleton variant="rounded" width="100%" height={40} />
+                  ) : (
+                    <Stack
+                      css={fullWidth}
+                      direction="row"
+                      alignItems="center"
+                      gap={3}
+                    >
+                      <DeviceToggleButton
+                        label={`${
+                          microphoneState.enabled ? 'Unmute' : 'Mute'
+                        } microphone for the call`}
+                        showTooltip
+                        deviceType="microphone"
+                        enabled={microphoneState.enabled}
+                        onClick={toggleEnabledChange('microphone')}
+                      />
+                      <DeviceSelector
+                        deviceType="camera"
+                        deviceId={microphoneState.deviceId}
+                        devices={devices.microphone}
+                        disabled={!microphoneState.enabled}
+                        onChange={handleDeviceChange('microphone')}
+                      />
+                    </Stack>
                   )}
-                  {/*{audioTrack && (*/}
-                  {/*  <>*/}
-                  {/*    <DeviceSelector*/}
-                  {/*      deviceType="microphone"*/}
-                  {/*      initialDeviceLabel={audioTrack.getTrackLabel()}*/}
-                  {/*      onChange={handleDeviceChange('microphone')}*/}
-                  {/*    />*/}
-                  {/*    <SwitchWithPopover*/}
-                  {/*      helperText={`${*/}
-                  {/*        microphoneEnabled ? 'Disable' : 'Enable'*/}
-                  {/*      } microphone for the call`}*/}
-                  {/*      checked={microphoneEnabled}*/}
-                  {/*      onChange={handleCallPermissionChange('microphone')}*/}
-                  {/*    />*/}
-                  {/*  </>*/}
-                  {/*)}*/}
-                </Stack>
+                </Box>
               </>
             )}
             <Stack
