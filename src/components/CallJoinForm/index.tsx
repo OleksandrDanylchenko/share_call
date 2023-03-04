@@ -4,12 +4,10 @@ import { LoadingButton } from '@mui/lab';
 import { Stack, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import {
-  joinFormWrapper,
-  nameForm,
-} from '@/components/CallJoinForm/styles';
+import { joinFormWrapper, nameForm } from '@/components/CallJoinForm/styles';
 import { useClientValue } from '@/hooks/index';
 import { useGuestUserInfo } from '@/store/guestUserInfo';
+import { shadowInset } from '@/styles/mixins';
 
 const CallJoinForm: FC = () => {
   const router = useRouter();
@@ -43,10 +41,12 @@ const CallJoinForm: FC = () => {
         />
         <LoadingButton
           type="submit"
-          variant="outlined"
           color="inherit"
           fullWidth
           disabled={!name}
+          css={(theme) =>
+            shadowInset(theme, { blurRadius: '10px', color: 'white' })
+          }
         >
           <span>Confirm</span>
         </LoadingButton>

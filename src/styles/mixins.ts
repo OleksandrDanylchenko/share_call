@@ -61,7 +61,7 @@ export const shadowInset = (
 
   const { blurRadius, spreadRadius, color } = {
     color: primary.main,
-    blurRadius: '20px',
+    blurRadius: '40px',
     spreadRadius: '2px',
     ...options,
   };

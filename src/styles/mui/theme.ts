@@ -24,7 +24,7 @@ const defaultTheme = createTheme({
           fontWeight: 700,
           padding: '0.55em 2.2em',
           borderRadius: '30px',
-          fontSize: '0.9em',
+          fontSize: '0.96em',
         },
       },
     },

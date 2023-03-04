@@ -26,6 +26,7 @@ import {
   fullParent,
   fullViewport,
   fullWidth,
+  shadowInset,
 } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
 
@@ -231,16 +232,19 @@ const Preview: FC = () => {
                     variant="outlined"
                     color="warning"
                     onClick={handleCancelClick}
-                    sx={{ width: '50%', fontSize: '0.97em' }}
+                    sx={{ width: '50%', color: 'white' }}
+                    css={(theme) =>
+                      shadowInset(theme, { color: theme.palette.warning.main })
+                    }
                   >
                     Cancel
                   </Button>
                   {!tracksErrorCode && (
                     <Button
-                      variant="contained"
                       fullWidth
                       onClick={handleJoinClick}
-                      sx={{ fontSize: '0.97em' }}
+                      sx={{ color: 'white' }}
+                      css={shadowInset}
                     >
                       Join
                     </Button>
