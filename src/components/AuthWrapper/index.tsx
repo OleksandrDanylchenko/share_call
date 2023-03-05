@@ -27,7 +27,7 @@ const Auth: FC<AuthProps & PropsWithChildren> = (props) => {
     children,
     required,
     onUnauthenticated,
-    unauthenticatedUrl,
+    unauthenticatedUrl = '/',
     loadingScreen,
   } = props;
 

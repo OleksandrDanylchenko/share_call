@@ -262,7 +262,6 @@ const Preview: FC = () => {
 const AuthPreview: NextAuthComponentType = Preview;
 AuthPreview.auth = {
   required: true,
-  unauthenticatedUrl: '/',
 };
 
 export default AuthPreview;
