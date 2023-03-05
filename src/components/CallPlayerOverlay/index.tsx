@@ -52,21 +52,24 @@ const CallPlayerOverlay: FC<Props> = (props) => {
         {showTracksStatus ? (
           <Stack
             css={(theme) =>
-              overlayBackground(theme, {
+              overlay(theme, {
                 side: 'left-bottom',
                 color: theme.palette.primary.dark,
               })
             }
             direction="row"
+            alignItems="center"
             gap={1.5}
           >
             <DeviceIcon
               deviceType="camera"
+              fontSize="small"
               enabled={cameraState?.enabled}
               color={cameraState?.enabled ? 'inherit' : 'error'}
             />
             <DeviceIcon
               deviceType="microphone"
+              fontSize="small"
               enabled={microphoneState?.enabled}
               color={microphoneState?.enabled ? 'inherit' : 'error'}
             />
@@ -76,12 +79,8 @@ const CallPlayerOverlay: FC<Props> = (props) => {
         )}
         {showName ? (
           <Typography
-            css={(theme) =>
-              overlayBackground(theme, {
-                side: 'right-bottom',
-              })
-            }
-            variant="subtitle1"
+            css={(theme) => overlay(theme, { side: 'right-bottom' })}
+            variant="subtitle2"
           >
             {userId}
           </Typography>
@@ -93,7 +92,7 @@ const CallPlayerOverlay: FC<Props> = (props) => {
   );
 };
 
-const overlayBackground = (
+const overlay = (
   theme: Theme,
   options: { side: 'left-bottom' | 'right-bottom'; color?: string },
 ): SerializedStyles => {
@@ -105,7 +104,7 @@ const overlayBackground = (
     ${shadowInset(theme, { color, blurRadius: '50px' })};
 
     color: ${theme.palette.common.black};
-    padding: ${spacing(0.6)};
+    padding: ${spacing(0.1)};
     z-index: 1;
 
     @container (max-width: 400px) {
