@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef } from 'react';
+import { FC, useMemo, useRef } from 'react';
 
 import {
   Box,
@@ -11,50 +11,44 @@ import { useRouter } from 'next/router';
 import useAsyncEffect from 'use-async-effect';
 import { useEventListener } from 'usehooks-ts';
 
+import { NextAuthComponentType } from '@/components/AuthWrapper';
 import CallControls from '@/components/CallControls';
 import CallScene, { CallSceneType } from '@/components/CallScene';
 import { clientEnv } from '@/env/schema.mjs';
 import { useAgoraRtcClient } from '@/hooks/useAgoraRtcClient';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { useCallState } from '@/store/callState';
+import {
+  selectLocalTracks,
+  selectTracks,
+  useCallTracks,
+} from '@/store/callTracks';
 import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
-import { AgoraLocalTracks } from '@/types/agora';
 
 const Call: FC = () => {
-  const router = useRouter();
+  const user = useCurrentUser();
 
-  const { isLoading: isLoadingUser, user } = useCurrentUser({
-    redirectOnUnauthenticated: () => router.replace('/'), // TODO Add toast
-  });
-  const { isLoading: isLoadingRtcClient, client: rtc } = useAgoraRtcClient();
-  const isLoading = isLoadingRtcClient || isLoadingUser;
-
-  const currentUserTracks = useCallState.use.usersTracks()[
-    user?.id || ''
-  ] as AgoraLocalTracks;
-  useEffect(() => {
-    if (!isLoadingUser && !currentUserTracks) {
-      router.replace('/preview');
-    }
-  }, [currentUserTracks, isLoadingUser, router]);
+  const userTracks = useCallTracks((state) =>
+    selectLocalTracks(state, user.id),
+  )!;
+  const addTrack = useCallTracks.use.addTrack();
+  const removeTracks = useCallTracks.use.removeTracks();
 
   const hasJoinRequested = useRef(false);
+  const { isLoading: isLoadingRtcClient, client: rtc } = useAgoraRtcClient();
 
-  const updateUserTracks = useCallState.use.updateUserTracks();
   useAsyncEffect(async () => {
     if (!rtc || hasJoinRequested.current) return;
 
-    if (!user?.id || !currentUserTracks) return;
-
     const appId = clientEnv.NEXT_PUBLIC_AGORA_APP_ID;
-    if (!appId) return;
+    if (!appId) {
+      throw new Error('Missing Agora App ID!');
+    }
 
     hasJoinRequested.current = true;
-
     await rtc.join(appId, 'test-channel', null, user.id);
 
-    const { audioTrack, videoTrack } = currentUserTracks;
-    // await rtc.publish([audioTrack, videoTrack]);
+    const { microphone, camera } = userTracks;
+    // await rtc.publish([microphone!.track, camera!.track]);
 
     rtc.on('user-published', async (user, mediaType) => {
       await rtc.subscribe(user, mediaType);
@@ -63,27 +57,28 @@ const Call: FC = () => {
       const userId = String(uid);
       switch (mediaType) {
         case 'video':
-          return updateUserTracks(userId, { videoTrack });
+          return addTrack(userId, 'camera', {
+            track: videoTrack!,
+            enabled: true,
+          });
         case 'audio':
-          return updateUserTracks(userId, { audioTrack });
+          return addTrack(userId, 'microphone', {
+            track: audioTrack!,
+            enabled: true,
+          });
       }
     });
 
-    rtc.on('user-unpublished', (user) => {
-      updateUserTracks(String(user.uid), undefined);
-    });
-  }, [hasJoinRequested, rtc, updateUserTracks, user?.id, currentUserTracks]);
+    rtc.on('user-unpublished', (user) => removeTracks(String(user.uid)));
+  }, [addTrack, removeTracks, rtc, user.id, userTracks]);
 
   useEventListener('beforeunload', async () => {
-    if (!user?.id || !currentUserTracks) return;
-
-    const { audioTrack, videoTrack } = currentUserTracks;
-    await rtc.unpublish([audioTrack, videoTrack]);
+    const { microphone, camera } = userTracks;
+    await rtc.unpublish([microphone!.track, camera!.track]);
   });
 
   const sceneView = useMemo(() => {
     const scene = CallSceneType.Grid as CallSceneType; // TODO Replace w/ query
-
     switch (scene) {
       case CallSceneType.Grid:
         return <CallScene.Grid />;
@@ -102,7 +97,7 @@ const Call: FC = () => {
       <Box flex={1}>
         <Container css={fullHeight}>
           <Stack css={fullHeight} alignItems="center" justifyContent="center">
-            {isLoading ? (
+            {isLoadingRtcClient ? (
               <Stack gap={5} padding={10} borderRadius={5}>
                 <Typography variant="h2">Joining the call...</Typography>
                 <LinearProgress color="inherit" />
@@ -118,4 +113,24 @@ const Call: FC = () => {
   );
 };
 
-export default Call;
+const CallContainer: FC = () => {
+  const router = useRouter();
+
+  const user = useCurrentUser();
+
+  const userTracks = useCallTracks((state) => selectTracks(state, user.id));
+  if (!userTracks) {
+    // Tracks need to be populated before entering the call
+    router.replace('/preview');
+    return null;
+  }
+
+  return <Call />;
+};
+
+const AuthCall: NextAuthComponentType = CallContainer;
+AuthCall.auth = {
+  required: true,
+};
+
+export default AuthCall;
