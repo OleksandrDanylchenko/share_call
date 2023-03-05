@@ -1,4 +1,4 @@
-import { FC, useMemo, useRef } from 'react';
+import { FC, useEffect, useMemo, useRef } from 'react';
 
 import {
   Box,
@@ -25,6 +25,8 @@ import {
 import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
 
 const Call: FC = () => {
+  const router = useRouter();
+
   const user = useCurrentUser();
 
   const userTracks = useCallTracks((state) =>
@@ -79,6 +81,12 @@ const Call: FC = () => {
 
     rtc.on('user-left', (user) => removeTracks(String(user.uid)));
   }, [addTrack, removeTrack, removeTracks, rtc, user.id, userTracks]);
+
+  useEffect(() => {
+    const handleRouteChange = (): void => removeTracks(user.id);
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => router.events.off('routeChangeStart', handleRouteChange);
+  }, [removeTracks, router.events, user.id]);
 
   useEventListener('beforeunload', async () => {
     const { microphone, camera } = userTracks;

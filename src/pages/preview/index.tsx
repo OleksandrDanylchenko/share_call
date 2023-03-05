@@ -75,12 +75,15 @@ const Preview: FC = () => {
 
   const compliment = useCompliment();
 
-  const handleCancelClick = (): void => {
-    router.push('/').finally(() => removeTracks(user.id));
-  };
-  const handleJoinClick = (): void => {
-    router.push('/call');
-  };
+  useEffect(() => {
+    const handleRouteChange = (url: string): void => {
+      if (url !== '/call') {
+        removeTracks(user.id);
+      }
+    };
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => router.events.off('routeChangeStart', handleRouteChange);
+  }, [removeTracks, router.events, user.id]);
 
   return (
     <main css={[fullViewport, doubleColorGradient]}>
@@ -231,7 +234,7 @@ const Preview: FC = () => {
                     size="large"
                     variant="outlined"
                     color="warning"
-                    onClick={handleCancelClick}
+                    onClick={() => router.push('/')}
                     sx={{ width: '50%', color: 'white' }}
                     css={(theme) =>
                       shadowInset(theme, { color: theme.palette.warning.main })
@@ -242,7 +245,7 @@ const Preview: FC = () => {
                   {!tracksErrorCode && (
                     <Button
                       fullWidth
-                      onClick={handleJoinClick}
+                      onClick={() => router.push('/call')}
                       sx={{ color: 'white' }}
                       css={shadowInset}
                     >
