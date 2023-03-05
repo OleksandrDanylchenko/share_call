@@ -28,7 +28,7 @@ import {
   fullWidth,
   shadowInset,
 } from '@/styles/mixins';
-import { DeviceType, isLocalTrack } from '@/types/agora';
+import { DeviceType } from '@/types/agora';
 
 const Preview: FC = () => {
   const router = useRouter();
