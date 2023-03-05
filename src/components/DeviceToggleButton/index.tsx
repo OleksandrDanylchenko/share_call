@@ -6,6 +6,7 @@ import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { IconButton, Tooltip } from '@mui/material';
 
+import DeviceIcon from '@/components/DeviceIcon';
 import { shadowInset } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
 
@@ -21,23 +22,6 @@ interface Props {
 const DeviceToggleButton: FC<Props> = (props) => {
   const { deviceType, enabled, label, showTooltip, onClick, className } = props;
 
-  let icon: ReactElement;
-  switch (deviceType) {
-    case 'microphone':
-      icon = enabled ? (
-        <MicIcon fontSize="large" />
-      ) : (
-        <MicOffIcon fontSize="large" />
-      );
-      break;
-    case 'camera':
-      icon = enabled ? (
-        <PhotoCameraIcon fontSize="large" />
-      ) : (
-        <NoPhotographyIcon fontSize="large" />
-      );
-  }
-
   const iconButton = (
     <IconButton
       css={(theme) => {
@@ -52,7 +36,7 @@ const DeviceToggleButton: FC<Props> = (props) => {
       aria-label={label}
       onClick={onClick}
     >
-      {icon}
+      <DeviceIcon deviceType={deviceType} enabled={enabled} fontSize="large" />
     </IconButton>
   );
 
