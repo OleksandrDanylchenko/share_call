@@ -12,6 +12,7 @@ import {
   DeviceTracksState,
   DeviceType,
   isLocalTrack,
+  isLocalTrackState,
 } from '@/types/agora';
 
 interface State {
@@ -56,7 +57,7 @@ const useCallStateBase = create<Store>()(
     removeTracks: (userId) =>
       set((state) => {
         const userTracks = state.tracks[userId];
-        if (isEmpty(userTracks)) return;
+        if (!userTracks) return;
 
         ObjectTyped.keys(userTracks).forEach((deviceType) =>
           get().removeTrack(userId, deviceType),
@@ -89,9 +90,8 @@ const useCallStateBase = create<Store>()(
         const trackState = state.tracks[userId]?.[deviceType];
         if (!trackState) return;
 
-        const { track } = trackState;
-        if (isLocalTrack(track)) {
-          track.setDevice(deviceId);
+        if (isLocalTrackState(trackState) && isLocalTrack(trackState.track)) {
+          trackState.track.setDevice(deviceId);
           trackState.deviceId = deviceId;
         }
       }),

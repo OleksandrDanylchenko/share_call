@@ -31,6 +31,7 @@ const Call: FC = () => {
     selectLocalTracks(state, user.id),
   )!;
   const addTrack = useCallTracks.use.addTrack();
+  const removeTrack = useCallTracks.use.removeTrack();
   const removeTracks = useCallTracks.use.removeTracks();
 
   const hasJoinRequested = useRef(false);
@@ -48,7 +49,7 @@ const Call: FC = () => {
     await rtc.join(appId, 'test-channel', null, user.id);
 
     const { microphone, camera } = userTracks;
-    // await rtc.publish([microphone!.track, camera!.track]);
+    await rtc.publish([microphone!.track, camera!.track]);
 
     rtc.on('user-published', async (user, mediaType) => {
       await rtc.subscribe(user, mediaType);
@@ -69,8 +70,15 @@ const Call: FC = () => {
       }
     });
 
-    rtc.on('user-unpublished', (user) => removeTracks(String(user.uid)));
-  }, [addTrack, removeTracks, rtc, user.id, userTracks]);
+    rtc.on('user-unpublished', (user, mediaType) =>
+      removeTrack(
+        String(user.uid),
+        mediaType === 'audio' ? 'microphone' : 'camera',
+      ),
+    );
+
+    rtc.on('user-left', (user) => removeTracks(String(user.uid)));
+  }, [addTrack, removeTrack, removeTracks, rtc, user.id, userTracks]);
 
   useEventListener('beforeunload', async () => {
     const { microphone, camera } = userTracks;
