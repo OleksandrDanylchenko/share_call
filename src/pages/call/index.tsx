@@ -102,7 +102,7 @@ const Call: FC = () => {
         doubleColorGradient(theme, { centerOffset: 26 }),
       ]}
     >
-      <Box flex={1}>
+      <Box flex={1} overflow="hidden">
         <Container css={fullHeight}>
           <Stack css={fullHeight} alignItems="center" justifyContent="center">
             {isLoadingRtcClient ? (
