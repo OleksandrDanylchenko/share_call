@@ -36,10 +36,10 @@ const Preview: FC = () => {
   const user = useCurrentUser();
 
   const microphoneState = useCallTracks((state) =>
-    selectTrackState(state, user!.id, 'microphone'),
+    selectTrackState(state, user.id, 'microphone'),
   );
   const cameraState = useCallTracks((state) =>
-    selectTrackState(state, user!.id, 'camera'),
+    selectTrackState(state, user.id, 'camera'),
   );
 
   const addTracks = useCallTracks.use.addTracks();
@@ -56,27 +56,27 @@ const Preview: FC = () => {
 
   useEffect(() => {
     if (tracks) {
-      addTracks(user!.id, tracks);
+      addTracks(user.id, tracks);
     }
   }, [addTracks, tracks, user]);
 
   const handleDeviceChange =
     (deviceType: DeviceType) =>
     ({ deviceId }: MediaDeviceInfo): void =>
-      setTrackDevice(user!.id, deviceType, deviceId);
+      setTrackDevice(user.id, deviceType, deviceId);
 
   const toggleEnabledChange = (deviceType: DeviceType) => (): void => {
     const enabled =
       deviceType === 'microphone'
         ? microphoneState?.enabled
         : cameraState?.enabled;
-    setTrackEnabled(user!.id, deviceType, !enabled);
+    setTrackEnabled(user.id, deviceType, !enabled);
   };
 
   const compliment = useCompliment();
 
   const handleCancelClick = (): void => {
-    router.push('/').finally(() => removeTracks(user!.id));
+    router.push('/').finally(() => removeTracks(user.id));
   };
   const handleJoinClick = (): void => {
     router.push('/call');
