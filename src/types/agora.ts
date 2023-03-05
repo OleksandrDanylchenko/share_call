@@ -108,10 +108,7 @@ export type AgoraRemoteTracks = {
 };
 
 export type AgoraTracks = AgoraLocalTracks | AgoraRemoteTracks;
-
 export type AgoraTrack = AgoraTracks[keyof AgoraTracks];
-export type AgoraAudioTrack = AgoraTracks['audioTrack'];
-export type AgoraVideoTrack = AgoraTracks['videoTrack'];
 
 export type DeviceType = 'microphone' | 'camera';
 
@@ -129,14 +126,24 @@ export const isRemoteTrack = (
 ): track is AgoraRemoteTracks[keyof AgoraRemoteTracks] =>
   typeof track === 'object' && track !== null && 'getUserId' in track;
 
-export interface DeviceTrackState<T extends AgoraTrack> {
+export interface DeviceTrackState<T = AgoraTrack> {
   track: T;
   enabled: boolean;
   deviceId?: string; // Available only for local tracks
 }
 
-export interface DeviceTracksState
-  extends Record<DeviceType, DeviceTrackState<AgoraTrack>> {
-  microphone: DeviceTrackState<AgoraAudioTrack>;
-  camera: DeviceTrackState<AgoraVideoTrack>;
+export interface DeviceLocalTracksState
+  extends Record<DeviceType, DeviceTrackState> {
+  microphone: DeviceTrackState<AgoraLocalTracks['audioTrack']>;
+  camera: DeviceTrackState<AgoraLocalTracks['videoTrack']>;
 }
+
+export interface DeviceRemoteTracksState
+  extends Record<DeviceType, DeviceTrackState> {
+  microphone: DeviceTrackState<AgoraRemoteTracks['audioTrack']>;
+  camera: DeviceTrackState<AgoraRemoteTracks['videoTrack']>;
+}
+
+export type DeviceTracksState =
+  | DeviceLocalTracksState
+  | DeviceRemoteTracksState;

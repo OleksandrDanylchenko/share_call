@@ -7,7 +7,12 @@ import { ObjectTyped } from 'object-typed';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-import { DeviceTracksState, DeviceType, isLocalTrack } from '@/types/agora';
+import {
+  DeviceLocalTracksState,
+  DeviceTracksState,
+  DeviceType,
+  isLocalTrack,
+} from '@/types/agora';
 
 interface State {
   tracks: Record<string, Partial<DeviceTracksState>>; // user -> deviceType -> track
@@ -93,19 +98,34 @@ const useCallStateBase = create<Store>()(
   })),
 );
 
-export const selectTracks = (
+export const selectTracks = <TTracks extends DeviceTracksState>(
   state: State,
   userId: string,
-): Partial<DeviceTracksState> | undefined => state.tracks[userId];
+): Partial<TTracks> | undefined => state.tracks[userId] as TTracks;
 
-export const selectTrackState = <T extends DeviceType>(
+export const selectLocalTracks = (
+  ...args: Parameters<typeof selectTracks>
+): Partial<DeviceLocalTracksState> | undefined =>
+  selectTracks<DeviceLocalTracksState>(...args);
+
+export const selectTrackState = <
+  TTracks extends DeviceTracksState,
+  TDevice extends DeviceType,
+>(
   state: State,
   userId: string,
-  deviceType: T,
-): DeviceTracksState[T] | undefined => {
-  const userTracks = selectTracks(state, userId);
+  deviceType: TDevice,
+): TTracks[TDevice] | undefined => {
+  const userTracks = selectTracks<TTracks>(state, userId);
   return userTracks?.[deviceType];
 };
+
+export const selectLocalTrackState = <TDevice extends DeviceType>(
+  state: State,
+  userId: string,
+  deviceType: TDevice,
+): DeviceLocalTracksState[TDevice] | undefined =>
+  selectTrackState<DeviceLocalTracksState, TDevice>(state, userId, deviceType);
 
 export const useCallTracks = createSelectorFunctions(
   useCallStateBase as any, // Fixes immer inferring

@@ -18,7 +18,7 @@ import DeviceToggleButton from '@/components/DeviceToggleButton';
 import TracksPlayer from '@/components/TracksPlayer';
 import { useCompliment, useCurrentUser, useMicCamTracks } from '@/hooks/index';
 import { useDevices } from '@/hooks/useDevices';
-import { selectTrackState, useCallTracks } from '@/store/callTracks';
+import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
@@ -36,10 +36,10 @@ const Preview: FC = () => {
   const user = useCurrentUser();
 
   const microphoneState = useCallTracks((state) =>
-    selectTrackState(state, user.id, 'microphone'),
+    selectLocalTrackState(state, user.id, 'microphone'),
   );
   const cameraState = useCallTracks((state) =>
-    selectTrackState(state, user.id, 'camera'),
+    selectLocalTrackState(state, user.id, 'camera'),
   );
 
   const addTracks = useCallTracks.use.addTracks();
@@ -108,16 +108,14 @@ const Preview: FC = () => {
               borderRadius={8}
               overflow="hidden"
             >
-              {cameraState?.track &&
-                // Narrows down the track type to be assignable to the TracksPlayer component
-                isLocalTrack(cameraState.track) && (
-                  <TracksPlayer
-                    css={css`
-                      z-index: 1;
-                    `}
-                    tracks={{ videoTrack: cameraState.track }}
-                  />
-                )}
+              {cameraState?.track && (
+                <TracksPlayer
+                  css={css`
+                    z-index: 1;
+                  `}
+                  tracks={{ videoTrack: cameraState.track }}
+                />
+              )}
               <Skeleton
                 css={fullParent}
                 variant="rounded"
