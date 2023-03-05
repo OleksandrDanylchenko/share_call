@@ -32,6 +32,9 @@ rules:
   jsx-quotes:
     - error
     - prefer-double
+  'react-hooks/exhaustive-deps':
+    - warn
+    - additionalHooks: '(useAsyncEffect)'
   '@typescript-eslint/explicit-function-return-type':
     - warn
     - allowExpressions: true
