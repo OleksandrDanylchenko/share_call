@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import { css } from '@emotion/react';
 import ReportIcon from '@mui/icons-material/Report';
@@ -28,7 +28,7 @@ import {
   fullWidth,
   shadowInset,
 } from '@/styles/mixins';
-import { DeviceType } from '@/types/agora';
+import { DeviceType, isLocalTrack } from '@/types/agora';
 
 const Preview: FC = () => {
   const router = useRouter();
@@ -108,14 +108,16 @@ const Preview: FC = () => {
               borderRadius={8}
               overflow="hidden"
             >
-              {cameraState?.track && (
-                <TracksPlayer
-                  css={css`
-                    z-index: 1;
-                  `}
-                  tracks={{ videoTrack: cameraState?.track }}
-                />
-              )}
+              {cameraState?.track &&
+                // Narrows down the track type to be assignable to the TracksPlayer component
+                isLocalTrack(cameraState.track) && (
+                  <TracksPlayer
+                    css={css`
+                      z-index: 1;
+                    `}
+                    tracks={{ videoTrack: cameraState.track }}
+                  />
+                )}
               <Skeleton
                 css={fullParent}
                 variant="rounded"

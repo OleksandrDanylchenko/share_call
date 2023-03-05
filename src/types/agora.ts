@@ -107,7 +107,7 @@ export type AgoraRemoteTracks = {
   videoTrack: IRemoteVideoTrack;
 };
 
-export type AgoraTracks = AgoraLocalTracks & AgoraRemoteTracks;
+export type AgoraTracks = AgoraLocalTracks | AgoraRemoteTracks;
 
 export type AgoraTrack = AgoraTracks[keyof AgoraTracks];
 export type AgoraAudioTrack = AgoraTracks['audioTrack'];
@@ -124,10 +124,15 @@ export const isLocalTrack = (
   'setEnabled' in track &&
   'setDevice' in track;
 
+export const isRemoteTrack = (
+  track: unknown,
+): track is AgoraRemoteTracks[keyof AgoraRemoteTracks] =>
+  typeof track === 'object' && track !== null && 'getUserId' in track;
+
 export interface DeviceTrackState<T extends AgoraTrack> {
   track: T;
   enabled: boolean;
-  deviceId: string;
+  deviceId?: string; // Available only for local tracks
 }
 
 export interface DeviceTracksState
