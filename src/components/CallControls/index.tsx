@@ -1,74 +1,29 @@
-import { FC, ReactElement } from 'react';
+import { FC } from 'react';
 
-import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/MicOff';
-import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import { IconButton, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 
-import { useClientValue } from '@/hooks/useClientValue';
-import { useMediaSettings } from '@/store/mediaSettings';
-import { shadowInset } from '@/styles/mixins';
+import DeviceToggleButton from '@/components/DeviceToggleButton';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
 import { DeviceType } from '@/types/agora';
 
 const CallControls: FC = () => {
-  const cameraEnabled = useClientValue(
-    useMediaSettings.use.camera().enabled,
-    true,
-  );
-  const microphoneEnabled = useClientValue(
-    useMediaSettings.use.microphone().enabled,
-    true,
-  );
+  const user = useCurrentUser();
 
-  const setEnabled = useMediaSettings.use.setEnabled();
-  const handleToggleCallPermission = (deviceType: DeviceType) => (): void => {
+  const microphoneState = useCallTracks((state) =>
+    selectLocalTrackState(state, user.id, 'microphone'),
+  )!;
+  const cameraState = useCallTracks((state) =>
+    selectLocalTrackState(state, user.id, 'camera'),
+  )!;
+
+  const setTrackEnabled = useCallTracks.use.setTrackEnabled();
+  const toggleEnabledChange = (deviceType: DeviceType) => (): void => {
     const enabled =
-      deviceType === 'microphone' ? microphoneEnabled : cameraEnabled;
-    setEnabled(deviceType, !enabled);
-  };
-
-  const getControlIcon = (deviceType: DeviceType): ReactElement => {
-    let enabled: boolean;
-    let ariaLabel: string;
-    let icon: ReactElement;
-
-    switch (deviceType) {
-      case 'microphone':
-        enabled = microphoneEnabled;
-        ariaLabel = `${enabled ? 'Unmute' : 'Mute'} microphone`;
-        icon = enabled ? (
-          <MicIcon fontSize="large" />
-        ) : (
-          <MicOffIcon fontSize="large" />
-        );
-        break;
-      case 'camera':
-        enabled = cameraEnabled;
-        ariaLabel = `${enabled ? 'Disable' : 'Enable'} camera`;
-        icon = enabled ? (
-          <PhotoCameraIcon fontSize="large" />
-        ) : (
-          <NoPhotographyIcon fontSize="large" />
-        );
-    }
-
-    return (
-      <IconButton
-        css={(theme) => {
-          const { warning, error } = theme.palette;
-          return shadowInset(theme, {
-            blurRadius: '40px',
-            color: enabled ? warning.main : error.main,
-          });
-        }}
-        size="large"
-        aria-label={ariaLabel}
-        onClick={handleToggleCallPermission(deviceType)}
-      >
-        {icon}
-      </IconButton>
-    );
+      deviceType === 'microphone'
+        ? microphoneState?.enabled
+        : cameraState?.enabled;
+    setTrackEnabled(user.id, deviceType, !enabled);
   };
 
   return (
@@ -79,8 +34,22 @@ const CallControls: FC = () => {
       p={2}
       gap={4}
     >
-      {getControlIcon('microphone')}
-      {getControlIcon('camera')}
+      <DeviceToggleButton
+        label={`${
+          cameraState.enabled ? 'Disable' : 'Enable'
+        } camera for the call`}
+        deviceType="camera"
+        enabled={cameraState.enabled}
+        onClick={toggleEnabledChange('camera')}
+      />
+      <DeviceToggleButton
+        label={`${
+          microphoneState.enabled ? 'Unmute' : 'Mute'
+        } microphone for the call`}
+        deviceType="microphone"
+        enabled={microphoneState.enabled}
+        onClick={toggleEnabledChange('microphone')}
+      />
     </Stack>
   );
 };
