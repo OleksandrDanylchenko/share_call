@@ -5,16 +5,17 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useGridItemDimensions } from '@/components/CallScene/Grid/useGridItemWidth';
 import TracksPlayer from '@/components/TracksPlayer';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { useCallState } from '@/store/callState';
+import { useCallTracks } from '@/store/callTracks';
 import { fullParent } from '@/styles/mixins';
+import { AgoraTracks } from '@/types/agora';
 
 const GridScene: FC = () => {
-  const { user } = useCurrentUser();
+  const user = useCurrentUser();
 
   const gridContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const usersTracks = useCallState.use.usersTracks();
-  const usersNumber = Object.keys(usersTracks).length;
+  const tracks = useCallTracks.use.tracks();
+  const usersNumber = Object.keys(tracks).length;
 
   const itemDimensions = useGridItemDimensions({
     containerRef: gridContainerRef,
@@ -39,11 +40,15 @@ const GridScene: FC = () => {
       {/*    </Item>*/}
       {/*  </Grid>*/}
       {/*))}*/}
-      {Object.entries(usersTracks).map(([userId, tracks]) => (
+      {Object.entries(tracks).map(([userId, { microphone, camera }]) => (
         <Grid key={userId} {...itemDimensions}>
           <TracksPlayer
-            userId={userId}
-            tracks={tracks}
+            tracks={
+              {
+                audioTrack: microphone?.track,
+                videoTrack: camera?.track,
+              } as Partial<AgoraTracks>
+            }
             playAudio={userId !== user?.id}
           />
         </Grid>
