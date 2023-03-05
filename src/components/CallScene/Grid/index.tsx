@@ -2,6 +2,7 @@ import { FC, useRef } from 'react';
 
 import Grid from '@mui/material/Unstable_Grid2';
 
+import CallPlayerOverlay from '@/components/CallPlayerOverlay';
 import { useGridItemDimensions } from '@/components/CallScene/Grid/useGridItemWidth';
 import TracksPlayer from '@/components/TracksPlayer';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
@@ -35,15 +36,17 @@ const GridScene: FC = () => {
     >
       {Object.entries(tracks).map(([userId, { microphone, camera }]) => (
         <Grid key={userId} {...itemDimensions}>
-          <TracksPlayer
-            tracks={
-              {
-                audioTrack: microphone?.track,
-                videoTrack: camera?.track,
-              } as Partial<AgoraTracks>
-            }
-            playAudio={userId !== user?.id}
-          />
+          <CallPlayerOverlay userId={userId}>
+            <TracksPlayer
+              tracks={
+                {
+                  audioTrack: microphone?.track,
+                  videoTrack: camera?.track,
+                } as Partial<AgoraTracks>
+              }
+              playAudio={userId !== user?.id}
+            />
+          </CallPlayerOverlay>
         </Grid>
       ))}
     </Grid>

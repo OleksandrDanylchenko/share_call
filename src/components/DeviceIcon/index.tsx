@@ -12,7 +12,7 @@ type SvgIconProps = SvgIconTypeMap['props'];
 
 interface Props extends SvgIconProps {
   deviceType: DeviceType;
-  enabled: boolean;
+  enabled: boolean | undefined;
 }
 
 const DeviceIcon: FC<Props> = (props) => {

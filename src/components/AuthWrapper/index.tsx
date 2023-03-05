@@ -18,11 +18,13 @@ export type NextAuthComponentType = AppPropsType['Component'] & {
   auth?: AuthProps;
 };
 
+type Props = AuthProps & PropsWithChildren;
+
 /**
  * Handling session in the client and showing a global loader for the first time
  * @see {@link https://next-auth.js.org/getting-started/client#custom-client-session-handling}
  */
-const Auth: FC<AuthProps & PropsWithChildren> = (props) => {
+const Auth: FC<Props> = (props) => {
   const {
     children,
     required,
