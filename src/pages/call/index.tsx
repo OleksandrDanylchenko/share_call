@@ -83,10 +83,13 @@ const Call: FC = () => {
   }, [addTrack, removeTrack, removeTracks, rtc, user.id, userTracks]);
 
   useEffect(() => {
-    const handleRouteChange = (): void => removeTracks(user.id);
+    const handleRouteChange = (): void => {
+      rtc.leave();
+      removeTracks(user.id);
+    };
     router.events.on('routeChangeStart', handleRouteChange);
     return () => router.events.off('routeChangeStart', handleRouteChange);
-  }, [removeTracks, router.events, user.id]);
+  }, [removeTracks, router.events, rtc, user.id]);
 
   useEventListener('beforeunload', async () => {
     const { microphone, camera } = userTracks;
