@@ -41,7 +41,7 @@ const SignInForm: FC = () => {
   };
 
   const handleEmailSignIn = async (email: string): Promise<void> => {
-    await signIn('email', { email });
+    await signIn('email', { email, redirect: false });
   };
 
   const [parent] = useAutoAnimate();
