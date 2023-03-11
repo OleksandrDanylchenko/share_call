@@ -79,7 +79,7 @@ const UserNameSetting: FC = () => {
   const handleNameSubmit = ({ name }: UserNameForm): void => {
     toggleEditing();
     if (session?.user?.id) {
-      updateUsername({ userId: session.user.id, name });
+      updateUsername({ name });
     }
   };
 
