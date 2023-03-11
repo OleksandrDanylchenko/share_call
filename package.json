@@ -42,6 +42,7 @@
     "next-auth": "^4.18.7",
     "nodemailer": "^6.9.1",
     "object-typed": "^1.0.0",
+    "random-animal-name-generator": "^0.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.42.1",

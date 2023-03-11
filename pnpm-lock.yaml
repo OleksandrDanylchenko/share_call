@@ -45,6 +45,7 @@ specifiers:
   object-typed: ^1.0.0
   prettier: ^2.8.3
   prisma: ^4.10.1
+  random-animal-name-generator: ^0.1.1
   react: 18.2.0
   react-dom: 18.2.0
   react-hook-form: ^7.42.1
@@ -88,6 +89,7 @@ dependencies:
   next-auth: 4.18.8_kcrisbppuh4uplzrocihcy7jcu
   nodemailer: 6.9.1
   object-typed: 1.0.0
+  random-animal-name-generator: 0.1.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.42.1_react@18.2.0
@@ -2967,6 +2969,10 @@ packages:
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: true
+
+  /random-animal-name-generator/0.1.1:
+    resolution: {integrity: sha512-VggZMRUlhOcRlm0x+2BegT+QfzeFj82Q5BqykpMcsrDoHR+NUp2DEnrZmYWekFgN3qCGRX73GYRygHAv4+0pQQ==}
+    dev: false
 
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
