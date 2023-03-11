@@ -73,11 +73,8 @@ const UserNameSetting: FC = () => {
     toggleEditing();
   };
 
-  const {
-    mutate: updateUsername,
-    isLoading,
-    isError,
-  } = api.userSettings.updateName.useMutation();
+  const { mutate: updateUsername, isLoading } =
+    api.userSettings.updateName.useMutation({ onError: handleCancelEditing });
 
   const handleNameSubmit = ({ name }: UserNameForm): void => {
     toggleEditing();
