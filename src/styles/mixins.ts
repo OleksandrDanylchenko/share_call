@@ -81,3 +81,11 @@ export const blurBackgroundContainer = css`
   backdrop-filter: blur(60px) hue-rotate(180deg) saturate(40%);
   border: none;
 `;
+
+export const textFieldEllipsis = css`
+  .MuiInputBase-input {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`;
