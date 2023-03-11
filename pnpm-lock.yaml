@@ -5,6 +5,7 @@ specifiers:
   '@emotion/react': ^11.10.5
   '@emotion/server': ^11.10.0
   '@emotion/styled': ^11.10.5
+  '@formkit/auto-animate': 1.0.0-beta.6
   '@ls-lint/ls-lint': ^1.11.2
   '@mui/icons-material': ^5.11.0
   '@mui/lab': 5.0.0-alpha.117
@@ -62,6 +63,7 @@ dependencies:
   '@emotion/react': 11.10.5_kzbn2opkn2327fwg5yzwzya5o4
   '@emotion/server': 11.10.0
   '@emotion/styled': 11.10.5_qvatmowesywn4ye42qoh247szu
+  '@formkit/auto-animate': 1.0.0-beta.6
   '@mui/lab': 5.0.0-alpha.117_hjvzipabzikmspdw5vrjiezodi
   '@mui/material': 5.11.4_lskpmcsdi7ipu6qpuapyu56ihm
   '@mui/utils': 5.11.9_react@18.2.0
@@ -368,6 +370,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@formkit/auto-animate/1.0.0-beta.6:
+    resolution: {integrity: sha512-PVDhLAlr+B4Xb7e+1wozBUWmXa6BFU8xUPR/W/E+TsQhPS1qkAdAsJ25keEnFrcePSnXHrOsh3tiFbEToOzV9w==}
+    dev: false
 
   /@humanwhocodes/config-array/0.11.8:
     resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}
