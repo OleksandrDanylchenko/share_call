@@ -69,6 +69,10 @@ export const shadowBorder = (
   return css`
     box-shadow: inset 0 0 ${blurRadius} ${spreadRadius} ${color};
     border: none;
+
+    &.Mui-disabled {
+      border: none;
+    }
   `;
 };
 

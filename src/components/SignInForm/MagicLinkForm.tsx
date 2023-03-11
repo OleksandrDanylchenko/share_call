@@ -1,9 +1,9 @@
 import React, { FC, useState } from 'react';
-import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
+import { FormContainer, TextFieldElement, useForm } from 'react-hook-form-mui';
 
 import EmailIcon from '@mui/icons-material/Email';
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 
 import { fullWidth, shadowBorder } from '@/styles/mixins';
 
@@ -12,11 +12,20 @@ interface EmailMagicLinkFormProps {
   onMagicLinkCancel: () => void;
 }
 
+interface EmailForm {
+  email: string;
+}
+
 const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
   const { onEmailSignIn, onMagicLinkCancel } = props;
 
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+
+  const formContext = useForm<EmailForm>({
+    defaultValues: { email: '' },
+  });
+  const { watch } = formContext;
 
   const handleEmailSubmit = async (data: { email: string }): Promise<void> => {
     setSendingEmail(true);
@@ -26,18 +35,18 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
 
   return (
     <Stack css={fullWidth} gap={2}>
-      <Typography variant="h4">Could you provide your email?</Typography>
-      <FormContainer
-        defaultValues={{ email: '' }}
-        onSuccess={handleEmailSubmit}
-      >
+      <Typography variant="h4" component="label" htmlFor="email-field">
+        Could you provide your email?
+      </Typography>
+      <FormContainer formContext={formContext} onSuccess={handleEmailSubmit}>
         <Stack gap={3}>
           <TextFieldElement
+            id="email-field"
             name="email"
-            label="Email"
             variant="filled"
             fullWidth
             required
+            hiddenLabel
           />
           <Stack gap={2} direction="row">
             <Button
@@ -48,7 +57,6 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
             >
               Cancel
             </Button>
-
             <LoadingButton
               type="submit"
               css={(theme) =>
@@ -61,6 +69,7 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
               color="inherit"
               startIcon={<EmailIcon />}
               loading={sendingEmail}
+              disabled={!watch('email').length}
               fullWidth
             >
               <span>Send the link</span>
