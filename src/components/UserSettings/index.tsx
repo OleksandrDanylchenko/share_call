@@ -1,28 +1,22 @@
-import React, { FC, useEffect, useState } from 'react';
-import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
+import React, { FC } from 'react';
+import { FormContainer, TextFieldElement, useForm } from 'react-hook-form-mui';
 
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import CreateIcon from '@mui/icons-material/Create';
-import EmailIcon from '@mui/icons-material/Email';
-import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
-import { LoadingButton } from '@mui/lab';
 import {
+  Avatar,
+  Box,
+  IconButton,
+  InputAdornment,
   Skeleton,
   Stack,
-  Avatar,
-  Typography,
-  TextField,
-  InputAdornment,
-  IconButton,
-  Button,
-  Box,
 } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import { useToggle } from 'usehooks-ts';
 
-import MagicLinkForm from '@/components/SignInForm/MagicLinkForm';
-import { fullWidth, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
+import { fullWidth, textFieldEllipsis } from '@/styles/mixins';
+import { api } from '@/utils/api';
 
 const AVATAR_SIZE = 212;
 
@@ -35,7 +29,6 @@ const UserSettings: FC = () => {
     <Stack css={fullWidth} alignItems="center" gap={4}>
       <UserAvatarSetting />
       <UserNameSetting />
-      <MagicLinkForm />
     </Stack>
   );
 };
@@ -60,19 +53,38 @@ const UserAvatarSetting: FC = () => {
   );
 };
 
-type UserNameState = 'idle' | 'sending' | 'sent';
+interface UserNameForm {
+  name: string;
+}
 
 const UserNameSetting: FC = () => {
   const { status, data: session } = useSession();
-
   const sessionUsername = session?.user?.name || '';
-  const [username, setUsername] = useState(sessionUsername);
-  useEffect(() => {
-    if (status !== 'loading') setUsername(sessionUsername);
-  }, [sessionUsername, status]);
+
+  const nameFormContext = useForm<UserNameForm>({
+    defaultValues: { name: sessionUsername },
+    values: { name: sessionUsername }, // Reacts on loaded value
+  });
+  const { reset } = nameFormContext;
 
   const [editing, toggleEditing] = useToggle(false);
-  const handleNameSubmit = ({ name }: { name: string }): void => {};
+  const handleCancelEditing = (): void => {
+    reset({ name: sessionUsername });
+    toggleEditing();
+  };
+
+  const {
+    mutate: updateUsername,
+    isLoading,
+    isError,
+  } = api.userSettings.updateName.useMutation();
+
+  const handleNameSubmit = ({ name }: UserNameForm): void => {
+    toggleEditing();
+    if (session?.user?.id) {
+      updateUsername({ userId: session.user.id, name });
+    }
+  };
 
   return (
     <>
@@ -81,9 +93,7 @@ const UserNameSetting: FC = () => {
       ) : (
         <Box css={fullWidth}>
           <FormContainer
-            defaultValues={{ name: sessionUsername }}
-            values={{ name: username }} // Reacts on loaded value
-            resetOptions={{ keepDirtyValues: true }}
+            formContext={nameFormContext}
             onSuccess={handleNameSubmit}
           >
             <TextFieldElement
@@ -91,21 +101,30 @@ const UserNameSetting: FC = () => {
               label="Name"
               name="name"
               variant="standard"
-              value={username}
               fullWidth
-              required
+              required={editing}
               InputProps={{
                 readOnly: !editing,
                 endAdornment: (
                   <InputAdornment position="end">
+                    {editing && !isLoading && (
+                      <IconButton
+                        aria-label="Cancel editing name"
+                        size="small"
+                        type="button"
+                        onClick={handleCancelEditing}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                    )}
                     <IconButton
                       aria-label="Edit name"
-                      onClick={toggleEditing}
+                      onMouseDown={!editing ? toggleEditing : undefined}
                       size="small"
                       type={editing ? 'submit' : 'button'}
                     >
                       {editing ? (
-                        <CheckIcon fontSize="small" />
+                        <CheckIcon fontSize="small" color="primary" />
                       ) : (
                         <CreateIcon fontSize="small" />
                       )}
@@ -113,7 +132,6 @@ const UserNameSetting: FC = () => {
                   </InputAdornment>
                 ),
               }}
-              onChange={(e) => setUsername(e.target.value)}
             />
           </FormContainer>
         </Box>
