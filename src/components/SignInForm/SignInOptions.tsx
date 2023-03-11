@@ -35,7 +35,7 @@ const SignInOptions: FC<Props> = (props) => {
       {oAuthProviders.map(({ provider, label, logo, color }) => (
         <LoadingButton
           key={provider}
-          css={(theme) => shadowBorder(theme, { blurRadius: '10px', color })}
+          css={(theme) => shadowBorder(theme, { color })}
           variant="outlined"
           color="inherit"
           fullWidth
@@ -52,7 +52,7 @@ const SignInOptions: FC<Props> = (props) => {
       <Button
         type="submit"
         css={(theme) =>
-          shadowBorder(theme, { blurRadius: '10px', color: 'white' })
+          shadowBorder(theme, { color: theme.palette.common.white })
         }
         variant="outlined"
         color="inherit"

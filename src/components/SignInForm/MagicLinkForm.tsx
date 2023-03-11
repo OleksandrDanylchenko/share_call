@@ -1,7 +1,9 @@
 import React, { FC, useState } from 'react';
 import { FormContainer, TextFieldElement, useForm } from 'react-hook-form-mui';
 
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import EmailIcon from '@mui/icons-material/Email';
+import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
 import { LoadingButton } from '@mui/lab';
 import { Button, Stack, Typography } from '@mui/material';
 
@@ -16,11 +18,12 @@ interface EmailForm {
   email: string;
 }
 
+type MagicLinkState = 'none' | 'sending' | 'sent';
+
 const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
   const { onEmailSignIn, onMagicLinkCancel } = props;
 
-  const [sendingEmail, setSendingEmail] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
+  const [linkStatus, setLinkStatus] = useState<MagicLinkState>('none');
 
   const formContext = useForm<EmailForm>({
     defaultValues: { email: '' },
@@ -28,9 +31,9 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
   const { watch } = formContext;
 
   const handleEmailSubmit = async (data: { email: string }): Promise<void> => {
-    setSendingEmail(true);
+    setLinkStatus('sending');
     await onEmailSignIn(data.email);
-    setEmailSent(true);
+    setLinkStatus('sent');
   };
 
   return (
@@ -43,37 +46,61 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
           <TextFieldElement
             id="email-field"
             name="email"
+            type="email"
             variant="filled"
             fullWidth
             required
             hiddenLabel
+            disabled={linkStatus !== 'none'}
           />
           <Stack gap={2} direction="row">
-            <Button
-              color="inherit"
-              sx={{ width: '30%' }}
-              disabled={sendingEmail || emailSent}
-              onClick={onMagicLinkCancel}
-            >
-              Cancel
-            </Button>
-            <LoadingButton
-              type="submit"
-              css={(theme) =>
-                shadowBorder(theme, {
-                  blurRadius: '10px',
-                  color: theme.palette.common.white,
-                })
-              }
-              variant="outlined"
-              color="inherit"
-              startIcon={<EmailIcon />}
-              loading={sendingEmail}
-              disabled={!watch('email').length}
-              fullWidth
-            >
-              <span>Send the link</span>
-            </LoadingButton>
+            {linkStatus !== 'sent' ? (
+              <>
+                <Button
+                  color="inherit"
+                  sx={{ width: '30%' }}
+                  disabled={linkStatus === 'sending'}
+                  onClick={onMagicLinkCancel}
+                >
+                  Cancel
+                </Button>
+                <LoadingButton
+                  type="submit"
+                  css={(theme) =>
+                    shadowBorder(theme, { color: theme.palette.common.white })
+                  }
+                  variant="outlined"
+                  color="inherit"
+                  startIcon={<EmailIcon />}
+                  loading={linkStatus === 'sending'}
+                  disabled={!watch('email').length}
+                  fullWidth
+                >
+                  <span>Send the link</span>
+                </LoadingButton>
+              </>
+            ) : (
+              <>
+                <Button
+                  color="inherit"
+                  sx={{ width: '30%' }}
+                  startIcon={<ArrowBackIosIcon />}
+                  onClick={onMagicLinkCancel}
+                >
+                  Back
+                </Button>
+                <Button
+                  css={(theme) =>
+                    shadowBorder(theme, { color: theme.palette.success.main })
+                  }
+                  color="success"
+                  startIcon={<MarkEmailUnreadIcon />}
+                  fullWidth
+                >
+                  The link has been sent
+                </Button>
+              </>
+            )}
           </Stack>
         </Stack>
       </FormContainer>
