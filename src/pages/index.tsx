@@ -1,17 +1,16 @@
 import React from 'react';
 
-import { Container, Stack, Typography } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { type NextPage } from 'next';
 import { getSession, GetSessionParams, useSession } from 'next-auth/react';
 
+import Catchphrase from '@/components/Catchphrase';
 import SignInForm from '@/components/SignInForm';
-import StringsRotator from '@/components/StringsRotator';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
   fullHeight,
   fullViewport,
-  fullWidth,
 } from '@/styles/mixins';
 
 const Home: NextPage = () => {
@@ -27,20 +26,7 @@ const Home: NextPage = () => {
           justifyContent={{ md: 'center', lg: 'space-around' }}
           gap={{ md: 4, lg: 14 }}
         >
-          <Typography
-            css={fullWidth}
-            variant="h1"
-            fontSize="11rem"
-            fontWeight={400}
-            textAlign={{ md: 'center', lg: 'left' }}
-            flex={{ md: 0, lg: 1 }}
-          >
-            Let&apos;s
-            <br />
-            <StringsRotator
-              strings={['chat', 'babble', 'give voice', 'share']}
-            />
-          </Typography>
+          <Catchphrase />
           <Stack
             css={blurBackgroundContainer}
             alignItems="center"
