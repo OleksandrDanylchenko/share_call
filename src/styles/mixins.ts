@@ -61,7 +61,7 @@ export const shadowBorder = (
 
   const { blurRadius, spreadRadius, color } = {
     color: primary.main,
-    blurRadius: '40px',
+    blurRadius: '10px',
     spreadRadius: '2px',
     ...options,
   };
