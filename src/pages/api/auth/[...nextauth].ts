@@ -7,6 +7,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import { env } from '@/env/server.mjs';
 import { prisma } from '@/server/db';
 
+export type AuthProvider = 'google' | 'facebook' | 'email';
+
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
@@ -40,10 +42,7 @@ export const authOptions: NextAuthOptions = {
       from: env.EMAIL_FROM,
     }),
   ],
-  // TODO Create custom page for sign in
-  // pages: {
-  //   signIn: '/auth/signin',
-  // },
+  pages: { signIn: '/' },
 };
 
 export default NextAuth(authOptions);

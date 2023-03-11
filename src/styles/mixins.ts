@@ -51,7 +51,7 @@ export const doubleColorGradient = (
   `;
 };
 
-export const shadowInset = (
+export const shadowBorder = (
   theme: Theme,
   options: { blurRadius?: string; spreadRadius?: string; color?: string } = {},
 ): SerializedStyles => {
@@ -68,11 +68,12 @@ export const shadowInset = (
 
   return css`
     box-shadow: inset 0 0 ${blurRadius} ${spreadRadius} ${color};
+    border: none;
   `;
 };
 
-export const blurBackgroundContainer = (theme: Theme): SerializedStyles => css`
+export const blurBackgroundContainer = css`
   border-radius: 5px;
   backdrop-filter: blur(60px) hue-rotate(180deg) saturate(40%);
-  padding: ${theme.spacing(4, 6)};
+  border: none;
 `;

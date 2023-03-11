@@ -1,10 +1,17 @@
-import { css } from '@emotion/react';
+import React from 'react';
+
 import { Container, Stack, Typography } from '@mui/material';
 import { type NextPage } from 'next';
 
-import CallJoinForm from '@/components/CallJoinForm';
+import SignInForm from '@/components/SIgnInForm';
 import StringsRotator from '@/components/StringsRotator';
-import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
+import {
+  blurBackgroundContainer,
+  doubleColorGradient,
+  fullHeight,
+  fullViewport,
+  fullWidth,
+} from '@/styles/mixins';
 
 const Home: NextPage = () => (
   <main css={[fullViewport, doubleColorGradient]}>
@@ -17,29 +24,35 @@ const Home: NextPage = () => (
         gap={{ md: 4, lg: 14 }}
       >
         <Typography
+          css={fullWidth}
           variant="h1"
-          css={catchphrase}
+          fontSize="11rem"
+          fontWeight={400}
           textAlign={{ md: 'center', lg: 'left' }}
-          flex={{
-            md: 0,
-            lg: 1,
-          }}
+          flex={{ md: 0, lg: 1 }}
         >
           Let&apos;s
           <br />
           <StringsRotator strings={['chat', 'babble', 'give voice', 'share']} />
         </Typography>
-        <CallJoinForm />
+        <Stack
+          css={blurBackgroundContainer}
+          alignItems="center"
+          justifyContent="center"
+          flexShrink={0}
+          width={500}
+          gap={3}
+          px={6}
+          py={4}
+        >
+          <Typography variant="h4" component="label" htmlFor="name-field">
+            Could you introduce yourself?
+          </Typography>
+          <SignInForm />
+        </Stack>
       </Stack>
     </Container>
   </main>
 );
-
-const catchphrase = css`
-  width: 100%;
-  text-align: center;
-  font-size: 11rem;
-  font-weight: 400;
-`;
 
 export default Home;

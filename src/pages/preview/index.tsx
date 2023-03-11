@@ -26,7 +26,7 @@ import {
   fullParent,
   fullViewport,
   fullWidth,
-  shadowInset,
+  shadowBorder,
 } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
 
@@ -237,7 +237,7 @@ const Preview: FC = () => {
                     onClick={() => router.push('/')}
                     sx={{ width: '50%', color: 'white' }}
                     css={(theme) =>
-                      shadowInset(theme, { color: theme.palette.warning.main })
+                      shadowBorder(theme, { color: theme.palette.warning.main })
                     }
                   >
                     Cancel
@@ -247,7 +247,7 @@ const Preview: FC = () => {
                       fullWidth
                       onClick={() => router.push('/call')}
                       sx={{ color: 'white' }}
-                      css={shadowInset}
+                      css={shadowBorder}
                     >
                       Join
                     </Button>

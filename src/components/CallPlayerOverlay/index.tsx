@@ -5,7 +5,7 @@ import { Box, Stack, Theme, Typography } from '@mui/material';
 
 import DeviceIcon from '@/components/DeviceIcon';
 import { selectTrackState, useCallTracks } from '@/store/callTracks';
-import { fullParent, shadowInset } from '@/styles/mixins';
+import { fullParent, shadowBorder } from '@/styles/mixins';
 
 interface Props extends PropsWithChildren {
   userId: string;
@@ -101,7 +101,7 @@ const overlay = (
   const { side, color = theme.palette.warning.light } = options;
 
   return css`
-    ${shadowInset(theme, { color, blurRadius: '50px' })};
+    ${shadowBorder(theme, { color, blurRadius: '50px' })};
 
     color: ${theme.palette.common.black};
     padding: ${spacing(0.1)};

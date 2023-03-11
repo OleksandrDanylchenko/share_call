@@ -7,7 +7,7 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { IconButton, Tooltip } from '@mui/material';
 
 import DeviceIcon from '@/components/DeviceIcon';
-import { shadowInset } from '@/styles/mixins';
+import { shadowBorder } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
 
 interface Props {
@@ -26,7 +26,7 @@ const DeviceToggleButton: FC<Props> = (props) => {
     <IconButton
       css={(theme) => {
         const { warning, error } = theme.palette;
-        return shadowInset(theme, {
+        return shadowBorder(theme, {
           blurRadius: '40px',
           color: enabled ? warning.main : error.main,
         });
