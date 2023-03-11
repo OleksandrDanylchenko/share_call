@@ -4,10 +4,12 @@ import { FormContainer, TextFieldElement, useForm } from 'react-hook-form-mui';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import EmailIcon from '@mui/icons-material/Email';
 import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
+import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 import { LoadingButton } from '@mui/lab';
 import { Button, Stack, Typography } from '@mui/material';
 
 import { fullWidth, shadowBorder } from '@/styles/mixins';
+import { AsyncActionState } from '@/types/index';
 
 interface EmailMagicLinkFormProps {
   onEmailSignIn: (email: string) => Promise<void>;
@@ -18,12 +20,11 @@ interface EmailForm {
   email: string;
 }
 
-type MagicLinkState = 'none' | 'sending' | 'sent';
-
 const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
   const { onEmailSignIn, onMagicLinkCancel } = props;
 
-  const [linkStatus, setLinkStatus] = useState<MagicLinkState>('none');
+  const [linkGenerationState, setLinkGenerationState] =
+    useState<AsyncActionState>('rejected');
 
   const formContext = useForm<EmailForm>({
     defaultValues: { email: '' },
@@ -31,9 +32,13 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
   const { watch } = formContext;
 
   const handleEmailSubmit = async (data: { email: string }): Promise<void> => {
-    setLinkStatus('sending');
-    await onEmailSignIn(data.email);
-    setLinkStatus('sent');
+    try {
+      setLinkGenerationState('pending');
+      await onEmailSignIn(data.email);
+      setLinkGenerationState('fulfilled');
+    } catch (_error: unknown) {
+      setLinkGenerationState('rejected');
+    }
   };
 
   return (
@@ -51,15 +56,16 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
             fullWidth
             required
             hiddenLabel
-            disabled={linkStatus !== 'none'}
+            disabled={linkGenerationState !== 'idle'}
           />
           <Stack gap={2} direction="row">
-            {linkStatus !== 'sent' ? (
+            {linkGenerationState !== 'fulfilled' &&
+            linkGenerationState !== 'rejected' ? (
               <>
                 <Button
                   color="inherit"
                   sx={{ width: '30%' }}
-                  disabled={linkStatus === 'sending'}
+                  disabled={linkGenerationState === 'pending'}
                   onClick={onMagicLinkCancel}
                 >
                   Cancel
@@ -72,7 +78,7 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
                   variant="outlined"
                   color="inherit"
                   startIcon={<EmailIcon />}
-                  loading={linkStatus === 'sending'}
+                  loading={linkGenerationState === 'pending'}
                   disabled={!watch('email').length}
                   fullWidth
                 >
@@ -91,13 +97,28 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
                 </Button>
                 <Button
                   css={(theme) =>
-                    shadowBorder(theme, { color: theme.palette.success.main })
+                    shadowBorder(theme, {
+                      color:
+                        linkGenerationState === 'fulfilled'
+                          ? theme.palette.success.main
+                          : theme.palette.error.main,
+                    })
                   }
-                  color="success"
-                  startIcon={<MarkEmailUnreadIcon />}
+                  color={
+                    linkGenerationState === 'fulfilled' ? 'success' : 'error'
+                  }
+                  startIcon={
+                    linkGenerationState === 'fulfilled' ? (
+                      <MarkEmailUnreadIcon />
+                    ) : (
+                      <UnsubscribeIcon />
+                    )
+                  }
                   fullWidth
                 >
-                  The link has been sent
+                  {linkGenerationState === 'fulfilled'
+                    ? 'The link is sent'
+                    : 'The link failed sending'}
                 </Button>
               </>
             )}
