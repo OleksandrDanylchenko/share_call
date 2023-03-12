@@ -3,16 +3,18 @@ import React, { ChangeEvent, FC, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import EmailIcon from '@mui/icons-material/Email';
-import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
-import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 import { LoadingButton } from '@mui/lab';
 import { Button, Stack, useTheme } from '@mui/material';
+import { uploadFile } from '@uploadcare/upload-client';
 import dynamic from 'next/dynamic';
+import { useSession } from 'next-auth/react';
 
 import { AVATAR_SIZE } from '@/constants/index';
+import { clientEnv } from '@/env/schema.mjs';
 import useElementContentDimensions from '@/hooks/useElementContentDimensions';
 import { fullHeight, shadowBorder } from '@/styles/mixins';
+import { api } from '@/utils/api';
+import { dataURLtoFile } from '@/utils/files';
 const AvatarEditorNoSSR = dynamic(() => import('react-avatar-edit'), {
   ssr: false,
 });
@@ -31,12 +33,15 @@ const ALLOWED_MIME_TYPES = [
 ].join(',');
 
 const AvatarEditor: FC<Props> = (props) => {
+  const { data: session } = useSession();
+
   const { src, onClose } = props;
 
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const { height: containerContentHeight } =
     useElementContentDimensions(editorContainerRef);
 
+  const [imageName, setImageName] = useState('');
   const [croppedImage, setCroppedImage] = useState('');
 
   const handleBeforeLoad = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -47,6 +52,39 @@ const AvatarEditor: FC<Props> = (props) => {
         event.target.value = '';
       }
     }
+  };
+
+  const handleFileLoad = (
+    event: ChangeEvent<HTMLInputElement> | File,
+  ): void => {
+    if ('target' in event) {
+      const file = event.target.files![0];
+      setImageName(file!.name);
+    } else {
+      setImageName(event!.name);
+    }
+  };
+
+  const [uploadingCdnImage, setUploadingCdnImage] = useState(false);
+  const {
+    mutate: updateImage,
+    isLoading: isLoadingImageOnServer,
+    error,
+  } = api.userSettings.updateImage.useMutation({ onSuccess: onClose });
+
+  const handleImageCapture = async (): Promise<void> => {
+    setUploadingCdnImage(true);
+    const croppedBlob = dataURLtoFile(croppedImage, imageName);
+    const { cdnUrl } = await uploadFile(croppedBlob, {
+      publicKey: clientEnv.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY!,
+      store: 'auto',
+      metadata: {
+        userId: session!.user!.id,
+        type: 'avatar',
+      },
+    });
+    setUploadingCdnImage(false);
+    updateImage({ image: cdnUrl! });
   };
 
   const theme = useTheme();
@@ -82,6 +120,7 @@ const AvatarEditor: FC<Props> = (props) => {
           }}
           onClose={onClose}
           onBeforeFileLoad={handleBeforeLoad}
+          onFileLoad={handleFileLoad}
           onCrop={setCroppedImage}
         />
       </Stack>
@@ -91,6 +130,7 @@ const AvatarEditor: FC<Props> = (props) => {
           sx={{ width: '30%' }}
           startIcon={<ArrowBackIosIcon />}
           onClick={onClose}
+          disabled={uploadingCdnImage || isLoadingImageOnServer}
         >
           Back
         </Button>
@@ -102,7 +142,10 @@ const AvatarEditor: FC<Props> = (props) => {
           variant="outlined"
           color="inherit"
           startIcon={<AddAPhotoIcon />}
+          loading={uploadingCdnImage || isLoadingImageOnServer}
+          disabled={!croppedImage}
           fullWidth
+          onClick={handleImageCapture}
         >
           <span>Capture new image</span>
         </LoadingButton>

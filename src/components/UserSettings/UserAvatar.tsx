@@ -27,7 +27,7 @@ export const UserAvatarSetting: FC = () => {
       {status === 'loading' ? (
         <Skeleton variant="circular" width={AVATAR_SIZE} height={AVATAR_SIZE} />
       ) : (
-        <Box position="relative">
+        <Box position="relative" lineHeight={0}>
           <Tooltip
             open={showEditOverlay}
             title="Edit image"
