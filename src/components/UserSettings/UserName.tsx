@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import SingleFieldForm from '@/components/SingleFieldForm';
 import { fullWidth } from '@/styles/mixins';
 import { api } from '@/utils/api';
+import { reloadAuthSession } from '@/utils/auth';
 
 const UserNameSetting: FC = () => {
   const { status, data: session } = useSession();
@@ -17,7 +18,9 @@ const UserNameSetting: FC = () => {
     mutate: updateUsername,
     isLoading,
     error,
-  } = api.userSettings.updateName.useMutation();
+  } = api.userSettings.updateName.useMutation({
+    onSuccess: reloadAuthSession,
+  });
 
   return (
     <>

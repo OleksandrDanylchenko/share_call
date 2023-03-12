@@ -14,13 +14,13 @@ import { clientEnv } from '@/env/schema.mjs';
 import useElementContentDimensions from '@/hooks/useElementContentDimensions';
 import { fullHeight, shadowBorder } from '@/styles/mixins';
 import { api } from '@/utils/api';
+import { reloadAuthSession } from '@/utils/auth';
 import { dataURLtoFile } from '@/utils/files';
 const AvatarEditorNoSSR = dynamic(() => import('react-avatar-edit'), {
   ssr: false,
 });
 
 interface Props {
-  src: string;
   onClose: () => void;
 }
 
@@ -35,7 +35,7 @@ const ALLOWED_MIME_TYPES = [
 const AvatarEditor: FC<Props> = (props) => {
   const { data: session } = useSession();
 
-  const { src, onClose } = props;
+  const { onClose } = props;
 
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const { height: containerContentHeight } =
@@ -66,11 +66,14 @@ const AvatarEditor: FC<Props> = (props) => {
   };
 
   const [uploadingCdnImage, setUploadingCdnImage] = useState(false);
-  const {
-    mutate: updateImage,
-    isLoading: isLoadingImageOnServer,
-    error,
-  } = api.userSettings.updateImage.useMutation({ onSuccess: onClose });
+  const { mutateAsync: updateImage } = api.userSettings.updateImage.useMutation(
+    {
+      onSuccess: () => {
+        onClose();
+        reloadAuthSession();
+      },
+    },
+  );
 
   const handleImageCapture = async (): Promise<void> => {
     setUploadingCdnImage(true);
@@ -83,8 +86,8 @@ const AvatarEditor: FC<Props> = (props) => {
         type: 'avatar',
       },
     });
+    await updateImage({ image: cdnUrl! });
     setUploadingCdnImage(false);
-    updateImage({ image: cdnUrl! });
   };
 
   const theme = useTheme();
@@ -130,7 +133,7 @@ const AvatarEditor: FC<Props> = (props) => {
           sx={{ width: '30%' }}
           startIcon={<ArrowBackIosIcon />}
           onClick={onClose}
-          disabled={uploadingCdnImage || isLoadingImageOnServer}
+          disabled={uploadingCdnImage}
         >
           Back
         </Button>
@@ -142,7 +145,7 @@ const AvatarEditor: FC<Props> = (props) => {
           variant="outlined"
           color="inherit"
           startIcon={<AddAPhotoIcon />}
-          loading={uploadingCdnImage || isLoadingImageOnServer}
+          loading={uploadingCdnImage}
           disabled={!croppedImage}
           fullWidth
           onClick={handleImageCapture}

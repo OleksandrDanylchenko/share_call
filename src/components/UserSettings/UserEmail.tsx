@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import SingleFieldForm from '@/components/SingleFieldForm';
 import { fullWidth } from '@/styles/mixins';
 import { api } from '@/utils/api';
+import { reloadAuthSession } from '@/utils/auth';
 
 const UserEmailSetting: FC = () => {
   const { status, data: session } = useSession();
@@ -17,7 +18,9 @@ const UserEmailSetting: FC = () => {
     mutate: updateEmail,
     isLoading,
     error,
-  } = api.userSettings.updateEmail.useMutation();
+  } = api.userSettings.updateEmail.useMutation({
+    onSuccess: reloadAuthSession,
+  });
 
   return (
     <>
