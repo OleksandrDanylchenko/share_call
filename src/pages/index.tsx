@@ -1,8 +1,15 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
+import LogoutIcon from '@mui/icons-material/Logout';
+import { LoadingButton } from '@mui/lab';
 import { Box, Container, Stack, Typography } from '@mui/material';
 import { type NextPage } from 'next';
-import { getSession, GetSessionParams, useSession } from 'next-auth/react';
+import {
+  getSession,
+  GetSessionParams,
+  signOut,
+  useSession,
+} from 'next-auth/react';
 
 import Catchphrase from '@/components/Catchphrase';
 import SignInForm from '@/components/SignInForm';
@@ -13,6 +20,7 @@ import {
   fullHeight,
   fullViewport,
   fullWidth,
+  shadowBorder,
 } from '@/styles/mixins';
 
 const Home: NextPage = () => {
@@ -51,31 +59,55 @@ const Landing: FC = () => (
   </Stack>
 );
 
-const Dashboard: FC = () => (
-  <Stack
-    css={fullHeight}
-    direction="row"
-    alignItems="center"
-    justifyContent="center"
-    gap={4}
-  >
-    <Box css={[fullWidth, blurBackgroundContainer]} height="80%"></Box>
+const Dashboard: FC = () => {
+  const [signingOut, setSigningOut] = useState(false);
+  const handleSignOut = async (): Promise<void> => {
+    setSigningOut(true);
+    await signOut({ redirect: false });
+  };
+
+  return (
     <Stack
-      css={blurBackgroundContainer}
+      css={fullHeight}
+      direction="row"
       alignItems="center"
       justifyContent="center"
-      flexShrink={0}
-      width={400}
-      height="80%"
-      gap={3}
-      px={6}
-      py={2}
+      gap={4}
     >
-      <Typography variant="h4">Welcome!</Typography>
-      <UserSettings />
+      <Box css={[fullWidth, blurBackgroundContainer]} height="80%"></Box>
+      <Stack
+        css={blurBackgroundContainer}
+        position="relative"
+        alignItems="center"
+        justifyContent="center"
+        flexShrink={0}
+        width={420}
+        height="80%"
+        gap={6}
+        px={6}
+        py={2}
+      >
+        <Typography variant="h4" position="absolute" top={20}>
+          Welcome back!
+        </Typography>
+        <UserSettings />
+        <LoadingButton
+          css={(theme) =>
+            shadowBorder(theme, { color: theme.palette.error.light })
+          }
+          variant="outlined"
+          color="inherit"
+          endIcon={<LogoutIcon />}
+          loading={signingOut}
+          onClick={handleSignOut}
+          sx={{ position: 'absolute', bottom: 20 }}
+        >
+          <span>Sign Out</span>
+        </LoadingButton>
+      </Stack>
     </Stack>
-  </Stack>
-);
+  );
+};
 
 export const getServerSideProps = async (ctx: GetSessionParams) => {
   const session = await getSession(ctx);
