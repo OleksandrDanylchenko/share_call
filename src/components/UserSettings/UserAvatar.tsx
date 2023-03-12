@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import { ClassNames } from '@emotion/react';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import {
   Avatar,
@@ -7,21 +8,28 @@ import {
   Box,
   CircularProgress,
   css,
+  Drawer,
   Portal,
   Skeleton,
   Tooltip,
+  useTheme,
 } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import { useToggle } from 'usehooks-ts';
 
+import AvatarEditor from '@/components/AvatarEditor';
 import Dimmer from '@/components/Dimmer';
 import { AVATAR_SIZE } from '@/components/UserSettings/index';
+import { blurBackgroundContainer, shadowBorder } from '@/styles/mixins';
 
 export const UserAvatarSetting: FC = () => {
   const { status, data: session } = useSession();
 
   const [showEditOverlay, toggleShowOverlay] = useToggle(false);
   const [showNewImageEditor, toggleShowNewImageEditor] = useToggle(false);
+
+  const sessionName = session?.user?.name || '';
+  const sessionImage = session?.user?.image || '';
 
   return (
     <>
@@ -47,8 +55,8 @@ export const UserAvatarSetting: FC = () => {
             >
               <Avatar
                 variant="circular"
-                src={session!.user!.image || ''}
-                alt={session!.user!.name!}
+                src={sessionImage}
+                alt={sessionName}
                 sx={{
                   width: AVATAR_SIZE,
                   height: AVATAR_SIZE,
@@ -58,16 +66,26 @@ export const UserAvatarSetting: FC = () => {
           </Tooltip>
         </Box>
       )}
-      {showNewImageEditor && (
-        <Portal>
-          <Backdrop
+      <ClassNames>
+        {({ css, theme }) => (
+          <Drawer
+            anchor="right"
             open={showNewImageEditor}
-            onClick={toggleShowNewImageEditor}
+            onClose={toggleShowNewImageEditor}
+            PaperProps={{
+              className: css(
+                shadowBorder(theme, { color: theme.palette.warning.light }),
+                blurBackgroundContainer,
+              ),
+            }}
           >
-            <CircularProgress color="inherit" />
-          </Backdrop>
-        </Portal>
-      )}
+            <AvatarEditor
+              src={sessionImage}
+              onClose={toggleShowNewImageEditor}
+            />
+          </Drawer>
+        )}
+      </ClassNames>
     </>
   );
 };

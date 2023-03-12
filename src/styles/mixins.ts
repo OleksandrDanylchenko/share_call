@@ -80,6 +80,7 @@ export const blurBackgroundContainer = css`
   border-radius: 5px;
   backdrop-filter: blur(60px) hue-rotate(180deg) saturate(40%);
   border: none;
+  background: none;
 `;
 
 export const textFieldEllipsis = css`

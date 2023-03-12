@@ -6,3 +6,8 @@ export enum IntlLocale {
 }
 
 export type AsyncActionState = 'idle' | 'pending' | 'fulfilled' | 'rejected';
+
+export type Dimensions = {
+  width: number;
+  height: number;
+};

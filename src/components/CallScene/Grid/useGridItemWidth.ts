@@ -2,10 +2,7 @@ import { MutableRefObject, useCallback, useEffect, useState } from 'react';
 
 import { useEventListener } from 'usehooks-ts';
 
-type Dimensions = {
-  width: number;
-  height: number;
-};
+import { Dimensions } from '@/types/index';
 
 export const useGridItemDimensions = <T extends HTMLElement>(options: {
   containerRef: MutableRefObject<T | undefined | null>;
