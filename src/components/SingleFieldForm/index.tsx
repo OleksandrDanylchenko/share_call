@@ -41,6 +41,7 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
   const { formProps, textFieldProps, loading, error } = props;
   const {
     formContext: { reset, setError },
+    onSuccess,
   } = formProps;
 
   const [editing, toggleEditing, setEditing] = useToggle(false);
@@ -50,15 +51,14 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
     setEditing(false);
   };
 
-  const prevLoading = usePrevious(loading);
-  useEffect(() => {
-    if (prevLoading && !loading && !error) {
-      setEditing(false);
-    }
-  }, [error, prevLoading, loading, setEditing]);
+  const handleSuccessSubmit = (data: TFieldValues): void => {
+    onSuccess?.(data);
+    setEditing(false);
+  };
 
   useEffect(() => {
     if (error) {
+      setEditing(true);
       ObjectTyped.entries(error).forEach(([field, messages]) =>
         setError(field as Path<TFieldValues>, {
           type: 'manual',
@@ -66,11 +66,11 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
         }),
       );
     }
-  }, [error, setError]);
+  }, [error, setEditing, setError]);
 
   return (
     <Box css={fullWidth}>
-      <FormContainer {...formProps}>
+      <FormContainer {...formProps} onSuccess={handleSuccessSubmit}>
         <TextFieldElement
           css={textFieldEllipsis}
           variant="standard"
