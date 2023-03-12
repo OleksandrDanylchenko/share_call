@@ -12,6 +12,7 @@ import {
 } from 'next-auth/react';
 
 import Catchphrase from '@/components/Catchphrase';
+import DashboardOptions from '@/components/DashboardOptions';
 import SignInForm from '@/components/SignInForm';
 import UserSettings from '@/components/UserSettings';
 import {
@@ -74,7 +75,9 @@ const Dashboard: FC = () => {
       justifyContent="center"
       gap={4}
     >
-      <Box css={[fullWidth, blurBackgroundContainer]} height="80%"></Box>
+      <Box css={blurBackgroundContainer} flex={1} height="80%">
+        <DashboardOptions />
+      </Box>
       <Stack
         css={blurBackgroundContainer}
         position="relative"
