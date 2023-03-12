@@ -24,7 +24,7 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
   const { onEmailSignIn, onMagicLinkCancel } = props;
 
   const [linkGenerationState, setLinkGenerationState] =
-    useState<AsyncActionState>('rejected');
+    useState<AsyncActionState>('idle');
 
   const formContext = useForm<EmailForm>({
     defaultValues: { email: '' },
