@@ -4,12 +4,14 @@ import { ClassNames } from '@emotion/react';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { Box, css, Drawer, Skeleton, Tooltip } from '@mui/material';
 import UploadcareImage from '@uploadcare/nextjs-loader';
+import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useToggle } from 'usehooks-ts';
 
 import AvatarEditor from '@/components/AvatarEditor';
 import Dimmer from '@/components/Dimmer';
 import { AVATAR_SIZE } from '@/components/UserSettings/index';
+import { BORINGAVATARS_SERVICE_URL } from '@/constants/index';
 import { blurBackgroundContainer, shadowBorder } from '@/styles/mixins';
 
 export const UserAvatarSetting: FC = () => {
@@ -43,14 +45,24 @@ export const UserAvatarSetting: FC = () => {
                 cursor: pointer;
               `}
             >
-              <UploadcareImage
-                alt={sessionName}
-                src={sessionImage}
-                width={AVATAR_SIZE}
-                height={AVATAR_SIZE}
-                quality="80"
-                style={{ borderRadius: '50%' }}
-              />
+              {sessionImage.startsWith(BORINGAVATARS_SERVICE_URL) ? (
+                <Image
+                  alt={sessionName}
+                  src={sessionImage}
+                  width={AVATAR_SIZE}
+                  height={AVATAR_SIZE}
+                  quality={80}
+                />
+              ) : (
+                <UploadcareImage
+                  alt={sessionName}
+                  src={sessionImage}
+                  width={AVATAR_SIZE}
+                  height={AVATAR_SIZE}
+                  quality={80}
+                  style={{ borderRadius: '50%' }}
+                />
+              )}
             </Dimmer>
           </Tooltip>
         </Box>
