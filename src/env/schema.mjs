@@ -75,6 +75,8 @@ export const serverEnv = {
  */
 export const clientSchema = z.object({
   NEXT_PUBLIC_AGORA_APP_ID: z.string(),
+  NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY: z.string(),
+  NEXT_PUBLIC_UPLOADCARE_APP_BASE_URL: z.string(),
 });
 
 /**
@@ -85,4 +87,6 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   NEXT_PUBLIC_AGORA_APP_ID: process.env.NEXT_PUBLIC_AGORA_APP_ID,
+  NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY: process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY,
+  NEXT_PUBLIC_UPLOADCARE_APP_BASE_URL: process.env.NEXT_PUBLIC_UPLOADCARE_APP_BASE_URL,
 };

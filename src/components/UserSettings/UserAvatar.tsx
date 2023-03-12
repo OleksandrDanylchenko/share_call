@@ -2,18 +2,8 @@ import React, { FC } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import {
-  Avatar,
-  Backdrop,
-  Box,
-  CircularProgress,
-  css,
-  Drawer,
-  Portal,
-  Skeleton,
-  Tooltip,
-  useTheme,
-} from '@mui/material';
+import { Box, css, Drawer, Skeleton, Tooltip } from '@mui/material';
+import UploadcareImage from '@uploadcare/nextjs-loader';
 import { useSession } from 'next-auth/react';
 import { useToggle } from 'usehooks-ts';
 
@@ -53,14 +43,13 @@ export const UserAvatarSetting: FC = () => {
                 cursor: pointer;
               `}
             >
-              <Avatar
-                variant="circular"
-                src={sessionImage}
+              <UploadcareImage
                 alt={sessionName}
-                sx={{
-                  width: AVATAR_SIZE,
-                  height: AVATAR_SIZE,
-                }}
+                src={sessionImage}
+                width={AVATAR_SIZE}
+                height={AVATAR_SIZE}
+                quality="80"
+                style={{ borderRadius: '50%' }}
               />
             </Dimmer>
           </Tooltip>

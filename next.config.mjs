@@ -15,11 +15,13 @@ const config = {
     defaultLocale: 'en',
   },
   images: {
+    loader: 'custom',
     domains: [
       'lh3.googleusercontent.com',
       'graph.facebook.com',
       'upload.wikimedia.org',
       'i.kinja-img.com',
+      'source.boringavatars.com'
     ],
   },
 };
