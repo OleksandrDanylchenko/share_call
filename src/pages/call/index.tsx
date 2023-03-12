@@ -51,7 +51,12 @@ const Call: FC = () => {
     await rtc.join(appId, 'test-channel', null, user.id);
 
     const { microphone, camera } = userTracks;
-    await rtc.publish([microphone!.track, camera!.track]);
+    await Promise.all([
+      microphone?.enabled
+        ? rtc.publish([microphone!.track])
+        : Promise.resolve(),
+      camera?.enabled ? rtc.publish([camera!.track]) : Promise.resolve(),
+    ]);
 
     rtc.on('user-published', async (user, mediaType) => {
       await rtc.subscribe(user, mediaType);
