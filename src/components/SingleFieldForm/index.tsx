@@ -20,6 +20,7 @@ import { first } from 'lodash';
 import { ObjectTyped } from 'object-typed';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { useToggle } from 'usehooks-ts';
+import { typeToFlattenedError } from 'zod/lib/ZodError';
 
 import { usePrevious } from '@/hooks/usePrevious';
 import { fullWidth, textFieldEllipsis } from '@/styles/mixins';
@@ -31,7 +32,7 @@ type Props<TFieldValues extends FieldValues> = {
   textFieldProps: TextFieldElementProps<TFieldValues>;
 
   loading?: boolean;
-  error?: Record<Path<TFieldValues>, string | string[] | undefined>;
+  error?: typeToFlattenedError<TFieldValues>['fieldErrors'];
 };
 
 function SingleFieldForm<TFieldValues extends FieldValues>(
@@ -58,10 +59,10 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
 
   useEffect(() => {
     if (error) {
-      ObjectTyped.entries(error).forEach(([field, message]) =>
-        setError(field, {
+      ObjectTyped.entries(error).forEach(([field, messages]) =>
+        setError(field as Path<TFieldValues>, {
           type: 'manual',
-          message: typeof message === 'string' ? message : first(message),
+          message: first(messages),
         }),
       );
     }

@@ -19,6 +19,7 @@ const UserSettings: FC = () => {
     <Stack css={fullWidth} alignItems="center" gap={4}>
       <UserAvatarSetting />
       <UserNameSetting />
+      <UserEmailSetting />
     </Stack>
   );
 };
@@ -43,29 +44,16 @@ const UserAvatarSetting: FC = () => {
   );
 };
 
-interface NameForm extends Record<string, string> {
-  name: string;
-}
-
 const UserNameSetting: FC = () => {
   const { status, data: session } = useSession();
   const sessionUsername = session?.user?.name || '';
 
-  const nameFormContext = useForm<NameForm>({
-    values: { name: sessionUsername }, // Reacts on loaded value
-  });
-
+  const nameFormContext = useForm({ values: { name: sessionUsername } });
   const {
     mutate: updateUsername,
     isLoading,
     error,
   } = api.userSettings.updateName.useMutation();
-
-  const handleNameSubmit = ({ name }: NameForm): void => {
-    if (session?.user?.id) {
-      updateUsername({ name });
-    }
-  };
 
   return (
     <>
@@ -75,7 +63,8 @@ const UserNameSetting: FC = () => {
         <SingleFieldForm
           formProps={{
             formContext: nameFormContext,
-            onSuccess: handleNameSubmit,
+            onSuccess: ({ name }) =>
+              name !== sessionUsername && updateUsername({ name }),
           }}
           textFieldProps={{ label: 'Name', name: 'name' }}
           loading={isLoading}
@@ -86,49 +75,35 @@ const UserNameSetting: FC = () => {
   );
 };
 
-export default UserSettings;
+const UserEmailSetting: FC = () => {
+  const { status, data: session } = useSession();
+  const sessionEmail = session?.user?.email || '';
 
-// <Box css={fullWidth}>
-//   <FormContainer
-//     formContext={nameFormContext}
-//     onSuccess={handleNameSubmit}
-//   >
-//     <TextFieldElement
-//       css={textFieldEllipsis}
-//       label="Name"
-//       name="name"
-//       variant="standard"
-//       fullWidth
-//       required={editing}
-//       InputProps={{
-//         readOnly: !editing,
-//         endAdornment: (
-//           <InputAdornment position="end">
-//             {editing && !isLoading && (
-//               <IconButton
-//                 aria-label="Cancel editing name"
-//                 size="small"
-//                 type="button"
-//                 onClick={handleCancelEditing}
-//               >
-//                 <CloseIcon fontSize="small" />
-//               </IconButton>
-//             )}
-//             <IconButton
-//               aria-label="Edit name"
-//               onMouseDown={!editing ? toggleEditing : undefined}
-//               size="small"
-//               type={editing ? 'submit' : 'button'}
-//             >
-//               {editing ? (
-//                 <CheckIcon fontSize="small" color="primary" />
-//               ) : (
-//                 <CreateIcon fontSize="small" />
-//               )}
-//             </IconButton>
-//           </InputAdornment>
-//         ),
-//       }}
-//     />
-//   </FormContainer>
-// </Box>
+  const emailFormContext = useForm({ values: { email: sessionEmail } });
+  const {
+    mutate: updateEmail,
+    isLoading,
+    error,
+  } = api.userSettings.updateEmail.useMutation();
+
+  return (
+    <>
+      {status === 'loading' ? (
+        <Skeleton css={fullWidth} variant="text" />
+      ) : (
+        <SingleFieldForm
+          formProps={{
+            formContext: emailFormContext,
+            onSuccess: ({ email }) =>
+              email !== sessionEmail && updateEmail({ email }),
+          }}
+          textFieldProps={{ label: 'Email', name: 'email' }}
+          loading={isLoading}
+          error={error?.data?.zodError?.fieldErrors}
+        />
+      )}
+    </>
+  );
+};
+
+export default UserSettings;
