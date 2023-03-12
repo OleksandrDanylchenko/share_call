@@ -39,4 +39,12 @@ export const userSettingsRouter = createTRPCRouter({
         data: { email },
       });
     }),
+  updateImage: protectedProcedure
+    .input(z.object({ image: z.string().url() }))
+    .mutation(({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+      const { image } = input;
+
+      return ctx.prisma.user.update({ where: { id: userId }, data: { image } });
+    }),
 });
