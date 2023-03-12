@@ -15,7 +15,7 @@ const config = {
     defaultLocale: 'en',
   },
   images: {
-    loader: 'custom',
+    dangerouslyAllowSVG: true,
     domains: [
       'lh3.googleusercontent.com',
       'graph.facebook.com',

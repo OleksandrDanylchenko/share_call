@@ -11,5 +11,5 @@ export const videoConfig: CameraVideoTrackInitConfig = {
   },
 };
 export const BORINGAVATARS_SERVICE_URL = 'https://source.boringavatars.com';
-export const BORINGAVATARS_SIZE = 212;
 export const BORINGAVATARS_COLORS = ['775a2d', '252017', '162631', '225072'];
+export const AVATAR_SIZE = 212;

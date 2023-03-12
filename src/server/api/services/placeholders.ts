@@ -4,13 +4,13 @@ import generateRandomAnimalName from 'random-animal-name-generator';
 import {
   BORINGAVATARS_COLORS,
   BORINGAVATARS_SERVICE_URL,
-  BORINGAVATARS_SIZE,
+  AVATAR_SIZE,
 } from '@/constants/index';
 import { prisma } from '@/server/db';
 
 const getAvatarUrl = (value: string): string => {
   const continuousValue = value.replace(/ /g, '_');
-  return `${BORINGAVATARS_SERVICE_URL}/beam/${BORINGAVATARS_SIZE}/${continuousValue}?colors=${BORINGAVATARS_COLORS}`;
+  return `${BORINGAVATARS_SERVICE_URL}/beam/${AVATAR_SIZE}/${continuousValue}?colors=${BORINGAVATARS_COLORS}`;
 };
 
 /**

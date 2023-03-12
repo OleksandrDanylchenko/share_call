@@ -7,10 +7,10 @@ import EmailIcon from '@mui/icons-material/Email';
 import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
 import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Stack, useTheme } from '@mui/material';
+import { Button, Stack, useTheme } from '@mui/material';
 import dynamic from 'next/dynamic';
 
-import { AVATAR_SIZE } from '@/components/UserSettings';
+import { AVATAR_SIZE } from '@/constants/index';
 import useElementContentDimensions from '@/hooks/useElementContentDimensions';
 import { fullHeight, shadowBorder } from '@/styles/mixins';
 const AvatarEditorNoSSR = dynamic(() => import('react-avatar-edit'), {
