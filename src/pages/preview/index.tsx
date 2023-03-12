@@ -95,6 +95,8 @@ const Preview: FC = () => {
             gap={2}
             width="90%"
             maxWidth={777}
+            py={5}
+            px={6}
           >
             <Typography variant="h4" color={tracksErrorCode && 'error'} mb={3}>
               {isLoadingTracks && 'Loading media devices...'}
