@@ -113,7 +113,7 @@ const Preview: FC = () => {
               borderRadius={8}
               overflow="hidden"
             >
-              {cameraState?.track && (
+              {cameraState?.enabled && (
                 <TracksPlayer
                   css={css`
                     z-index: 1;
