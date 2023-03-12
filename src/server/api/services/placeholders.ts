@@ -1,14 +1,17 @@
 import { User } from 'next-auth';
 import generateRandomAnimalName from 'random-animal-name-generator';
 
+import {
+  BORINGAVATARS_COLORS,
+  BORINGAVATARS_SERVICE_URL,
+  BORINGAVATARS_SIZE,
+} from '@/constants/index';
 import { prisma } from '@/server/db';
 
-export const BORINGAVATARS_SERVICE_URL = 'https://source.boringavatars.com';
-export const BORINGAVATARS_SIZE = 212;
-export const BORINGAVATARS_COLORS = ['775a2d', '252017', '162631', '225072'];
-
-const getAvatarUrl = (value: string): string =>
-  `${BORINGAVATARS_SERVICE_URL}//beam/${BORINGAVATARS_SIZE}/${value}?colors=${BORINGAVATARS_COLORS}`;
+const getAvatarUrl = (value: string): string => {
+  const continuousValue = value.replace(/ /g, '_');
+  return `${BORINGAVATARS_SERVICE_URL}/beam/${BORINGAVATARS_SIZE}/${continuousValue}?colors=${BORINGAVATARS_COLORS}`;
+};
 
 /**
  * Sets random name and image on the user.
