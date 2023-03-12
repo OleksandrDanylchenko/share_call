@@ -9,7 +9,7 @@ import { signIn } from 'next-auth/react';
 import MagicLinkForm from '@/components/SignInForm/MagicLinkForm';
 import SignInOptions from '@/components/SignInForm/SignInOptions';
 import { AuthProvider } from '@/pages/api/auth/[...nextauth]';
-import { fullWidth } from '@/styles/mixins';
+import { fullHeight, fullWidth } from '@/styles/mixins';
 
 export type OathProviderOptions = {
   provider: AuthProvider;
@@ -47,7 +47,7 @@ const SignInForm: FC = () => {
   const [parent] = useAutoAnimate();
 
   return (
-    <Stack ref={parent} css={fullWidth} height={400} justifyContent="center">
+    <Stack ref={parent} css={[fullWidth, fullHeight]} justifyContent="center">
       {!emailLinkRequested ? (
         <SignInOptions
           oAuthProviders={oAuthProviders}

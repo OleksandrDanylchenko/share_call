@@ -59,68 +59,57 @@ const MagicLinkForm: FC<EmailMagicLinkFormProps> = (props) => {
             disabled={linkGenerationState !== 'idle'}
           />
           <Stack gap={2} direction="row">
-            {linkGenerationState !== 'fulfilled' &&
-            linkGenerationState !== 'rejected' ? (
-              <>
-                <Button
-                  color="inherit"
-                  sx={{ width: '30%' }}
-                  disabled={linkGenerationState === 'pending'}
-                  onClick={onMagicLinkCancel}
-                >
-                  Cancel
-                </Button>
-                <LoadingButton
-                  type="submit"
-                  css={(theme) =>
-                    shadowBorder(theme, { color: theme.palette.common.white })
-                  }
-                  variant="outlined"
-                  color="inherit"
-                  startIcon={<EmailIcon />}
-                  loading={linkGenerationState === 'pending'}
-                  disabled={!watch('email').length}
-                  fullWidth
-                >
-                  <span>Send the link</span>
-                </LoadingButton>
-              </>
+            <Button
+              color="inherit"
+              sx={{ width: '30%' }}
+              startIcon={<ArrowBackIosIcon />}
+              disabled={linkGenerationState === 'pending'}
+              onClick={onMagicLinkCancel}
+            >
+              Back
+            </Button>
+            {linkGenerationState === 'idle' ||
+            linkGenerationState === 'pending' ? (
+              <LoadingButton
+                type="submit"
+                css={(theme) =>
+                  shadowBorder(theme, { color: theme.palette.common.white })
+                }
+                variant="outlined"
+                color="inherit"
+                startIcon={<EmailIcon />}
+                loading={linkGenerationState === 'pending'}
+                disabled={!watch('email').length}
+                fullWidth
+              >
+                <span>Send the link</span>
+              </LoadingButton>
             ) : (
-              <>
-                <Button
-                  color="inherit"
-                  sx={{ width: '30%' }}
-                  startIcon={<ArrowBackIosIcon />}
-                  onClick={onMagicLinkCancel}
-                >
-                  Back
-                </Button>
-                <Button
-                  css={(theme) =>
-                    shadowBorder(theme, {
-                      color:
-                        linkGenerationState === 'fulfilled'
-                          ? theme.palette.success.main
-                          : theme.palette.error.main,
-                    })
-                  }
-                  color={
-                    linkGenerationState === 'fulfilled' ? 'success' : 'error'
-                  }
-                  startIcon={
-                    linkGenerationState === 'fulfilled' ? (
-                      <MarkEmailUnreadIcon />
-                    ) : (
-                      <UnsubscribeIcon />
-                    )
-                  }
-                  fullWidth
-                >
-                  {linkGenerationState === 'fulfilled'
-                    ? 'The link is sent'
-                    : 'The link failed sending'}
-                </Button>
-              </>
+              <Button
+                css={(theme) =>
+                  shadowBorder(theme, {
+                    color:
+                      linkGenerationState === 'fulfilled'
+                        ? theme.palette.success.main
+                        : theme.palette.error.main,
+                  })
+                }
+                color={
+                  linkGenerationState === 'fulfilled' ? 'success' : 'error'
+                }
+                startIcon={
+                  linkGenerationState === 'fulfilled' ? (
+                    <MarkEmailUnreadIcon />
+                  ) : (
+                    <UnsubscribeIcon />
+                  )
+                }
+                fullWidth
+              >
+                {linkGenerationState === 'fulfilled'
+                  ? 'The link is sent'
+                  : 'The link failed sending'}
+              </Button>
             )}
           </Stack>
         </Stack>
