@@ -1,9 +1,12 @@
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form-mui';
 
-import { Avatar, Skeleton, Stack } from '@mui/material';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { Avatar, Skeleton, Box, Stack, Tooltip, css } from '@mui/material';
 import { useSession } from 'next-auth/react';
+import { useToggle } from 'usehooks-ts';
 
+import Dimmer from '@/components/Dimmer';
 import SingleFieldForm from '@/components/SingleFieldForm';
 import { fullWidth } from '@/styles/mixins';
 import { api } from '@/utils/api';
@@ -26,19 +29,42 @@ const UserSettings: FC = () => {
 
 const UserAvatarSetting: FC = () => {
   const { status, data: session } = useSession();
+
+  const [showEditOverlay, toggleShowOverlay] = useToggle(false);
+
   return (
     <>
       {status === 'loading' ? (
         <Skeleton variant="circular" width={AVATAR_SIZE} height={AVATAR_SIZE} />
       ) : (
-        <Avatar
-          src={session!.user!.image || ''}
-          alt={session!.user!.name!}
-          sx={{
-            width: AVATAR_SIZE,
-            height: AVATAR_SIZE,
-          }}
-        />
+        <Box position="relative">
+          <Tooltip
+            open={showEditOverlay}
+            title="Edit image"
+            placement="top"
+            onOpen={toggleShowOverlay}
+            onClose={toggleShowOverlay}
+          >
+            <Dimmer
+              open={showEditOverlay}
+              variant="circular"
+              content={<AddAPhotoIcon />}
+              css={css`
+                cursor: pointer;
+              `}
+            >
+              <Avatar
+                variant="circular"
+                src={session!.user!.image || ''}
+                alt={session!.user!.name!}
+                sx={{
+                  width: AVATAR_SIZE,
+                  height: AVATAR_SIZE,
+                }}
+              />
+            </Dimmer>
+          </Tooltip>
+        </Box>
       )}
     </>
   );

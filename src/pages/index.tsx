@@ -93,7 +93,10 @@ const Dashboard: FC = () => {
         <UserSettings />
         <LoadingButton
           css={(theme) =>
-            shadowBorder(theme, { color: theme.palette.error.light })
+            shadowBorder(theme, {
+              blurRadius: '7px',
+              color: theme.palette.warning.light,
+            })
           }
           variant="outlined"
           color="inherit"
