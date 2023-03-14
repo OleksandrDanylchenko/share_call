@@ -10,7 +10,7 @@ import { useToggle } from 'usehooks-ts';
 
 import AvatarEditor from '@/components/AvatarEditor';
 import Dimmer from '@/components/Dimmer';
-import { AVATAR_SIZE, UPLOADCARE_CDN_DOMAIN } from '@/constants/index';
+import { AVATAR_SIZE, UPLOADCARE_CDN_URL } from '@/constants/index';
 import { blurBackgroundContainer, shadowBorder } from '@/styles/mixins';
 
 export const UserAvatarSetting: FC = () => {
@@ -51,7 +51,7 @@ export const UserAvatarSetting: FC = () => {
                 height={AVATAR_SIZE}
                 quality={80}
                 loader={
-                  sessionImage.includes(UPLOADCARE_CDN_DOMAIN)
+                  sessionImage.includes(UPLOADCARE_CDN_URL)
                     ? uploadcareLoader // Use uploadcore for custom uploaded images
                     : undefined
                 }

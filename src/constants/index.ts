@@ -14,4 +14,4 @@ export const BORINGAVATARS_SERVICE_URL = 'https://source.boringavatars.com';
 export const BORINGAVATARS_COLORS = ['775a2d', '252017', '162631', '225072'];
 export const AVATAR_SIZE = 212;
 
-export const UPLOADCARE_CDN_DOMAIN = 'ucr.i';
+export const UPLOADCARE_CDN_URL = 'https://ucarecdn.com';
