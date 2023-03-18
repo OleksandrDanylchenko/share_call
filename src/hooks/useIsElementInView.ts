@@ -16,16 +16,12 @@ export const checkIsElementInView = <T extends HTMLElement>(
   };
   const parentStyle = getComputedStyle(parentElement);
   const parentOverflow = parentStyle.overflow;
-  if (parentOverflow === 'visible') return true;
-
-  const parentHeight = parentElement.clientHeight;
-  const parentWidth = parentElement.clientWidth;
-  return (
-    relativeRect.top >= 0 &&
-    relativeRect.bottom <= parentHeight &&
-    relativeRect.left >= 0 &&
-    relativeRect.right <= parentWidth
-  );
+  return parentOverflow === 'visible'
+    ? true
+    : relativeRect.top >= 0 &&
+        relativeRect.bottom <= parentRect.height &&
+        relativeRect.left >= 0 &&
+        relativeRect.right <= parentRect.width;
 };
 
 const useIsElementInView = <T extends HTMLElement>(
