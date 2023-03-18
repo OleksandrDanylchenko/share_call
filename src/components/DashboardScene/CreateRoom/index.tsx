@@ -8,10 +8,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import { LoadingButton } from '@mui/lab';
 import { Button, Stack, Typography } from '@mui/material';
 
-import {
-  DashboardSceneProps,
-  DashboardSceneType,
-} from '@/components/DashboardScene';
+import { DashboardSceneProps } from '@/components/DashboardScene';
 import { fullParent, shadowBorder } from '@/styles/mixins';
 import { api } from '@/utils/api';
 

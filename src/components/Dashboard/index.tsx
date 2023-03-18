@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -26,8 +26,7 @@ const Dashboard: FC = () => {
     await signOut({ redirect: false });
   };
 
-  const [animateDashboardParent] = useAutoAnimate({ duration: 150 });
-  const [animateDashboardSceneParent] = useAutoAnimate({ duration: 165 });
+  const [animateDashboardParent] = useAutoAnimate();
   return (
     <Stack
       ref={animateDashboardParent}
@@ -38,10 +37,9 @@ const Dashboard: FC = () => {
       gap={4}
     >
       <Box
-        ref={animateDashboardSceneParent}
         css={blurBackgroundContainer}
         flex={1}
-        height="80%"
+        height={scene === DashboardSceneType.Rooms ? '95%' : '80%'}
       >
         <DashboardScene />
       </Box>
