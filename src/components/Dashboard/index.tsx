@@ -1,11 +1,15 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { LoadingButton } from '@mui/lab';
 import { Box, Stack, Typography } from '@mui/material';
 import { signOut } from 'next-auth/react';
 
-import DashboardOptions from '@/components/DashboardOptions';
+import DashboardScene, {
+  DashboardSceneType,
+  DashboardSceneTypes,
+} from '@/components/DashboardScene';
 import UserSettings from '@/components/UserSettings';
 import {
   blurBackgroundContainer,
@@ -14,12 +18,20 @@ import {
 } from '@/styles/mixins';
 
 const Dashboard: FC = () => {
+  const [scene, setScene] = useState(DashboardSceneType.Options);
+  const sceneView = useMemo(() => {
+    const sceneType = DashboardSceneType[scene] as DashboardSceneTypes;
+    const SceneView = DashboardScene[sceneType];
+    return <SceneView onSceneChange={setScene} />;
+  }, [scene]);
+
   const [signingOut, setSigningOut] = useState(false);
   const handleSignOut = async (): Promise<void> => {
     setSigningOut(true);
     await signOut({ redirect: false });
   };
 
+  const [animateParent] = useAutoAnimate();
   return (
     <Stack
       css={fullHeight}
@@ -28,8 +40,13 @@ const Dashboard: FC = () => {
       justifyContent="center"
       gap={4}
     >
-      <Box css={blurBackgroundContainer} flex={1} height="80%">
-        <DashboardOptions />
+      <Box
+        ref={animateParent}
+        css={blurBackgroundContainer}
+        flex={1}
+        height="80%"
+      >
+        {sceneView}
       </Box>
       <Stack
         css={blurBackgroundContainer}
