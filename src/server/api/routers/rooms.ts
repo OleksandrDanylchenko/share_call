@@ -3,6 +3,23 @@ import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 export const roomsRouter = createTRPCRouter({
+  getRooms: protectedProcedure.query(({ ctx }) => {
+    const userId = ctx.session.user.id;
+    return ctx.prisma.room.findMany({
+      where: {
+        creator_id: userId,
+        OR: [
+          {
+            sessions: {
+              some: {
+                user_id: userId,
+              },
+            },
+          },
+        ],
+      },
+    });
+  }),
   createRoom: protectedProcedure
     .input(
       z.object({
