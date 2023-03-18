@@ -22,6 +22,7 @@ export const roomsRouter = createTRPCRouter({
           },
         ],
       },
+      orderBy: { created_at: 'desc' },
     });
   }),
   createRoom: protectedProcedure
