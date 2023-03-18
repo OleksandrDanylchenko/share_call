@@ -9,14 +9,14 @@ import {
   DashboardSceneProps,
   DashboardSceneType,
 } from '@/components/DashboardScene';
-import { fullHeight, fullWidth, shadowBorder } from '@/styles/mixins';
+import { fullParent, shadowBorder } from '@/styles/mixins';
 
 const DashboardOptions: FC<DashboardSceneProps> = (props) => {
   const { onSceneChange } = props;
 
   const theme = useTheme();
   return (
-    <Stack css={[fullWidth, fullHeight]} px={5} py={7} gap={5}>
+    <Stack css={fullParent} px={5} py={7} gap={5}>
       <Option
         layout="horizontal"
         stretch={false}

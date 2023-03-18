@@ -44,10 +44,13 @@ const SignInForm: FC = () => {
     await signIn('email', { email, redirect: false });
   };
 
-  const [parent] = useAutoAnimate();
-
+  const [animateParent] = useAutoAnimate();
   return (
-    <Stack ref={parent} css={[fullWidth, fullHeight]} justifyContent="center">
+    <Stack
+      ref={animateParent}
+      css={[fullWidth, fullHeight]}
+      justifyContent="center"
+    >
       {!emailLinkRequested ? (
         <SignInOptions
           oAuthProviders={oAuthProviders}
