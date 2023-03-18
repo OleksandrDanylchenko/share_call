@@ -125,7 +125,9 @@ const Preview: FC = () => {
                 css={fullParent}
                 variant="rounded"
                 animation={
-                  tracksErrorCode || !cameraState?.enabled ? false : 'pulse'
+                  tracksErrorCode || (cameraState && !cameraState.enabled)
+                    ? false
+                    : 'pulse'
                 }
                 sx={{ position: 'absolute' }}
               />
