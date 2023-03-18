@@ -26,8 +26,8 @@ const Dashboard: FC = () => {
     await signOut({ redirect: false });
   };
 
-  const [animateDashboardParent] = useAutoAnimate();
-  const [animateDashboardSceneParent] = useAutoAnimate();
+  const [animateDashboardParent] = useAutoAnimate({ duration: 150 });
+  const [animateDashboardSceneParent] = useAutoAnimate({ duration: 165 });
   return (
     <Stack
       ref={animateDashboardParent}
