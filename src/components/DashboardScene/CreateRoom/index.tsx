@@ -9,7 +9,7 @@ import { LoadingButton } from '@mui/lab';
 import { Button, Stack, Typography } from '@mui/material';
 
 import { DashboardSceneProps } from '@/components/DashboardScene';
-import { fullParent, shadowBorder } from '@/styles/mixins';
+import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
 interface RoomForm {
@@ -65,6 +65,7 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
                 </Typography>
                 <TextFieldElement
                   id="room-name-field"
+                  css={textFieldEllipsis}
                   name="name"
                   variant="filled"
                   fullWidth

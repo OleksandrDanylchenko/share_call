@@ -15,8 +15,8 @@ import { NextAuthComponentType } from '@/components/AuthWrapper';
 import CallControls from '@/components/CallControls';
 import CallScene, { CallSceneType } from '@/components/CallScene';
 import { clientEnv } from '@/env/schema.mjs';
+import { useCurrentUser } from '@/hooks/index';
 import { useAgoraRtcClient } from '@/hooks/useAgoraRtcClient';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
 import {
   selectLocalTracks,
   selectTracks,

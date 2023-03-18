@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Stack } from '@mui/material';
 
 import DeviceToggleButton from '@/components/DeviceToggleButton';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useCurrentUser } from '@/hooks/index';
 import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
 import { DeviceType } from '@/types/agora';
 

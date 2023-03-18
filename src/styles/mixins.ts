@@ -91,3 +91,10 @@ export const textFieldEllipsis = css`
     white-space: nowrap;
   }
 `;
+
+export const lineClamp = (linesNumber = 2): SerializedStyles => css`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: ${linesNumber};
+  overflow: hidden;
+`;

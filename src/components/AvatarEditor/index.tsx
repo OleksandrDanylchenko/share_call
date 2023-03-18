@@ -11,7 +11,7 @@ import { useSession } from 'next-auth/react';
 
 import { AVATAR_SIZE } from '@/constants/index';
 import { clientEnv } from '@/env/schema.mjs';
-import useElementContentDimensions from '@/hooks/useElementContentDimensions';
+import { useElementContentDimensions } from '@/hooks/index';
 import { fullHeight, shadowBorder } from '@/styles/mixins';
 import { api } from '@/utils/api';
 import { reloadAuthSession } from '@/utils/auth';

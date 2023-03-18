@@ -4,7 +4,7 @@ import { useEventListener } from 'usehooks-ts';
 
 import { Dimensions } from '@/types/index';
 
-const useElementContentDimensions = <T extends HTMLElement | null>(
+export const useElementContentDimensions = <T extends HTMLElement | null>(
   ref: MutableRefObject<T>,
 ): Dimensions => {
   const [dimensions, setDimensions] = useState<Dimensions>({
@@ -38,5 +38,3 @@ const useElementContentDimensions = <T extends HTMLElement | null>(
 
   return dimensions;
 };
-
-export default useElementContentDimensions;

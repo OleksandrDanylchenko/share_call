@@ -22,7 +22,6 @@ import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { useToggle } from 'usehooks-ts';
 import { typeToFlattenedError } from 'zod/lib/ZodError';
 
-import { usePrevious } from '@/hooks/usePrevious';
 import { fullWidth, textFieldEllipsis } from '@/styles/mixins';
 
 type Props<TFieldValues extends FieldValues> = {

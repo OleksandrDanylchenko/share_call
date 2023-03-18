@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import CallPlayerOverlay from '@/components/CallPlayerOverlay';
 import { useGridItemDimensions } from '@/components/CallScene/Grid/useGridItemWidth';
 import TracksPlayer from '@/components/TracksPlayer';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useCurrentUser } from '@/hooks/index';
 import { useCallTracks } from '@/store/callTracks';
 import { fullParent } from '@/styles/mixins';
 import { AgoraTracks } from '@/types/agora';
