@@ -43,6 +43,7 @@ model SessionParticipant {
     session_id String
     session    RoomSession @relation(fields: [session_id], references: [id])
     role       SessionRole
+    active     Boolean     @default(false)
 
     @@map("session_participants")
 }
