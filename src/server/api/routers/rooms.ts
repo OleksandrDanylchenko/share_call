@@ -10,15 +10,7 @@ export const roomsRouter = createTRPCRouter({
         OR: [
           { creator_id: userId },
           {
-            sessions: {
-              some: {
-                participants: {
-                  some: {
-                    user_id: userId,
-                  },
-                },
-              },
-            },
+            sessions: { some: { participants: { some: { user_id: userId } } } },
           },
         ],
       },

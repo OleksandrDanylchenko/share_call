@@ -7,8 +7,12 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import LoginIcon from '@mui/icons-material/Login';
 import { LoadingButton } from '@mui/lab';
 import { Button, Stack, Typography } from '@mui/material';
+import { router } from 'next/client';
 
-import { DashboardSceneProps } from '@/components/DashboardScene';
+import {
+  DashboardSceneProps,
+  DashboardSceneType,
+} from '@/components/DashboardScene';
 import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
@@ -26,7 +30,14 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
   const { watch } = formContext;
 
   const { mutate: createRoom, isLoading } = api.rooms.createRoom.useMutation({
-    onSuccess: () => onSceneChange('/'),
+    onSuccess(result) {
+      const { id: roomId } = result;
+      router.push(
+        { query: { scene: DashboardSceneType.Rooms, room_id: roomId } },
+        undefined,
+        { shallow: true },
+      );
+    },
   });
 
   return (
