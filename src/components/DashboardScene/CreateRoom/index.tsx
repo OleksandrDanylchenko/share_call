@@ -13,10 +13,11 @@ import {
   DashboardSceneType,
 } from '@/components/DashboardScene';
 import { fullParent, shadowBorder } from '@/styles/mixins';
+import { api } from '@/utils/api';
 
 interface RoomForm {
   name: string;
-  description?: string;
+  description: string;
 }
 
 const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
@@ -27,9 +28,7 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
   });
   const { watch } = formContext;
 
-  const handleCreateRoomSubmit = async (data: RoomForm): Promise<void> => {
-    console.log(data);
-  };
+  const { mutate: createRoom, isLoading } = api.rooms.createRoom.useMutation();
 
   return (
     <Stack css={fullParent} px={5} py={7}>
@@ -37,6 +36,7 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
         color="inherit"
         sx={{ width: 'fit-content' }}
         startIcon={<ArrowBackIosIcon />}
+        disabled={isLoading}
         onClick={() => onSceneChange(DashboardSceneType.Options)}
       >
         Back to dashboard
@@ -45,7 +45,7 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
         {({ css }) => (
           <FormContainer
             formContext={formContext}
-            onSuccess={handleCreateRoomSubmit}
+            onSuccess={(data) => createRoom(data)}
             FormProps={{
               className: css`
                 display: flex;
@@ -109,6 +109,7 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
                 color="inherit"
                 startIcon={<AddCircleOutlineIcon />}
                 disabled={!watch('name').length}
+                loading={isLoading}
                 fullWidth
               >
                 <span>Create room</span>
@@ -119,6 +120,7 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
                 color="inherit"
                 startIcon={<LoginIcon />}
                 disabled={!watch('name').length}
+                loading={isLoading}
                 fullWidth
               >
                 <span>Create room and join call</span>

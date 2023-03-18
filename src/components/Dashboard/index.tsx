@@ -18,7 +18,7 @@ import {
 } from '@/styles/mixins';
 
 const Dashboard: FC = () => {
-  const [scene, setScene] = useState(DashboardSceneType.Options);
+  const [scene, setScene] = useState(DashboardSceneType.CreateRoom);
   const sceneView = useMemo(() => {
     const sceneType = DashboardSceneType[scene] as DashboardSceneTypes;
     const SceneView = DashboardScene[sceneType];
