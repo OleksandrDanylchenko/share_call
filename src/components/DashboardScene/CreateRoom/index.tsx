@@ -28,7 +28,9 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
   });
   const { watch } = formContext;
 
-  const { mutate: createRoom, isLoading } = api.rooms.createRoom.useMutation();
+  const { mutate: createRoom, isLoading } = api.rooms.createRoom.useMutation({
+    onSuccess: () => onSceneChange('/'),
+  });
 
   return (
     <Stack css={fullParent} px={5} py={7}>
@@ -37,7 +39,7 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
         sx={{ width: 'fit-content' }}
         startIcon={<ArrowBackIosIcon />}
         disabled={isLoading}
-        onClick={() => onSceneChange(DashboardSceneType.Options)}
+        onClick={() => onSceneChange('/')}
       >
         Back to dashboard
       </Button>

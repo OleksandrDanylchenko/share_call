@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -8,7 +8,7 @@ import { signOut } from 'next-auth/react';
 
 import DashboardScene, {
   DashboardSceneType,
-  DashboardSceneTypes,
+  useDashboardSceneType,
 } from '@/components/DashboardScene';
 import UserSettings from '@/components/UserSettings';
 import {
@@ -18,12 +18,7 @@ import {
 } from '@/styles/mixins';
 
 const Dashboard: FC = () => {
-  const [scene, setScene] = useState(DashboardSceneType.CreateRoom);
-  const sceneView = useMemo(() => {
-    const sceneType = DashboardSceneType[scene] as DashboardSceneTypes;
-    const SceneView = DashboardScene[sceneType];
-    return <SceneView onSceneChange={setScene} />;
-  }, [scene]);
+  const scene = useDashboardSceneType();
 
   const [signingOut, setSigningOut] = useState(false);
   const handleSignOut = async (): Promise<void> => {
@@ -31,9 +26,11 @@ const Dashboard: FC = () => {
     await signOut({ redirect: false });
   };
 
-  const [animateParent] = useAutoAnimate();
+  const [animateDashboardParent] = useAutoAnimate();
+  const [animateDashboardSceneParent] = useAutoAnimate();
   return (
     <Stack
+      ref={animateDashboardParent}
       css={fullHeight}
       direction="row"
       alignItems="center"
@@ -41,46 +38,48 @@ const Dashboard: FC = () => {
       gap={4}
     >
       <Box
-        ref={animateParent}
+        ref={animateDashboardSceneParent}
         css={blurBackgroundContainer}
         flex={1}
         height="80%"
       >
-        {sceneView}
+        <DashboardScene />
       </Box>
-      <Stack
-        css={blurBackgroundContainer}
-        position="relative"
-        alignItems="center"
-        justifyContent="center"
-        flexShrink={0}
-        width={420}
-        height="80%"
-        gap={6}
-        px={6}
-        py={2}
-      >
-        <Typography variant="h4" position="absolute" top={20}>
-          Welcome back!
-        </Typography>
-        <UserSettings />
-        <LoadingButton
-          css={(theme) =>
-            shadowBorder(theme, {
-              blurRadius: '7px',
-              color: theme.palette.warning.light,
-            })
-          }
-          variant="outlined"
-          color="inherit"
-          endIcon={<LogoutIcon />}
-          loading={signingOut}
-          onClick={handleSignOut}
-          sx={{ position: 'absolute', bottom: 20 }}
+      {scene !== DashboardSceneType.Rooms && (
+        <Stack
+          css={blurBackgroundContainer}
+          position="relative"
+          alignItems="center"
+          justifyContent="center"
+          flexShrink={0}
+          width={420}
+          height="80%"
+          gap={6}
+          px={6}
+          py={2}
         >
-          <span>Sign Out</span>
-        </LoadingButton>
-      </Stack>
+          <Typography variant="h4" position="absolute" top={20}>
+            Welcome back!
+          </Typography>
+          <UserSettings />
+          <LoadingButton
+            css={(theme) =>
+              shadowBorder(theme, {
+                blurRadius: '7px',
+                color: theme.palette.warning.light,
+              })
+            }
+            variant="outlined"
+            color="inherit"
+            endIcon={<LogoutIcon />}
+            loading={signingOut}
+            onClick={handleSignOut}
+            sx={{ position: 'absolute', bottom: 20 }}
+          >
+            <span>Sign Out</span>
+          </LoadingButton>
+        </Stack>
+      )}
     </Stack>
   );
 };

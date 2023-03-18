@@ -22,7 +22,7 @@ const DashboardOptions: FC<DashboardSceneProps> = (props) => {
         stretch={false}
         borderColor={theme.palette.warning.light}
         icon={<FormatListBulletedIcon />}
-        onClick={() => onSceneChange(DashboardSceneType.Rooms)}
+        onClick={() => onSceneChange(`/?scene=${DashboardSceneType.Rooms}`)}
       >
         My rooms
       </Option>
@@ -35,13 +35,17 @@ const DashboardOptions: FC<DashboardSceneProps> = (props) => {
       >
         <Option
           icon={<AddCircleOutlineIcon />}
-          onClick={() => onSceneChange(DashboardSceneType.CreateRoom)}
+          onClick={() =>
+            onSceneChange(`/?scene=${DashboardSceneType.CreateRoom}`)
+          }
         >
           Create a room
         </Option>
         <Option
           icon={<LoginIcon />}
-          onClick={() => onSceneChange(DashboardSceneType.JoinCall)}
+          onClick={() =>
+            onSceneChange(`/?scene=${DashboardSceneType.JoinCall}`)
+          }
         >
           Join a call
         </Option>
