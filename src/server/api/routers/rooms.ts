@@ -7,8 +7,8 @@ export const roomsRouter = createTRPCRouter({
     const userId = ctx.session.user.id;
     return ctx.prisma.room.findMany({
       where: {
-        creator_id: userId,
         OR: [
+          { creator_id: userId },
           {
             sessions: {
               some: {
