@@ -7,7 +7,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import LoginIcon from '@mui/icons-material/Login';
 import { LoadingButton } from '@mui/lab';
 import { Button, Stack, Typography } from '@mui/material';
-import { router } from 'next/client';
+import { useRouter } from 'next/router';
 
 import {
   DashboardSceneProps,
@@ -23,6 +23,8 @@ interface RoomForm {
 
 const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
   const { onSceneChange } = props;
+
+  const router = useRouter();
 
   const formContext = useForm<RoomForm>({
     defaultValues: { name: '', description: '' },
