@@ -26,15 +26,32 @@ model Room {
 }
 
 model RoomSession {
-    id          String   @id @default(cuid())
-    room_id     String
-    room        Room     @relation(fields: [room_id], references: [id])
-    user_id     String
-    user        User     @relation(fields: [user_id], references: [id])
-    started_at  DateTime @default(now())
-    finished_at DateTime
+    id           String               @id @default(cuid())
+    room_id      String
+    room         Room                 @relation(fields: [room_id], references: [id])
+    started_at   DateTime             @default(now())
+    finished_at  DateTime
+    participants SessionParticipant[]
 
     @@map("room_sessions")
+}
+
+model SessionParticipant {
+    id         String      @id @default(cuid())
+    user_id    String
+    user       User        @relation(fields: [user_id], references: [id])
+    session_id String
+    session    RoomSession @relation(fields: [session_id], references: [id])
+    role       SessionRole
+
+    @@map("session_participants")
+}
+
+enum SessionRole {
+    admin
+    viewer
+
+    @@map("session_role")
 }
 
 // Necessary for Next auth
@@ -68,15 +85,15 @@ model Session {
 }
 
 model User {
-    id            String        @id @default(cuid())
-    name          String?
-    email         String?       @unique
-    emailVerified DateTime?     @map("email_verified")
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    Room          Room[]
-    RoomSession   RoomSession[]
+    id             String               @id @default(cuid())
+    name           String?
+    email          String?              @unique
+    emailVerified  DateTime?            @map("email_verified")
+    image          String?
+    accounts       Account[]
+    sessions       Session[]
+    created_rooms  Room[]
+    participations SessionParticipant[]
 
     @@map("users")
 }
