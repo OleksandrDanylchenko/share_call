@@ -31,6 +31,19 @@ export const api = createTRPCNext<AppRouter>({
       transformer: superjson,
 
       /**
+       * Query client configuration
+       * @see https://tanstack.com/query/v4/docs/react/reference/QueryClient
+       */
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60 * 5, // 5 minutes
+            cacheTime: 1000 * 60 * 10, // 10 minutes
+          },
+        },
+      },
+
+      /**
        * Links used to determine request flow from client to server
        * @see https://trpc.io/docs/links
        * */
