@@ -1,6 +1,5 @@
-import { lighten } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
-import { Poppins } from '@next/font/google';
+import { Poppins } from 'next/font/google';
 
 export const poppins = Poppins({
   weight: ['300', '400', '700', '900'],
