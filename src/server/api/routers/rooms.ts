@@ -12,7 +12,11 @@ export const roomsRouter = createTRPCRouter({
           {
             sessions: {
               some: {
-                user_id: userId,
+                participants: {
+                  some: {
+                    user_id: userId,
+                  },
+                },
               },
             },
           },
