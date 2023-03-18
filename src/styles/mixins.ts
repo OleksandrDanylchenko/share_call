@@ -1,5 +1,6 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Theme } from '@mui/material';
+import { merge } from 'lodash';
 
 export const fullViewport = css`
   width: 100vw;
@@ -32,13 +33,15 @@ export const doubleColorGradient = (
     palette: { warning, primary },
   } = theme;
 
-  const { colorStart, colorEnd, deg, centerOffset } = {
-    colorStart: warning.light,
-    colorEnd: primary.dark,
-    deg: 30,
-    centerOffset: 0,
-    ...options,
-  };
+  const { colorStart, colorEnd, deg, centerOffset } = merge(
+    {
+      colorStart: warning.light,
+      colorEnd: primary.dark,
+      deg: 30,
+      centerOffset: 0,
+    },
+    options,
+  );
 
   return css`
     background: linear-gradient(
@@ -59,12 +62,10 @@ export const shadowBorder = (
     palette: { primary },
   } = theme;
 
-  const { blurRadius, spreadRadius, color } = {
-    color: primary.main,
-    blurRadius: '10px',
-    spreadRadius: '2px',
-    ...options,
-  };
+  const { blurRadius, spreadRadius, color } = merge(
+    { color: primary.main, blurRadius: '10px', spreadRadius: '2px' },
+    options,
+  );
 
   return css`
     box-shadow: inset 0 0 ${blurRadius} ${spreadRadius} ${color};
