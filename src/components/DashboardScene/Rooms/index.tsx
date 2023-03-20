@@ -16,7 +16,7 @@ const DashboardRooms: FC<DashboardSceneProps> = (props) => {
   const activeRoomId = router.query.room_id as string | undefined;
 
   return (
-    <Stack css={fullParent} px={5} pt={3} gap={3}>
+    <Stack css={fullParent} px={5} pt={1} gap={3}>
       <Button
         color="inherit"
         sx={{ width: 'fit-content', marginLeft: -2 }}
