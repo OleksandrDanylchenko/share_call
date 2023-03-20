@@ -76,6 +76,7 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
           fullWidth
           required={editing}
           disabled={loading}
+          {...textFieldProps}
           InputProps={{
             readOnly: !editing,
             endAdornment: (
@@ -110,8 +111,8 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
                 )}
               </InputAdornment>
             ),
+            ...textFieldProps.InputProps,
           }}
-          {...textFieldProps}
         />
       </FormContainer>
     </Box>
