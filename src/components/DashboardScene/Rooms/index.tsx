@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { Button, Stack } from '@mui/material';
+import { Button, Divider, Stack } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { DashboardSceneProps } from '@/components/DashboardScene';
+import RoomDetails from '@/components/DashboardScene/Rooms/RoomDetails';
 import { RoomsList } from '@/components/DashboardScene/Rooms/RoomsList';
-import { fullHeight, fullParent } from '@/styles/mixins';
+import { fullHeight, fullParent, fullWidth } from '@/styles/mixins';
 
 const DashboardRooms: FC<DashboardSceneProps> = (props) => {
   const { onSceneChange } = props;
@@ -24,8 +25,13 @@ const DashboardRooms: FC<DashboardSceneProps> = (props) => {
       >
         Back to dashboard
       </Button>
-      <Stack css={fullHeight} direction="row" width="30%">
+      <Stack css={[fullWidth, fullHeight]} direction="row" gap={3}>
         <RoomsList activeRoomId={activeRoomId} />
+        <Divider
+          orientation="vertical"
+          sx={{ height: '95%', alignSelf: 'center' }}
+        />
+        <RoomDetails activeRoomId={activeRoomId} />
       </Stack>
     </Stack>
   );
