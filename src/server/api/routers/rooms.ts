@@ -1,3 +1,4 @@
+import { pickBy } from 'lodash';
 import { z } from 'zod';
 
 import { createTRPCRouter, protectedProcedure } from '../trpc';
@@ -35,6 +36,24 @@ export const roomsRouter = createTRPCRouter({
           creator_id: userId,
         },
         select: { id: true },
+      });
+    }),
+  updateRoom: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        name: z.string().optional(),
+        description: z.string().optional(),
+      }),
+    )
+    .mutation(({ input, ctx }) => {
+      const { id, ...payload } = input;
+      const updatePayload = pickBy(payload);
+
+      return ctx.prisma.room.update({
+        where: { id },
+        data: updatePayload,
+        select: { id: true, name: true, description: true },
       });
     }),
 });
