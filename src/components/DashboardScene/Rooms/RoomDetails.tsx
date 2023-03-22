@@ -35,15 +35,26 @@ const RoomDetails: FC<Required<Props>> = (props) => {
       apiUtils.rooms.getRooms.setData(
         undefined,
         prevData?.map((room) =>
-          room.id === id ? { ...room, ...pickBy(updated) } : room,
+          room.id === id ? { ...room, ...updated } : room,
         ),
       );
       return { prevData };
     },
-    onError(err, newPost, ctx) {
+    onError(_err, _newPost, ctx) {
       apiUtils.rooms.getRooms.setData(undefined, ctx?.prevData);
     },
   });
+
+  const handleRoomUpdate = (
+    data: { name: string } | { description: string },
+  ): void => {
+    if (
+      ('name' in data && data.name !== activeName) ||
+      ('description' in data && data.description !== activeDescription)
+    ) {
+      updateRoom({ id: activeRoomId, ...pickBy(data) });
+    }
+  };
 
   return (
     <Stack css={fullWidth}>
@@ -52,8 +63,7 @@ const RoomDetails: FC<Required<Props>> = (props) => {
           <SingleFieldForm
             formProps={{
               formContext: nameFormContext,
-              onSuccess: ({ name }) =>
-                name !== activeName && updateRoom({ id: activeRoomId, name }),
+              onSuccess: handleRoomUpdate,
             }}
             textFieldProps={{
               label: 'Name',
