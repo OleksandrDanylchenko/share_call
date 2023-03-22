@@ -34,6 +34,7 @@ const UserEmailSetting: FC = () => {
               email !== sessionEmail && updateEmail({ email }),
           }}
           textFieldProps={{ label: 'Email', name: 'email' }}
+          ellipsis
           loading={isLoading}
           error={error?.data?.zodError?.fieldErrors}
         />

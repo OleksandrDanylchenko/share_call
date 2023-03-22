@@ -29,6 +29,7 @@ type Props<TFieldValues extends FieldValues> = {
     formContext: UseFormReturn<TFieldValues>; // Makes property required
   };
   textFieldProps: TextFieldElementProps<TFieldValues>;
+  ellipsis?: boolean;
 
   loading?: boolean;
   error?: typeToFlattenedError<TFieldValues>['fieldErrors'];
@@ -37,7 +38,7 @@ type Props<TFieldValues extends FieldValues> = {
 function SingleFieldForm<TFieldValues extends FieldValues>(
   props: Props<TFieldValues>,
 ): ReactElement {
-  const { formProps, textFieldProps, loading, error } = props;
+  const { formProps, textFieldProps, ellipsis, loading, error } = props;
   const {
     formContext: { reset, setError },
     onSuccess,
@@ -71,7 +72,7 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
     <Box css={fullWidth}>
       <FormContainer {...formProps} onSuccess={handleSuccessSubmit}>
         <TextFieldElement
-          css={textFieldEllipsis}
+          css={ellipsis && textFieldEllipsis}
           variant="standard"
           fullWidth
           required={editing}

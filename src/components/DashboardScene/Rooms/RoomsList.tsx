@@ -69,10 +69,10 @@ export const RoomsList: FC<Props> = (props) => {
 
   const placeholderItems = useMemo(
     () =>
-      range(0, 4).map((_, index, arr) => (
+      range(0, 5).map((_, index, arr) => (
         <Fragment key={index}>
           <ListItem disablePadding>
-            <Skeleton css={fullWidth} height={130} sx={{ transform: 'none' }} />
+            <Skeleton css={fullWidth} height={100} sx={{ transform: 'none' }} />
           </ListItem>
           {index !== arr.length - 1 && (
             <Divider
@@ -87,7 +87,7 @@ export const RoomsList: FC<Props> = (props) => {
 
   const [animateListParent] = useAutoAnimate();
   return (
-    <Stack pl={1} gap={2} width="30%">
+    <Stack pl={1} gap={2} width="25%">
       <Typography variant="h4">Rooms:</Typography>
       <TextField
         css={textFieldEllipsis}

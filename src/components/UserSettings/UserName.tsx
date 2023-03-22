@@ -34,6 +34,7 @@ const UserNameSetting: FC = () => {
               name !== sessionUsername && updateUsername({ name }),
           }}
           textFieldProps={{ label: 'Name', name: 'name' }}
+          ellipsis
           loading={isLoading}
           error={error?.data?.zodError?.fieldErrors}
         />

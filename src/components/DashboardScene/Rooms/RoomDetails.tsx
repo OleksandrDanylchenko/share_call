@@ -25,6 +25,9 @@ const RoomDetails: FC<Required<Props>> = (props) => {
   const activeDescription = activeRoom?.description || '';
 
   const nameFormContext = useForm({ values: { name: activeName } });
+  const descriptionFormContext = useForm({
+    values: { description: activeDescription },
+  });
 
   const apiUtils = api.useContext();
   const { mutate: updateRoom } = api.rooms.updateRoom.useMutation({
@@ -57,7 +60,7 @@ const RoomDetails: FC<Required<Props>> = (props) => {
   };
 
   return (
-    <Stack css={fullWidth}>
+    <Stack css={fullWidth} gap={2}>
       <ClassNames>
         {({ css, theme }) => (
           <SingleFieldForm
@@ -75,6 +78,31 @@ const RoomDetails: FC<Required<Props>> = (props) => {
                 `,
               },
               fullWidth: true,
+            }}
+            ellipsis
+          />
+        )}
+      </ClassNames>
+      <ClassNames>
+        {({ css, theme }) => (
+          <SingleFieldForm
+            formProps={{
+              formContext: descriptionFormContext,
+              onSuccess: handleRoomUpdate,
+            }}
+            textFieldProps={{
+              label: 'Description',
+              name: 'description',
+              hiddenLabel: true,
+              fullWidth: true,
+              multiline: true,
+              rows: 4,
+              InputProps: {
+                className: css`
+                  color: ${theme.palette.text.secondary};
+                  font-size: ${theme.typography.body2.fontSize};
+                `,
+              },
             }}
           />
         )}
