@@ -20,6 +20,7 @@ model Room {
     creator_id  String
     creator     User          @relation(fields: [creator_id], references: [id])
     created_at  DateTime      @default(now())
+    invite_code String        @unique
     sessions    RoomSession[]
 
     @@map("rooms")

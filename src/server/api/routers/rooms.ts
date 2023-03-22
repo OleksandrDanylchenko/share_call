@@ -1,6 +1,8 @@
 import { pickBy } from 'lodash';
 import { z } from 'zod';
 
+import { shortNanoid } from '@/server/api/services/random';
+
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 export const roomsRouter = createTRPCRouter({
@@ -34,6 +36,7 @@ export const roomsRouter = createTRPCRouter({
           name,
           description,
           creator_id: userId,
+          invite_code: shortNanoid(),
         },
         select: { id: true },
       });

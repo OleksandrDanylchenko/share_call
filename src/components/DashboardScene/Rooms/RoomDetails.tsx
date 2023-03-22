@@ -14,7 +14,7 @@ interface Props {
   activeRoomId?: string;
 }
 
-const RoomDetails: FC<Required<Props>> = (props) => {
+export const RoomDetails: FC<Required<Props>> = (props) => {
   const { activeRoomId } = props;
 
   const { data: rooms, isLoading } = api.rooms.getRooms.useQuery(undefined, {
@@ -110,25 +110,3 @@ const RoomDetails: FC<Required<Props>> = (props) => {
     </Stack>
   );
 };
-
-const DetailsPlaceholder: FC = () => (
-  <Stack css={fullHeight} justifyContent="center" pl={8}>
-    <Stack alignItems="center" justifyContent="center">
-      <Typography variant="h2" fontSize="6rem">
-        Choose <br /> a room
-      </Typography>
-      <ArrowCircleLeftIcon sx={{ fontSize: '5rem' }} />
-    </Stack>
-  </Stack>
-);
-
-const RoomDetailsContainer: FC<Props> = (props) => {
-  const { activeRoomId } = props;
-  return !activeRoomId ? (
-    <DetailsPlaceholder />
-  ) : (
-    <RoomDetails activeRoomId={activeRoomId} />
-  );
-};
-
-export default RoomDetailsContainer;
