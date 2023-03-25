@@ -11,13 +11,13 @@ export const roomsRouter = createTRPCRouter({
     return ctx.prisma.room.findMany({
       where: {
         OR: [
-          { creator_id: userId },
+          { creatorId: userId },
           {
-            sessions: { some: { participants: { some: { user_id: userId } } } },
+            sessions: { some: { participants: { some: { userId } } } },
           },
         ],
       },
-      orderBy: { created_at: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
   }),
   createRoom: protectedProcedure
@@ -35,8 +35,8 @@ export const roomsRouter = createTRPCRouter({
         data: {
           name,
           description,
-          creator_id: userId,
-          invite_code: shortNanoid(),
+          creatorId: userId,
+          inviteCode: shortNanoid(),
         },
         select: { id: true },
       });
