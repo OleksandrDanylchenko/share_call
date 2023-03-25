@@ -1,15 +1,16 @@
 import React, { FC, ReactElement } from 'react';
 
 import { ClassNames } from '@emotion/react';
-import LogoutIcon from '@mui/icons-material/Logout';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import LoginIcon from '@mui/icons-material/Login';
 import { LoadingButton } from '@mui/lab';
-import { Avatar, AvatarGroup, Stack, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Button, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import BlinkingCircle from '@/components/BlinkingCircle';
 import {
   blurBackgroundContainer,
-  fullWidth,
+  fullHeight,
   lightBackgroundContainer,
   lineClamp,
   shadowBorder,
@@ -28,24 +29,18 @@ const CallRoomPreview: FC = () => {
 
   return (
     <Stack
-      css={blurBackgroundContainer}
+      css={[fullHeight, blurBackgroundContainer]}
       position="relative"
       alignItems="center"
-      justifyContent="center"
       flexShrink={0}
       width={420}
-      height="80%"
-      gap={5}
       p={4}
     >
-      <Typography variant="h4" position="absolute" top={20} px={4}>
-        You&apos;re about to join a call in the:
-      </Typography>
       <Stack gap={1}>
-        <Typography variant="h4" color="warning.main">
+        <Typography css={lineClamp(2)} variant="h3" color="warning.main">
           {targetRoom?.name}
         </Typography>
-        <Typography css={lineClamp(4)} variant="subtitle1">
+        <Typography css={lineClamp(7)} variant="subtitle1">
           {targetRoom?.description}
         </Typography>
       </Stack>

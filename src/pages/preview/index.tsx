@@ -13,8 +13,8 @@ import {
   blurBackgroundContainer,
   doubleColorGradient,
   fullHeight,
+  fullParent,
   fullViewport,
-  fullWidth,
 } from '@/styles/mixins';
 
 const Preview: FC = () => {
@@ -43,38 +43,34 @@ const Preview: FC = () => {
   return (
     <main css={[fullViewport, doubleColorGradient]}>
       <Container css={fullHeight}>
-        <Stack
-          css={fullHeight}
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-          gap={4}
-        >
-          <Stack
-            css={[fullWidth, blurBackgroundContainer]}
-            alignItems="center"
-            justifyContent="center"
-            gap={2}
-            flex={1}
-            height="80%"
-            py={5}
-            px={6}
-          >
-            <Typography
-              variant="h4"
-              color={tracksStatus === 'error' ? 'error' : undefined}
+        <Stack css={fullParent} alignItems="center" justifyContent="center">
+          <Stack direction="row" gap={4} height="60%">
+            <Stack
+              css={[fullParent, blurBackgroundContainer]}
+              alignItems="center"
+              justifyContent="center"
+              gap={2}
+              flex={1}
+              height="80%"
+              py={5}
+              px={6}
             >
-              {tracksStatus === 'loading' && 'Loading media devices...'}
-              {tracksStatus === 'error' && 'Cannot obtain devices'}
-              {tracksStatus === 'ready' && `You look ${compliment} ✨`}
-            </Typography>
-            <CallMediaPreview
-              user={user}
-              onTracksReady={() => setTracksStatus('ready')}
-              onTracksError={() => setTracksStatus('error')}
-            />
+              <Typography
+                variant="h4"
+                color={tracksStatus === 'error' ? 'error' : undefined}
+              >
+                {tracksStatus === 'loading' && 'Loading media devices...'}
+                {tracksStatus === 'error' && 'Cannot obtain devices'}
+                {tracksStatus === 'ready' && `You look ${compliment} ✨`}
+              </Typography>
+              <CallMediaPreview
+                user={user}
+                onTracksReady={() => setTracksStatus('ready')}
+                onTracksError={() => setTracksStatus('error')}
+              />
+            </Stack>
+            <CallRoomPreview />
           </Stack>
-          <CallRoomPreview />
         </Stack>
       </Container>
     </main>
