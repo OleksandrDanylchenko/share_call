@@ -1,5 +1,6 @@
 import React, { FC, useMemo } from 'react';
 
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
@@ -46,6 +47,7 @@ const DashboardRooms: FC = () => {
     return rooms.length > 0 ? <ChooseRoom /> : <CreateRoom />;
   }, [activeRoomId, isLoading, rooms]);
 
+  const [animateParent] = useAutoAnimate({ duration: 150 });
   return (
     <Stack css={fullParent} px={5} pt={1} gap={3}>
       <Button
@@ -56,7 +58,12 @@ const DashboardRooms: FC = () => {
       >
         Back to dashboard
       </Button>
-      <Stack css={[fullWidth, fullHeight]} direction="row" gap={3}>
+      <Stack
+        ref={animateParent}
+        css={[fullWidth, fullHeight]}
+        direction="row"
+        gap={3}
+      >
         {roomListElement}
         {activeRoomId && (
           <Divider
