@@ -9,7 +9,7 @@ import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
 import { RouterOutputs } from '@/utils/api';
 
 const RoomInvite: FC<{
-  activeRoom: RouterOutputs['rooms']['getRooms'][number];
+  activeRoom: RouterOutputs['rooms']['getRoom'];
 }> = (props) => {
   const { activeRoom } = props;
 
@@ -19,7 +19,9 @@ const RoomInvite: FC<{
   const handleCopyLink = async (): Promise<void> => {
     setShowCopied(true);
 
-    const invitationLink = `${window.location.origin}/invite/${activeRoom.inviteCode}`;
+    const invitationLink = `${window.location.origin}/invite/${
+      activeRoom!.inviteCode
+    }`;
     await copy(invitationLink);
     setTimeout(() => setShowCopied(false), 2500);
   };
@@ -43,7 +45,9 @@ const RoomInvite: FC<{
         ) : (
           <>
             <Typography variant="h5">Invitation code:</Typography>
-            <Typography variant="monospace">{activeRoom.inviteCode}</Typography>
+            <Typography variant="monospace">
+              {activeRoom!.inviteCode}
+            </Typography>
           </>
         )}
       </Stack>

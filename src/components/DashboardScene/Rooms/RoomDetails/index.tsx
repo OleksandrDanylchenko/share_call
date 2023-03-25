@@ -13,10 +13,10 @@ interface Props {
 const RoomDetails: FC<Required<Props>> = (props) => {
   const { activeRoomId } = props;
 
-  const { data: rooms } = api.rooms.getRooms.useQuery(undefined, {
-    trpc: { abortOnUnmount: true },
-  });
-  const activeRoom = rooms?.find((room) => room.id === activeRoomId);
+  const { data: activeRoom } = api.rooms.getRoom.useQuery(
+    { id: activeRoomId },
+    { trpc: { abortOnUnmount: true } },
+  );
 
   return (
     <Stack flex={1} gap={4}>

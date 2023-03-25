@@ -37,10 +37,7 @@ export const roomsRouter = createTRPCRouter({
       const { id } = input;
       return ctx.prisma.room.findUnique({
         where: { id },
-        select: {
-          id: true,
-          name: true,
-          description: true,
+        include: {
           sessions: {
             orderBy: { startedAt: 'desc' },
             take: 1,

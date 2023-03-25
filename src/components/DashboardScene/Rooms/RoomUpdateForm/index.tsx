@@ -9,7 +9,7 @@ import SingleFieldForm from '@/components/SingleFieldForm';
 import { api, RouterOutputs } from '@/utils/api';
 
 interface Props {
-  activeRoom: RouterOutputs['rooms']['getRooms'][number];
+  activeRoom: RouterOutputs['rooms']['getRoom'];
 }
 
 const RoomUpdateForm: FC<Required<Props>> = (props) => {
@@ -65,7 +65,7 @@ const RoomUpdateForm: FC<Required<Props>> = (props) => {
       ('name' in data && data.name !== activeName) ||
       ('description' in data && data.description !== activeDescription)
     ) {
-      updateRoom({ id: activeRoom.id, ...omitBy(data, isUndefined) });
+      updateRoom({ id: activeRoom!.id, ...omitBy(data, isUndefined) });
     }
   };
 
