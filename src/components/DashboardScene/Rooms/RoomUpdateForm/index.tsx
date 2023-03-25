@@ -6,19 +6,15 @@ import { Stack } from '@mui/material';
 import { pickBy } from 'lodash';
 
 import SingleFieldForm from '@/components/SingleFieldForm';
-import { api } from '@/utils/api';
+import { api, RouterOutputs } from '@/utils/api';
 
 interface Props {
-  activeRoomId?: string;
+  activeRoom: RouterOutputs['rooms']['getRooms'][number];
 }
 
 const RoomUpdateForm: FC<Required<Props>> = (props) => {
-  const { activeRoomId } = props;
+  const { activeRoom } = props;
 
-  const { data: rooms, isLoading } = api.rooms.getRooms.useQuery(undefined, {
-    trpc: { abortOnUnmount: true },
-  });
-  const activeRoom = rooms?.find((room) => room.id === activeRoomId);
   const activeName = activeRoom?.name || '';
   const activeDescription = activeRoom?.description || '';
 
@@ -53,7 +49,7 @@ const RoomUpdateForm: FC<Required<Props>> = (props) => {
       ('name' in data && data.name !== activeName) ||
       ('description' in data && data.description !== activeDescription)
     ) {
-      updateRoom({ id: activeRoomId, ...pickBy(data) });
+      updateRoom({ id: activeRoom.id, ...pickBy(data) });
     }
   };
 
