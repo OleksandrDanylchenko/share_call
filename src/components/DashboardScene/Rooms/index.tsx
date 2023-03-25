@@ -4,7 +4,14 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import { Button, Divider, IconButton, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
@@ -47,7 +54,6 @@ const DashboardRooms: FC = () => {
     return rooms.length > 0 ? <ChooseRoom /> : <CreateRoom />;
   }, [activeRoomId, isLoading, rooms]);
 
-  const [animateParent] = useAutoAnimate({ duration: 150 });
   return (
     <Stack css={fullParent} px={5} pt={1} gap={3}>
       <Button
@@ -58,12 +64,7 @@ const DashboardRooms: FC = () => {
       >
         Back to dashboard
       </Button>
-      <Stack
-        ref={animateParent}
-        css={[fullWidth, fullHeight]}
-        direction="row"
-        gap={3}
-      >
+      <Stack css={[fullWidth, fullHeight]} direction="row" gap={3}>
         {roomListElement}
         {activeRoomId && (
           <Divider
@@ -71,7 +72,6 @@ const DashboardRooms: FC = () => {
             sx={{ height: '95%', alignSelf: 'center' }}
           />
         )}
-
         {roomDetailsElement}
       </Stack>
     </Stack>
