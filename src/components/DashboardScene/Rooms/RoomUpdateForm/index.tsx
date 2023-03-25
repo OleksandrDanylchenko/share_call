@@ -94,7 +94,6 @@ const RoomUpdateForm: FC<Required<Props>> = (props) => {
               maxRows: 3,
               InputProps: {
                 className: css`
-                  color: ${theme.palette.text.secondary};
                   font-size: ${theme.typography.body2.fontSize};
                 `,
               },

@@ -1,17 +1,9 @@
 import React, { FC, useMemo } from 'react';
 
-import { useAutoAnimate } from '@formkit/auto-animate/react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Button, Divider, IconButton, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';

@@ -14,17 +14,10 @@ import { goToOptions, goToScene } from '@/components/DashboardScene/routing';
 import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
-interface RoomForm {
-  name: string;
-  description: string;
-}
-
 const DashboardCreateRoom: FC = () => {
   const router = useRouter();
 
-  const formContext = useForm<RoomForm>({
-    defaultValues: { name: '', description: '' },
-  });
+  const formContext = useForm({ defaultValues: { name: '', description: '' } });
   const { watch } = formContext;
 
   const { mutate: createRoom, isLoading } = api.rooms.createRoom.useMutation({

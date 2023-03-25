@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import DashboardCreateRoom from '@/components/DashboardScene/CreateRoom';
+import DashboardJoinCall from '@/components/DashboardScene/JoinCall';
 import DashboardOptions from '@/components/DashboardScene/Options';
 import DashboardRooms from '@/components/DashboardScene/Rooms';
 import { fullParent } from '@/styles/mixins';
@@ -26,7 +27,7 @@ const DashboardScene: FC = () => {
       case DashboardSceneType.CreateRoom:
         return <DashboardCreateRoom />;
       case DashboardSceneType.JoinCall:
-        return <DashboardOptions />;
+        return <DashboardJoinCall />;
       default:
         return <DashboardOptions />;
     }

@@ -59,4 +59,18 @@ export const roomsRouter = createTRPCRouter({
         select: { id: true, name: true, description: true },
       });
     }),
+  checkRoomInviteCode: protectedProcedure
+    .input(
+      z.object({
+        inviteCode: z
+          .string()
+          .min(1, 'Invite code should be at least 1 character long'),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { inviteCode } = input;
+      return {
+        roomExist: (await ctx.prisma.room.count({ where: { inviteCode } })) > 0,
+      };
+    }),
 });
