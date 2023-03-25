@@ -5,21 +5,17 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { Button, Divider, IconButton, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import {
-  DashboardSceneProps,
-  DashboardSceneType,
-} from '@/components/DashboardScene';
+import { DashboardSceneType } from '@/components/DashboardScene';
 import { RoomDetails } from '@/components/DashboardScene/Rooms/RoomDetails';
 import {
   RoomsList,
   RoomsListPlaceholder,
 } from '@/components/DashboardScene/Rooms/RoomsList';
+import { goToOptions, goToScene } from '@/components/DashboardScene/routing';
 import { fullHeight, fullParent, fullWidth } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
-const DashboardRooms: FC<DashboardSceneProps> = (props) => {
-  const { onSceneChange } = props;
-
+const DashboardRooms: FC = () => {
   const router = useRouter();
   const activeRoomId = router.query.room_id as string | undefined;
 
@@ -35,7 +31,7 @@ const DashboardRooms: FC<DashboardSceneProps> = (props) => {
     return rooms.length > 0 ? (
       <RoomsList rooms={rooms} activeRoomId={activeRoomId} />
     ) : null;
-  }, []);
+  }, [activeRoomId, isLoading, rooms]);
 
   const roomDetailsElement = useMemo(() => {
     if (!rooms || isLoading) {
@@ -46,12 +42,8 @@ const DashboardRooms: FC<DashboardSceneProps> = (props) => {
       return <RoomDetails activeRoomId={activeRoomId} />;
     }
 
-    return rooms.length > 0 ? (
-      <ChooseRoom />
-    ) : (
-      <CreateRoom onSceneChange={onSceneChange} />
-    );
-  }, [activeRoomId, isLoading, onSceneChange, rooms]);
+    return rooms.length > 0 ? <ChooseRoom /> : <CreateRoom />;
+  }, [activeRoomId, isLoading, rooms]);
 
   return (
     <Stack css={fullParent} px={5} pt={1} gap={3}>
@@ -59,7 +51,7 @@ const DashboardRooms: FC<DashboardSceneProps> = (props) => {
         color="inherit"
         sx={{ width: 'fit-content', marginLeft: -2 }}
         startIcon={<ArrowBackIosIcon />}
-        onClick={() => onSceneChange('/')}
+        onClick={() => goToOptions(router)}
       >
         Back to dashboard
       </Button>
@@ -88,22 +80,23 @@ const ChooseRoom: FC = () => (
   </Stack>
 );
 
-export const CreateRoom: FC<DashboardSceneProps> = (props) => (
-  <Stack css={[fullWidth, fullHeight]} justifyContent="center" pl={8}>
-    <Stack alignItems="center" justifyContent="center">
-      <Typography variant="h2" fontSize="6rem">
-        Create <br /> a room
-      </Typography>
-      <IconButton
-        aria-label="Create a room"
-        onClick={() =>
-          props.onSceneChange(`/?scene=${DashboardSceneType.CreateRoom}`)
-        }
-      >
-        <ArrowCircleLeftIcon sx={{ fontSize: '5rem' }} />
-      </IconButton>
+export const CreateRoom: FC = () => {
+  const router = useRouter();
+  return (
+    <Stack css={[fullWidth, fullHeight]} justifyContent="center" pl={8}>
+      <Stack alignItems="center" justifyContent="center">
+        <Typography variant="h2" fontSize="6rem">
+          Create <br /> a room
+        </Typography>
+        <IconButton
+          aria-label="Create a room"
+          onClick={() => goToScene(router, DashboardSceneType.CreateRoom)}
+        >
+          <ArrowCircleLeftIcon sx={{ fontSize: '5rem' }} />
+        </IconButton>
+      </Stack>
     </Stack>
-  </Stack>
-);
+  );
+};
 
 export default DashboardRooms;

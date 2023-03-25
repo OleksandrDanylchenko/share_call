@@ -58,7 +58,7 @@ const RoomsList: FC<Props> = (props) => {
 
   const [animateListParent] = useAutoAnimate();
   return (
-    <Stack pl={1} gap={2} width="25%">
+    <Stack pl={1} gap={2} minWidth="20%">
       <Typography variant="h4">Rooms:</Typography>
       <TextField
         css={textFieldEllipsis}

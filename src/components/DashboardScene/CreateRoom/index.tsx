@@ -9,10 +9,8 @@ import { LoadingButton } from '@mui/lab';
 import { Button, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import {
-  DashboardSceneProps,
-  DashboardSceneType,
-} from '@/components/DashboardScene';
+import { DashboardSceneType } from '@/components/DashboardScene';
+import { goToOptions, goToScene } from '@/components/DashboardScene/routing';
 import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
@@ -21,9 +19,7 @@ interface RoomForm {
   description: string;
 }
 
-const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
-  const { onSceneChange } = props;
-
+const DashboardCreateRoom: FC = () => {
   const router = useRouter();
 
   const formContext = useForm<RoomForm>({
@@ -34,11 +30,7 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
   const { mutate: createRoom, isLoading } = api.rooms.createRoom.useMutation({
     onSuccess(result) {
       const { id: roomId } = result;
-      router.push(
-        { query: { scene: DashboardSceneType.Rooms, room_id: roomId } },
-        undefined,
-        { shallow: true },
-      );
+      return goToScene(router, DashboardSceneType.Rooms, { room_id: roomId });
     },
   });
 
@@ -49,7 +41,7 @@ const DashboardCreateRoom: FC<DashboardSceneProps> = (props) => {
         sx={{ width: 'fit-content' }}
         startIcon={<ArrowBackIosIcon />}
         disabled={isLoading}
-        onClick={() => onSceneChange('/')}
+        onClick={() => goToOptions(router)}
       >
         Back to dashboard
       </Button>

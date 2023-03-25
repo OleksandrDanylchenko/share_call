@@ -8,38 +8,29 @@ import DashboardCreateRoom from '@/components/DashboardScene/CreateRoom';
 import DashboardOptions from '@/components/DashboardScene/Options';
 import DashboardRooms from '@/components/DashboardScene/Rooms';
 import { fullParent } from '@/styles/mixins';
-import { isValueInStringEnum } from '@/utils/types';
 
 export enum DashboardSceneType {
-  Options = 'options',
   Rooms = 'rooms',
   CreateRoom = 'create-room',
   JoinCall = 'join-call',
 }
 
-export interface DashboardSceneProps {
-  onSceneChange: (path: string) => Promise<boolean>;
-}
-
 const DashboardScene: FC = () => {
   const router = useRouter();
-  const scene = useDashboardSceneType();
+  const sceneQuery = router.query.scene as string | undefined;
 
   const sceneView = useMemo(() => {
-    const handleSceneChange: DashboardSceneProps['onSceneChange'] = (path) =>
-      router.push(path, undefined, { shallow: true });
-
-    switch (scene) {
-      case DashboardSceneType.Options:
-        return <DashboardOptions onSceneChange={handleSceneChange} />;
+    switch (sceneQuery) {
       case DashboardSceneType.Rooms:
-        return <DashboardRooms onSceneChange={handleSceneChange} />;
+        return <DashboardRooms />;
       case DashboardSceneType.CreateRoom:
-        return <DashboardCreateRoom onSceneChange={handleSceneChange} />;
+        return <DashboardCreateRoom />;
       case DashboardSceneType.JoinCall:
-        return <DashboardOptions onSceneChange={handleSceneChange} />;
+        return <DashboardOptions />;
+      default:
+        return <DashboardOptions />;
     }
-  }, [router, scene]);
+  }, [sceneQuery]);
 
   const [animateParent] = useAutoAnimate();
   return (
@@ -47,14 +38,6 @@ const DashboardScene: FC = () => {
       {sceneView}
     </Box>
   );
-};
-
-export const useDashboardSceneType = (): DashboardSceneType => {
-  const router = useRouter();
-  const sceneQuery = router.query.scene as string | undefined;
-  return isValueInStringEnum(sceneQuery, DashboardSceneType)
-    ? sceneQuery
-    : DashboardSceneType.Options;
 };
 
 export default DashboardScene;

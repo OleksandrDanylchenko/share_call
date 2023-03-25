@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -8,8 +8,8 @@ import { signOut } from 'next-auth/react';
 
 import DashboardScene, {
   DashboardSceneType,
-  useDashboardSceneType,
 } from '@/components/DashboardScene';
+import { useDashboardSceneType } from '@/components/DashboardScene/routing';
 import UserSettings from '@/components/UserSettings';
 import {
   blurBackgroundContainer,

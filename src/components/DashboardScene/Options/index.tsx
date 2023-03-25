@@ -4,15 +4,14 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import LoginIcon from '@mui/icons-material/Login';
 import { Button, Stack, Typography, useTheme } from '@mui/material';
+import { useRouter } from 'next/router';
 
-import {
-  DashboardSceneProps,
-  DashboardSceneType,
-} from '@/components/DashboardScene';
+import { DashboardSceneType } from '@/components/DashboardScene';
+import { goToScene } from '@/components/DashboardScene/routing';
 import { fullParent, shadowBorder } from '@/styles/mixins';
 
-const DashboardOptions: FC<DashboardSceneProps> = (props) => {
-  const { onSceneChange } = props;
+const DashboardOptions: FC = () => {
+  const router = useRouter();
 
   const theme = useTheme();
   return (
@@ -22,7 +21,7 @@ const DashboardOptions: FC<DashboardSceneProps> = (props) => {
         stretch={false}
         borderColor={theme.palette.warning.light}
         icon={<FormatListBulletedIcon />}
-        onClick={() => onSceneChange(`/?scene=${DashboardSceneType.Rooms}`)}
+        onClick={() => goToScene(router, DashboardSceneType.Rooms)}
       >
         My rooms
       </Option>
@@ -35,17 +34,13 @@ const DashboardOptions: FC<DashboardSceneProps> = (props) => {
       >
         <Option
           icon={<AddCircleOutlineIcon />}
-          onClick={() =>
-            onSceneChange(`/?scene=${DashboardSceneType.CreateRoom}`)
-          }
+          onClick={() => goToScene(router, DashboardSceneType.CreateRoom)}
         >
           Create a room
         </Option>
         <Option
           icon={<LoginIcon />}
-          onClick={() =>
-            onSceneChange(`/?scene=${DashboardSceneType.JoinCall}`)
-          }
+          onClick={() => goToScene(router, DashboardSceneType.JoinCall)}
         >
           Join a call
         </Option>
