@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react';
+import { ReactElement, KeyboardEvent, useEffect } from 'react';
 import { Path, UseFormReturn } from 'react-hook-form';
 import {
   FormContainer,
@@ -40,7 +40,7 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
 ): ReactElement {
   const { formProps, textFieldProps, ellipsis, loading, error } = props;
   const {
-    formContext: { reset, setError },
+    formContext: { getValues, reset, setError },
     onSuccess,
   } = formProps;
 
@@ -54,6 +54,12 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
   const handleSuccessSubmit = (data: TFieldValues): void => {
     onSuccess?.(data);
     setEditing(false);
+  };
+
+  const handleKeydown = (event: KeyboardEvent): void => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+      handleSuccessSubmit(getValues());
+    }
   };
 
   useEffect(() => {
@@ -77,6 +83,7 @@ function SingleFieldForm<TFieldValues extends FieldValues>(
           fullWidth
           required={editing}
           disabled={loading}
+          onKeyDown={handleKeydown}
           {...textFieldProps}
           InputProps={{
             readOnly: !editing,
