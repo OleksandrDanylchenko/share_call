@@ -45,20 +45,35 @@ const CallRoomPreview: FC = () => {
         </Typography>
       </Stack>
       <CallStatus active={true} />
-      <LoadingButton
-        css={(theme) =>
-          shadowBorder(theme, {
-            blurRadius: '7px',
-            color: theme.palette.warning.light,
-          })
-        }
-        variant="outlined"
-        color="inherit"
-        endIcon={<LogoutIcon />}
-        sx={{ position: 'absolute', bottom: 20 }}
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+        gap={5}
+        width="90%"
+        mt={2}
+        position="absolute"
+        bottom={20}
       >
-        <span>Join</span>
-      </LoadingButton>
+        <Button
+          color="inherit"
+          sx={{ width: '30%' }}
+          startIcon={<ArrowBackIosIcon />}
+          onClick={() => router.back()}
+        >
+          Back
+        </Button>
+        <LoadingButton
+          type="submit"
+          css={(theme) =>
+            shadowBorder(theme, { color: theme.palette.warning.light })
+          }
+          color="inherit"
+          startIcon={<LoginIcon />}
+        >
+          <span>Join the call</span>
+        </LoadingButton>
+      </Stack>
     </Stack>
   );
 };
@@ -129,54 +144,3 @@ const CallStatus: FC<{ active: boolean }> = (props) => {
 };
 
 export default CallRoomPreview;
-
-//  <Stack
-//               direction="row"
-//               alignItems="center"
-//               justifyContent="space-around"
-//               gap={5}
-//               width="90%"
-//               mt={2}
-//             >
-//               {tracksStatus === 'loading' ? (
-//                 <>
-//                   <Skeleton
-//                     variant="rounded"
-//                     width="50%"
-//                     height={44}
-//                     sx={{ borderRadius: 30 }}
-//                   />
-//                   <Skeleton
-//                     variant="rounded"
-//                     width="100%"
-//                     height={44}
-//                     sx={{ borderRadius: 30 }}
-//                   />
-//                 </>
-//               ) : (
-//                 <>
-//                   <Button
-//                     size="large"
-//                     variant="outlined"
-//                     color="warning"
-//                     onClick={() => router.push('/')}
-//                     sx={{ width: '50%', color: 'white' }}
-//                     css={(theme) =>
-//                       shadowBorder(theme, { color: theme.palette.warning.main })
-//                     }
-//                   >
-//                     Cancel
-//                   </Button>
-//                   {tracksStatus === 'ready' && (
-//                     <Button
-//                       fullWidth
-//                       onClick={() => router.push('/call')}
-//                       sx={{ color: 'white' }}
-//                       css={shadowBorder}
-//                     >
-//                       Join
-//                     </Button>
-//                   )}
-//                 </>
-//               )}
-//             </Stack>

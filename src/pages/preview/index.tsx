@@ -44,7 +44,7 @@ const Preview: FC = () => {
     <main css={[fullViewport, doubleColorGradient]}>
       <Container css={fullHeight}>
         <Stack css={fullParent} alignItems="center" justifyContent="center">
-          <Stack direction="row" gap={4} height="60%">
+          <Stack direction="row" gap={4} height="70%">
             <Stack
               css={[fullParent, blurBackgroundContainer]}
               alignItems="center"
