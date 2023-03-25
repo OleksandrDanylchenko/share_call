@@ -1,5 +1,6 @@
 import React, { FC, useMemo } from 'react';
 
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { Button, Divider, IconButton, Stack, Typography } from '@mui/material';
@@ -35,7 +36,7 @@ const DashboardRooms: FC = () => {
 
   const roomDetailsElement = useMemo(() => {
     if (!rooms || isLoading) {
-      return <ChooseRoom />;
+      return null; // TODO Create placeholder or let the underlying components handle it?
     }
 
     if (activeRoomId) {
@@ -63,6 +64,7 @@ const DashboardRooms: FC = () => {
             sx={{ height: '95%', alignSelf: 'center' }}
           />
         )}
+
         {roomDetailsElement}
       </Stack>
     </Stack>
@@ -92,7 +94,7 @@ export const CreateRoom: FC = () => {
           aria-label="Create a room"
           onClick={() => goToScene(router, DashboardSceneType.CreateRoom)}
         >
-          <ArrowCircleLeftIcon sx={{ fontSize: '5rem' }} />
+          <AddCircleOutlineIcon sx={{ fontSize: '5rem' }} />
         </IconButton>
       </Stack>
     </Stack>

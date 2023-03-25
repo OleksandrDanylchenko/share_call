@@ -1,12 +1,12 @@
 import React, { FC, Fragment } from 'react';
 
-import { Divider, ListItem, Skeleton } from '@mui/material';
+import { Divider, ListItem, Skeleton, Stack } from '@mui/material';
 import { range } from 'lodash';
 
 import { fullWidth } from '@/styles/mixins';
 
 const RoomsListPlaceholder: FC = () => (
-  <>
+  <Stack pl={1} gap={2} width="20%" minWidth={230}>
     {range(0, 5).map((_, index, arr) => (
       <Fragment key={index}>
         <ListItem disablePadding>
@@ -21,7 +21,7 @@ const RoomsListPlaceholder: FC = () => (
         )}
       </Fragment>
     ))}
-  </>
+  </Stack>
 );
 
 export default RoomsListPlaceholder;
