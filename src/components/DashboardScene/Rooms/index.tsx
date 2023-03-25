@@ -6,7 +6,7 @@ import { Button, Divider, IconButton, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
-import { RoomDetails } from '@/components/DashboardScene/Rooms/RoomDetails';
+import RoomDetails from '@/components/DashboardScene/Rooms/RoomDetails';
 import {
   RoomsList,
   RoomsListPlaceholder,

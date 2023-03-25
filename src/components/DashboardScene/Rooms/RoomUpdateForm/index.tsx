@@ -2,19 +2,17 @@ import React, { FC } from 'react';
 import { useForm } from 'react-hook-form-mui';
 
 import { ClassNames } from '@emotion/react';
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { pickBy } from 'lodash';
 
 import SingleFieldForm from '@/components/SingleFieldForm';
-import { fullHeight, fullWidth } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
 interface Props {
   activeRoomId?: string;
 }
 
-export const RoomDetails: FC<Required<Props>> = (props) => {
+const RoomUpdateForm: FC<Required<Props>> = (props) => {
   const { activeRoomId } = props;
 
   const { data: rooms, isLoading } = api.rooms.getRooms.useQuery(undefined, {
@@ -96,7 +94,7 @@ export const RoomDetails: FC<Required<Props>> = (props) => {
               hiddenLabel: true,
               fullWidth: true,
               multiline: true,
-              rows: 4,
+              rows: 3,
               InputProps: {
                 className: css`
                   color: ${theme.palette.text.secondary};
@@ -110,3 +108,5 @@ export const RoomDetails: FC<Required<Props>> = (props) => {
     </Stack>
   );
 };
+
+export default RoomUpdateForm;
