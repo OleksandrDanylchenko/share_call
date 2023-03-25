@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
 import CallMediaPreview from '@/components/CallMediaPreview';
+import CallRoomPreview from '@/components/CallRoomPreview';
 import { useCompliment } from '@/hooks/index';
 import { useCallTracks } from '@/store/callTracks';
 import {
@@ -73,22 +74,7 @@ const Preview: FC = () => {
               onTracksError={() => setTracksStatus('error')}
             />
           </Stack>
-          <Stack
-            css={blurBackgroundContainer}
-            position="relative"
-            alignItems="center"
-            justifyContent="center"
-            flexShrink={0}
-            width={420}
-            height="80%"
-            gap={6}
-            px={6}
-            py={2}
-          >
-            <Typography variant="h4" position="absolute" top={20}>
-              You&apos;re about to join a call in room:
-            </Typography>
-          </Stack>
+          <CallRoomPreview />
         </Stack>
       </Container>
     </main>
@@ -101,54 +87,3 @@ AuthPreview.auth = {
 };
 
 export default AuthPreview;
-
-//  <Stack
-//               direction="row"
-//               alignItems="center"
-//               justifyContent="space-around"
-//               gap={5}
-//               width="90%"
-//               mt={2}
-//             >
-//               {tracksStatus === 'loading' ? (
-//                 <>
-//                   <Skeleton
-//                     variant="rounded"
-//                     width="50%"
-//                     height={44}
-//                     sx={{ borderRadius: 30 }}
-//                   />
-//                   <Skeleton
-//                     variant="rounded"
-//                     width="100%"
-//                     height={44}
-//                     sx={{ borderRadius: 30 }}
-//                   />
-//                 </>
-//               ) : (
-//                 <>
-//                   <Button
-//                     size="large"
-//                     variant="outlined"
-//                     color="warning"
-//                     onClick={() => router.push('/')}
-//                     sx={{ width: '50%', color: 'white' }}
-//                     css={(theme) =>
-//                       shadowBorder(theme, { color: theme.palette.warning.main })
-//                     }
-//                   >
-//                     Cancel
-//                   </Button>
-//                   {tracksStatus === 'ready' && (
-//                     <Button
-//                       fullWidth
-//                       onClick={() => router.push('/call')}
-//                       sx={{ color: 'white' }}
-//                       css={shadowBorder}
-//                     >
-//                       Join
-//                     </Button>
-//                   )}
-//                 </>
-//               )}
-//             </Stack>
