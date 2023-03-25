@@ -27,18 +27,34 @@ const RoomUpdateForm: FC<Required<Props>> = (props) => {
   const { mutate: updateRoom } = api.rooms.updateRoom.useMutation({
     async onMutate({ id, ...updated }) {
       await apiUtils.rooms.getRooms.cancel();
+      await apiUtils.rooms.getRoom.cancel();
 
-      const prevData = apiUtils.rooms.getRooms.getData();
-      apiUtils.rooms.getRooms.setData(
-        undefined,
-        prevData?.map((room) =>
-          room.id === id ? { ...room, ...updated } : room,
-        ),
-      );
-      return { prevData };
+      const prevRoomsData = apiUtils.rooms.getRooms.getData();
+      if (prevRoomsData) {
+        apiUtils.rooms.getRooms.setData(
+          undefined,
+          prevRoomsData?.map((room) =>
+            room.id === id ? { ...room, ...updated } : room,
+          ),
+        );
+      }
+
+      const prevRoomData = apiUtils.rooms.getRoom.getData({ id });
+      if (prevRoomData) {
+        apiUtils.rooms.getRoom.setData(
+          { id },
+          {
+            ...prevRoomData,
+            ...updated,
+          },
+        );
+      }
+
+      return { prevRoomsData, prevRoomData };
     },
-    onError(_err, _newPost, ctx) {
-      apiUtils.rooms.getRooms.setData(undefined, ctx?.prevData);
+    onError(_err, { id }, ctx) {
+      apiUtils.rooms.getRooms.setData(undefined, ctx?.prevRoomsData);
+      apiUtils.rooms.getRoom.setData({ id }, ctx?.prevRoomData);
     },
   });
 
