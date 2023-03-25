@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form-mui';
 
 import { ClassNames } from '@emotion/react';
 import { Stack } from '@mui/material';
-import { pickBy } from 'lodash';
+import { isUndefined, omitBy } from 'lodash';
 
 import SingleFieldForm from '@/components/SingleFieldForm';
 import { api, RouterOutputs } from '@/utils/api';
@@ -49,7 +49,7 @@ const RoomUpdateForm: FC<Required<Props>> = (props) => {
       ('name' in data && data.name !== activeName) ||
       ('description' in data && data.description !== activeDescription)
     ) {
-      updateRoom({ id: activeRoom.id, ...pickBy(data) });
+      updateRoom({ id: activeRoom.id, ...omitBy(data, isUndefined) });
     }
   };
 
@@ -87,10 +87,11 @@ const RoomUpdateForm: FC<Required<Props>> = (props) => {
             textFieldProps={{
               label: 'Description',
               name: 'description',
+              required: false,
               hiddenLabel: true,
               fullWidth: true,
               multiline: true,
-              rows: 3,
+              maxRows: 3,
               InputProps: {
                 className: css`
                   color: ${theme.palette.text.secondary};

@@ -1,4 +1,4 @@
-import { pickBy } from 'lodash';
+import { isUndefined, omitBy } from 'lodash';
 import { z } from 'zod';
 
 import { shortNanoid } from '@/server/api/services/random';
@@ -51,7 +51,7 @@ export const roomsRouter = createTRPCRouter({
     )
     .mutation(({ input, ctx }) => {
       const { id, ...payload } = input;
-      const updatePayload = pickBy(payload);
+      const updatePayload = omitBy(payload, isUndefined);
 
       return ctx.prisma.room.update({
         where: { id },
