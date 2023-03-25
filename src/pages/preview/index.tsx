@@ -1,80 +1,35 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
-import { css } from '@emotion/react';
-import ReportIcon from '@mui/icons-material/Report';
-import {
-  Box,
-  Button,
-  Container,
-  Skeleton,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Button, Container, Skeleton, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
-import DeviceSelector from '@/components/DeviceSelector';
-import DeviceToggleButton from '@/components/DeviceToggleButton';
-import TracksPlayer from '@/components/TracksPlayer';
-import { useCompliment, useCurrentUser, useMicCamTracks } from '@/hooks/index';
-import { useDevices } from '@/hooks/useDevices';
-import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
+import CallMediaPreview from '@/components/CallMediaPreview';
+import { useCompliment } from '@/hooks/index';
+import { useCallTracks } from '@/store/callTracks';
 import {
   blurBackgroundContainer,
   doubleColorGradient,
   fullHeight,
-  fullParent,
   fullViewport,
   fullWidth,
   shadowBorder,
 } from '@/styles/mixins';
-import { DeviceType } from '@/types/agora';
 
 const Preview: FC = () => {
   const router = useRouter();
 
-  const user = useCurrentUser();
-
-  const microphoneState = useCallTracks((state) =>
-    selectLocalTrackState(state, user.id, 'microphone'),
-  );
-  const cameraState = useCallTracks((state) =>
-    selectLocalTrackState(state, user.id, 'camera'),
-  );
-
-  const addTracks = useCallTracks.use.addTracks();
-  const setTrackEnabled = useCallTracks.use.setTrackEnabled();
-  const setTrackDevice = useCallTracks.use.setTrackDevice();
-  const removeTracks = useCallTracks.use.removeTracks();
-
-  const {
-    isLoading: isLoadingTracks,
-    tracks,
-    errorCode: tracksErrorCode,
-  } = useMicCamTracks();
-  const { devices } = useDevices();
-
-  useEffect(() => {
-    if (tracks) {
-      addTracks(user.id, tracks);
-    }
-  }, [addTracks, tracks, user]);
-
-  const handleDeviceChange =
-    (deviceType: DeviceType) =>
-    ({ deviceId }: MediaDeviceInfo): void =>
-      setTrackDevice(user.id, deviceType, deviceId);
-
-  const toggleEnabledChange = (deviceType: DeviceType) => (): void => {
-    const enabled =
-      deviceType === 'microphone'
-        ? microphoneState?.enabled
-        : cameraState?.enabled;
-    setTrackEnabled(user.id, deviceType, !enabled);
-  };
+  const { data: session } = useSession();
+  const user = session!.user!;
 
   const compliment = useCompliment();
 
+  const [tracksStatus, setTracksStatus] = useState<
+    'loading' | 'error' | 'ready'
+  >('loading');
+
+  const removeTracks = useCallTracks.use.removeTracks();
   useEffect(() => {
     const handleRouteChange = (url: string): void => {
       if (url !== '/call') {
@@ -90,125 +45,26 @@ const Preview: FC = () => {
       <Container css={fullHeight}>
         <Stack css={fullHeight} alignItems="center" justifyContent="center">
           <Stack
-            css={blurBackgroundContainer}
+            css={[fullWidth, blurBackgroundContainer]}
             alignItems="center"
             gap={2}
-            width="90%"
             maxWidth={777}
             py={5}
             px={6}
           >
-            <Typography variant="h4" color={tracksErrorCode && 'error'} mb={3}>
-              {isLoadingTracks && 'Loading media devices...'}
-              {tracksErrorCode && 'Cannot obtain devices'}
-              {tracks && `You look ${compliment} ✨`}
-            </Typography>
-            <Stack
-              alignItems="center"
-              justifyContent="center"
-              gap={3}
-              width="90%"
-              height={300}
-              position="relative"
-              borderRadius={8}
-              overflow="hidden"
+            <Typography
+              variant="h4"
+              color={tracksStatus === 'error' ? 'error' : undefined}
             >
-              {cameraState?.enabled && (
-                <TracksPlayer
-                  css={css`
-                    z-index: 1;
-                  `}
-                  tracks={{ videoTrack: cameraState.track }}
-                />
-              )}
-              <Skeleton
-                css={fullParent}
-                variant="rounded"
-                animation={
-                  tracksErrorCode || (cameraState && !cameraState.enabled)
-                    ? false
-                    : 'pulse'
-                }
-                sx={{ position: 'absolute' }}
-              />
-              {cameraState && !cameraState.enabled && (
-                <Typography variant="h5">Camera is disabled</Typography>
-              )}
-              {tracksErrorCode && (
-                <>
-                  <ReportIcon fontSize="large" color="error" />
-                  <Typography variant="body1" color="error" textAlign="center">
-                    We couldn&apos;t obtain your media devices. <br />
-                    Please check your browser&apos;s permissions and try again.
-                  </Typography>
-                  <Typography variant="body2" color="error">
-                    Error code: {tracksErrorCode}
-                  </Typography>
-                </>
-              )}
-            </Stack>
-            {!tracksErrorCode && (
-              <>
-                <Box width="90%">
-                  {!cameraState || !devices?.camera ? (
-                    <Skeleton variant="rounded" width="100%" height={60} />
-                  ) : (
-                    <Stack
-                      css={fullWidth}
-                      direction="row"
-                      alignItems="center"
-                      gap={3}
-                    >
-                      <DeviceToggleButton
-                        label={`${
-                          cameraState.enabled ? 'Disable' : 'Enable'
-                        } camera for the call`}
-                        showTooltip
-                        deviceType="camera"
-                        enabled={cameraState.enabled}
-                        onClick={toggleEnabledChange('camera')}
-                      />
-                      <DeviceSelector
-                        deviceType="camera"
-                        deviceId={cameraState.deviceId}
-                        devices={devices.camera}
-                        disabled={!cameraState.enabled}
-                        onChange={handleDeviceChange('camera')}
-                      />
-                    </Stack>
-                  )}
-                </Box>
-                <Box width="90%">
-                  {!microphoneState || !devices?.microphone ? (
-                    <Skeleton variant="rounded" width="100%" height={60} />
-                  ) : (
-                    <Stack
-                      css={fullWidth}
-                      direction="row"
-                      alignItems="center"
-                      gap={3}
-                    >
-                      <DeviceToggleButton
-                        label={`${
-                          microphoneState.enabled ? 'Unmute' : 'Mute'
-                        } microphone for the call`}
-                        showTooltip
-                        deviceType="microphone"
-                        enabled={microphoneState.enabled}
-                        onClick={toggleEnabledChange('microphone')}
-                      />
-                      <DeviceSelector
-                        deviceType="camera"
-                        deviceId={microphoneState.deviceId}
-                        devices={devices.microphone}
-                        disabled={!microphoneState.enabled}
-                        onChange={handleDeviceChange('microphone')}
-                      />
-                    </Stack>
-                  )}
-                </Box>
-              </>
-            )}
+              {tracksStatus === 'loading' && 'Loading media devices...'}
+              {tracksStatus === 'error' && 'Cannot obtain devices'}
+              {tracksStatus === 'ready' && `You look ${compliment} ✨`}
+            </Typography>
+            <CallMediaPreview
+              user={user}
+              onTracksReady={() => setTracksStatus('ready')}
+              onTracksError={() => setTracksStatus('error')}
+            />
             <Stack
               direction="row"
               alignItems="center"
@@ -217,7 +73,7 @@ const Preview: FC = () => {
               width="90%"
               mt={2}
             >
-              {isLoadingTracks ? (
+              {tracksStatus === 'loading' ? (
                 <>
                   <Skeleton
                     variant="rounded"
@@ -246,7 +102,7 @@ const Preview: FC = () => {
                   >
                     Cancel
                   </Button>
-                  {!tracksErrorCode && (
+                  {tracksStatus === 'ready' && (
                     <Button
                       fullWidth
                       onClick={() => router.push('/call')}
