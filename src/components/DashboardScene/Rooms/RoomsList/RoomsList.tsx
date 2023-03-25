@@ -19,7 +19,12 @@ import {
 import { useRouter } from 'next/router';
 
 import { checkIsElementInView } from '@/hooks/useIsElementInView';
-import { fullHeight, lineClamp, textFieldEllipsis } from '@/styles/mixins';
+import {
+  fullHeight,
+  lightBackgroundContainer,
+  lineClamp,
+  textFieldEllipsis,
+} from '@/styles/mixins';
 import { RouterOutputs } from '@/utils/api';
 
 interface Props {
@@ -82,16 +87,12 @@ const RoomsList: FC<Props> = (props) => {
                 <Fragment key={id}>
                   <ListItemButton
                     ref={activeRoomId === id ? setActiveRoomItem : undefined}
-                    sx={{
-                      borderRadius: 6,
-                      backgroundColor: (theme) =>
-                        alpha(
-                          activeRoomId === id
-                            ? theme.palette.warning.main
-                            : theme.palette.primary.main,
-                          0.1,
-                        ),
-                    }}
+                    css={(theme) =>
+                      lightBackgroundContainer(theme, {
+                        active: activeRoomId === id,
+                      })
+                    }
+                    sx={{ borderRadius: 6 }}
                     onClick={() => handleRoomClick(id)}
                   >
                     <ClassNames>

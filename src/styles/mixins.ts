@@ -1,5 +1,5 @@
 import { css, SerializedStyles } from '@emotion/react';
-import { Theme } from '@mui/material';
+import { alpha, Theme } from '@mui/material';
 import { merge } from 'lodash';
 
 export const fullViewport = css`
@@ -83,6 +83,17 @@ export const blurBackgroundContainer = css`
   border: none;
   background: none;
 `;
+
+export const lightBackgroundContainer = (
+  theme: Theme,
+  options: { active: boolean } = { active: false },
+): SerializedStyles =>
+  css`
+    background-color: ${alpha(
+      options.active ? theme.palette.warning.main : theme.palette.primary.main,
+      0.1,
+    )};
+  `;
 
 export const textFieldEllipsis = css`
   .MuiInputBase-input {

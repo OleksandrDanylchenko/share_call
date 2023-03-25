@@ -54,7 +54,7 @@ const RoomUpdateForm: FC<Required<Props>> = (props) => {
   };
 
   return (
-    <Stack flex={1} gap={2}>
+    <Stack gap={2.5}>
       <ClassNames>
         {({ css, theme }) => (
           <SingleFieldForm
