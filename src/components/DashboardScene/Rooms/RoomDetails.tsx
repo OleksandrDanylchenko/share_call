@@ -60,7 +60,7 @@ export const RoomDetails: FC<Required<Props>> = (props) => {
   };
 
   return (
-    <Stack css={fullWidth} gap={2}>
+    <Stack flex={1} gap={2}>
       <ClassNames>
         {({ css, theme }) => (
           <SingleFieldForm
