@@ -19,8 +19,8 @@ model Room {
     description String?       @db.Text
     creator_id  String
     creator     User          @relation(fields: [creator_id], references: [id])
-    created_at  DateTime      @default(now())
-    invite_code String        @unique
+    createdAt   DateTime      @default(now()) @map("created_at")
+    inviteCode  String        @unique @map("invite_code")
     sessions    RoomSession[]
 
     @@map("rooms")
@@ -30,21 +30,21 @@ model RoomSession {
     id           String               @id @default(cuid())
     room_id      String
     room         Room                 @relation(fields: [room_id], references: [id])
-    started_at   DateTime             @default(now())
-    finished_at  DateTime
+    startedAt    DateTime             @default(now()) @map("started_at")
+    finishedAt   DateTime             @map("finished_at")
     participants SessionParticipant[]
 
     @@map("room_sessions")
 }
 
 model SessionParticipant {
-    id         String      @id @default(cuid())
-    user_id    String
-    user       User        @relation(fields: [user_id], references: [id])
-    session_id String
-    session    RoomSession @relation(fields: [session_id], references: [id])
-    role       SessionRole
-    active     Boolean     @default(false)
+    id        String      @id @default(cuid())
+    userId    String      @map("user_id")
+    user      User        @relation(fields: [userId], references: [id])
+    sessionId String      @map("session_id")
+    session   RoomSession @relation(fields: [sessionId], references: [id])
+    role      SessionRole
+    active    Boolean     @default(false)
 
     @@map("session_participants")
 }
