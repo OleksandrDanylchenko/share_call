@@ -1,4 +1,5 @@
 import React, { FC, useEffect } from 'react';
+import { Path } from 'react-hook-form';
 import { FormContainer, TextFieldElement, useForm } from 'react-hook-form-mui';
 
 import { ClassNames } from '@emotion/react';
@@ -6,7 +7,9 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import LoginIcon from '@mui/icons-material/Login';
 import { LoadingButton } from '@mui/lab';
 import { Button, Stack, Typography } from '@mui/material';
+import { first } from 'lodash';
 import { useRouter } from 'next/router';
+import { ObjectTyped } from 'object-typed';
 
 import { goToOptions } from '@/components/DashboardScene/routing';
 import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
@@ -25,29 +28,39 @@ const DashboardJoinCall: FC = () => {
   const { watch, setError, clearErrors } = formContext;
 
   const {
-    data: isExistData,
-    isFetching,
+    data: inviteRoom,
+    isFetching: isFetchingInviteRoom,
+    error: inviteRoomError,
     refetch: checkInviteCode,
-  } = api.rooms.checkRoomInviteCode.useQuery(
+  } = api.rooms.getRoomByInviteCode.useQuery(
     { inviteCode: watch('inviteCode') },
-    { enabled: false },
+    { enabled: false, retry: false, cacheTime: 0 },
   );
 
   useEffect(() => {
-    if (!isExistData) return;
-
-    const { roomExist } = isExistData;
-    if (roomExist) {
-      clearErrors('inviteCode');
-    } else {
-      setError('inviteCode', {
-        type: 'manual',
-        message: 'The room for the provided code does not exist',
-      });
+    if (inviteRoom) {
+      const { id: roomId } = inviteRoom;
+      router.push(
+        { pathname: '/preview', query: { room_id: roomId } },
+        undefined,
+        { shallow: true },
+      );
     }
-  }, [clearErrors, isExistData, setError]);
+  }, [inviteRoom, router]);
+
+  useEffect(() => {
+    ObjectTyped.entries(
+      inviteRoomError?.data?.zodError?.fieldErrors || {},
+    ).forEach(([field, messages]) =>
+      setError(field as Path<JoinCallForm>, {
+        type: 'manual',
+        message: first(messages),
+      }),
+    );
+  }, [inviteRoomError, setError]);
 
   const handleJoinCall = async (): Promise<void> => {
+    clearErrors();
     await checkInviteCode();
   };
 
@@ -91,6 +104,7 @@ const DashboardJoinCall: FC = () => {
                   variant="filled"
                   fullWidth
                   hiddenLabel
+                  disabled={isFetchingInviteRoom}
                 />
               </Stack>
             </Stack>
@@ -101,7 +115,7 @@ const DashboardJoinCall: FC = () => {
                   shadowBorder(theme, { color: theme.palette.warning.light })
                 }
                 color="inherit"
-                loading={isFetching}
+                loading={isFetchingInviteRoom}
                 startIcon={<LoginIcon />}
                 disabled={!watch('inviteCode').length}
                 fullWidth

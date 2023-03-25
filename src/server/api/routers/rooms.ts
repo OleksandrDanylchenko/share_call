@@ -2,6 +2,7 @@ import { isUndefined, omitBy } from 'lodash';
 import { z } from 'zod';
 
 import { shortNanoid } from '@/server/api/services/random';
+import { prisma } from '@/server/db';
 
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
@@ -59,18 +60,24 @@ export const roomsRouter = createTRPCRouter({
         select: { id: true, name: true, description: true },
       });
     }),
-  checkRoomInviteCode: protectedProcedure
+  getRoomByInviteCode: protectedProcedure
     .input(
       z.object({
         inviteCode: z
           .string()
-          .min(1, 'Invite code should be at least 1 character long'),
+          .min(1, 'Invite code should be at least 1 character long')
+          .refine(
+            async (inviteCode) =>
+              (await prisma.room.count({ where: { inviteCode } })) !== 0,
+            'The room for the provided invite code does not exist',
+          ),
       }),
     )
-    .query(async ({ input, ctx }) => {
+    .query(({ input, ctx }) => {
       const { inviteCode } = input;
-      return {
-        roomExist: (await ctx.prisma.room.count({ where: { inviteCode } })) > 0,
-      };
+      return ctx.prisma.room.findUnique({
+        where: { inviteCode },
+        select: { id: true },
+      });
     }),
 });
