@@ -4,13 +4,22 @@ import { ClassNames } from '@emotion/react';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import LoginIcon from '@mui/icons-material/Login';
 import { LoadingButton } from '@mui/lab';
-import { Avatar, AvatarGroup, Button, Stack, Typography } from '@mui/material';
+import {
+  Avatar,
+  AvatarGroup,
+  Button,
+  Skeleton,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { range } from 'lodash';
 import { useRouter } from 'next/router';
 
 import BlinkingCircle from '@/components/BlinkingCircle';
 import {
   blurBackgroundContainer,
   fullHeight,
+  fullWidth,
   lightBackgroundContainer,
   lineClamp,
   shadowBorder,
@@ -36,13 +45,24 @@ const CallRoomPreview: FC = () => {
       width={420}
       p={4}
     >
-      <Stack gap={1}>
-        <Typography css={lineClamp(2)} variant="h3" color="warning.main">
-          {targetRoom?.name}
-        </Typography>
-        <Typography css={lineClamp(7)} variant="subtitle1">
-          {targetRoom?.description}
-        </Typography>
+      <Stack css={fullWidth} gap={1}>
+        {isTargetRoomLoading ? (
+          <>
+            <Skeleton variant="text" height={115} sx={{ transform: 'none' }} />
+            {range(7).map((i) => (
+              <Skeleton key={i} />
+            ))}
+          </>
+        ) : (
+          <>
+            <Typography css={lineClamp(2)} variant="h3" color="warning.main">
+              {targetRoom?.name}
+            </Typography>
+            <Typography css={lineClamp(7)} variant="subtitle1">
+              {targetRoom?.description}
+            </Typography>
+          </>
+        )}
       </Stack>
       <CallStatus active={true} />
       <Stack
