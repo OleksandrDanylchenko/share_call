@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 
-import { Button, Container, Skeleton, Stack, Typography } from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 
@@ -14,7 +14,6 @@ import {
   fullHeight,
   fullViewport,
   fullWidth,
-  shadowBorder,
 } from '@/styles/mixins';
 
 const Preview: FC = () => {
@@ -43,12 +42,20 @@ const Preview: FC = () => {
   return (
     <main css={[fullViewport, doubleColorGradient]}>
       <Container css={fullHeight}>
-        <Stack css={fullHeight} alignItems="center" justifyContent="center">
+        <Stack
+          css={fullHeight}
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+          gap={4}
+        >
           <Stack
             css={[fullWidth, blurBackgroundContainer]}
             alignItems="center"
+            justifyContent="center"
             gap={2}
-            maxWidth={777}
+            flex={1}
+            height="80%"
             py={5}
             px={6}
           >
@@ -65,56 +72,22 @@ const Preview: FC = () => {
               onTracksReady={() => setTracksStatus('ready')}
               onTracksError={() => setTracksStatus('error')}
             />
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-around"
-              gap={5}
-              width="90%"
-              mt={2}
-            >
-              {tracksStatus === 'loading' ? (
-                <>
-                  <Skeleton
-                    variant="rounded"
-                    width="50%"
-                    height={44}
-                    sx={{ borderRadius: 30 }}
-                  />
-                  <Skeleton
-                    variant="rounded"
-                    width="100%"
-                    height={44}
-                    sx={{ borderRadius: 30 }}
-                  />
-                </>
-              ) : (
-                <>
-                  <Button
-                    size="large"
-                    variant="outlined"
-                    color="warning"
-                    onClick={() => router.push('/')}
-                    sx={{ width: '50%', color: 'white' }}
-                    css={(theme) =>
-                      shadowBorder(theme, { color: theme.palette.warning.main })
-                    }
-                  >
-                    Cancel
-                  </Button>
-                  {tracksStatus === 'ready' && (
-                    <Button
-                      fullWidth
-                      onClick={() => router.push('/call')}
-                      sx={{ color: 'white' }}
-                      css={shadowBorder}
-                    >
-                      Join
-                    </Button>
-                  )}
-                </>
-              )}
-            </Stack>
+          </Stack>
+          <Stack
+            css={blurBackgroundContainer}
+            position="relative"
+            alignItems="center"
+            justifyContent="center"
+            flexShrink={0}
+            width={420}
+            height="80%"
+            gap={6}
+            px={6}
+            py={2}
+          >
+            <Typography variant="h4" position="absolute" top={20}>
+              You&apos;re about to join a call in room:
+            </Typography>
           </Stack>
         </Stack>
       </Container>
@@ -128,3 +101,54 @@ AuthPreview.auth = {
 };
 
 export default AuthPreview;
+
+//  <Stack
+//               direction="row"
+//               alignItems="center"
+//               justifyContent="space-around"
+//               gap={5}
+//               width="90%"
+//               mt={2}
+//             >
+//               {tracksStatus === 'loading' ? (
+//                 <>
+//                   <Skeleton
+//                     variant="rounded"
+//                     width="50%"
+//                     height={44}
+//                     sx={{ borderRadius: 30 }}
+//                   />
+//                   <Skeleton
+//                     variant="rounded"
+//                     width="100%"
+//                     height={44}
+//                     sx={{ borderRadius: 30 }}
+//                   />
+//                 </>
+//               ) : (
+//                 <>
+//                   <Button
+//                     size="large"
+//                     variant="outlined"
+//                     color="warning"
+//                     onClick={() => router.push('/')}
+//                     sx={{ width: '50%', color: 'white' }}
+//                     css={(theme) =>
+//                       shadowBorder(theme, { color: theme.palette.warning.main })
+//                     }
+//                   >
+//                     Cancel
+//                   </Button>
+//                   {tracksStatus === 'ready' && (
+//                     <Button
+//                       fullWidth
+//                       onClick={() => router.push('/call')}
+//                       sx={{ color: 'white' }}
+//                       css={shadowBorder}
+//                     >
+//                       Join
+//                     </Button>
+//                   )}
+//                 </>
+//               )}
+//             </Stack>

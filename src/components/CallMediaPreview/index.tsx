@@ -63,7 +63,7 @@ const CallMediaPreview: FC<Props> = (props) => {
   };
 
   return (
-    <Stack css={fullParent} alignItems="center" gap={2}>
+    <Stack css={fullWidth} alignItems="center" gap={2}>
       <Stack
         alignItems="center"
         justifyContent="center"
