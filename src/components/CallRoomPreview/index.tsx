@@ -29,7 +29,15 @@ import {
 } from '@/styles/mixins';
 import { api, RouterOutputs } from '@/utils/api';
 
-const CallRoomPreview: FC = () => {
+import type { TracksStatus } from '@/pages/preview';
+
+interface Props {
+  tracksStatus: TracksStatus;
+}
+
+const CallRoomPreview: FC<Props> = (props) => {
+  const { tracksStatus } = props;
+
   const router = useRouter();
   const targetRoomId = router.query.room_id as string;
 
@@ -131,7 +139,7 @@ const CallRoomPreview: FC = () => {
           />
         ) : (
           <>
-            {!targetRoomError && (
+            {!targetRoomError && tracksStatus !== 'error' && (
               <LoadingButton
                 type="submit"
                 css={(theme) =>
@@ -139,6 +147,7 @@ const CallRoomPreview: FC = () => {
                 }
                 color="inherit"
                 startIcon={<LoginIcon />}
+                loading={tracksStatus === 'loading'}
               >
                 <span>Join the call</span>
               </LoadingButton>

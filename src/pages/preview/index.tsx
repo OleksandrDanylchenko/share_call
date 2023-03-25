@@ -18,6 +18,8 @@ import {
   fullWidth,
 } from '@/styles/mixins';
 
+export type TracksStatus = 'loading' | 'error' | 'ready';
+
 const Preview: FC = () => {
   const router = useRouter();
 
@@ -26,9 +28,7 @@ const Preview: FC = () => {
 
   const compliment = useCompliment();
 
-  const [tracksStatus, setTracksStatus] = useState<
-    'loading' | 'error' | 'ready'
-  >('loading');
+  const [tracksStatus, setTracksStatus] = useState<TracksStatus>('loading');
 
   const removeTracks = useCallTracks.use.removeTracks();
   useEffect(() => {
@@ -70,7 +70,7 @@ const Preview: FC = () => {
                 onTracksError={() => setTracksStatus('error')}
               />
             </Stack>
-            <CallRoomPreview />
+            <CallRoomPreview tracksStatus={tracksStatus} />
           </Stack>
         </Stack>
       </Container>
