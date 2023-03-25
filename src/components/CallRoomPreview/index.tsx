@@ -48,7 +48,7 @@ const CallRoomPreview: FC = () => {
       <Stack css={fullWidth} gap={1}>
         {isTargetRoomLoading ? (
           <>
-            <Skeleton variant="text" height={115} sx={{ transform: 'none' }} />
+            <Skeleton variant="text" height={116} sx={{ transform: 'none' }} />
             {range(7).map((i) => (
               <Skeleton key={i} />
             ))}
@@ -64,7 +64,22 @@ const CallRoomPreview: FC = () => {
           </>
         )}
       </Stack>
-      <CallStatus active={true} />
+      {isTargetRoomLoading ? (
+        <Skeleton
+          variant="text"
+          width="80%"
+          height={116}
+          sx={{
+            transform: 'none',
+            borderRadius: 6,
+            position: 'absolute',
+            bottom: 100,
+          }}
+        />
+      ) : (
+        <CallStatus active={true} />
+      )}
+
       <Stack
         direction="row"
         alignItems="center"
@@ -127,22 +142,9 @@ const CallStatus: FC<{ active: boolean }> = (props) => {
         </Typography>
       </Stack>
       <AvatarGroup max={7}>
-        <Avatar alt="Remy Sharp" src="https://cataas.com/cat" />
-        <Avatar alt="Travis Howard" src="https://cataas.com/cat" />
-        <Avatar alt="Cindy Baker" src="https://cataas.com/cat" />
-        <Avatar alt="Agnes Walker" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
-        <Avatar alt="Trevor Henderson" src="https://cataas.com/cat" />
+        {range(20).map((i) => (
+          <Avatar key={i} src="https://cataas.com/cat" />
+        ))}
       </AvatarGroup>
     </>
   );
