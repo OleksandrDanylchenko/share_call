@@ -15,6 +15,7 @@ import {
   fullHeight,
   fullParent,
   fullViewport,
+  fullWidth,
 } from '@/styles/mixins';
 
 const Preview: FC = () => {
@@ -44,7 +45,7 @@ const Preview: FC = () => {
     <main css={[fullViewport, doubleColorGradient]}>
       <Container css={fullHeight}>
         <Stack css={fullParent} alignItems="center" justifyContent="center">
-          <Stack direction="row" gap={4} height="70%">
+          <Stack css={fullWidth} direction="row" gap={4} height="70%">
             <Stack
               css={[fullParent, blurBackgroundContainer]}
               alignItems="center"
@@ -53,7 +54,7 @@ const Preview: FC = () => {
               flex={1}
               height="80%"
               py={5}
-              px={6}
+              px={4}
             >
               <Typography
                 variant="h4"

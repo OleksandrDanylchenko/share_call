@@ -12,10 +12,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { range } from 'lodash';
+import { uploadcareLoader } from '@uploadcare/nextjs-loader';
+import { first, range } from 'lodash';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import BlinkingCircle from '@/components/BlinkingCircle';
+import { AVATAR_SIZE, UPLOADCARE_CDN_URL } from '@/constants/index';
 import {
   blurBackgroundContainer,
   fullHeight,
@@ -24,7 +27,7 @@ import {
   lineClamp,
   shadowBorder,
 } from '@/styles/mixins';
-import { api } from '@/utils/api';
+import { api, RouterOutputs } from '@/utils/api';
 
 const CallRoomPreview: FC = () => {
   const router = useRouter();
@@ -43,7 +46,7 @@ const CallRoomPreview: FC = () => {
       alignItems="center"
       justifyContent={targetRoomError ? 'center' : 'flex-start'}
       flexShrink={0}
-      width={400}
+      width={420}
       p={4}
     >
       <Stack css={fullWidth} gap={1}>
@@ -95,7 +98,11 @@ const CallRoomPreview: FC = () => {
           }}
         />
       ) : (
-        <>{!targetRoomError && <CallStatus active={true} />}</>
+        <>
+          {targetRoom && !targetRoomError && (
+            <CallStatus targetRoom={targetRoom} />
+          )}
+        </>
       )}
       <Stack
         direction="row"
@@ -143,8 +150,13 @@ const CallRoomPreview: FC = () => {
   );
 };
 
-const CallStatus: FC<{ active: boolean }> = (props) => {
-  const { active } = props;
+const CallStatus: FC<{ targetRoom: RouterOutputs['rooms']['getRoom'] }> = (
+  props,
+) => {
+  const { targetRoom } = props;
+
+  const lastSession = first(targetRoom!.sessions);
+  const isActiveSession = lastSession?.finishedAt === null;
 
   const renderInactiveStatus = (): ReactElement => (
     <Stack direction="row" alignItems="center" gap={1}>
@@ -156,7 +168,6 @@ const CallStatus: FC<{ active: boolean }> = (props) => {
           />
         )}
       </ClassNames>
-
       <Typography variant="subtitle1">
         The call hasn&apos;t started yet
       </Typography>
@@ -172,8 +183,20 @@ const CallStatus: FC<{ active: boolean }> = (props) => {
         </Typography>
       </Stack>
       <AvatarGroup max={7}>
-        {range(20).map((i) => (
-          <Avatar key={i} src="https://cataas.com/cat" />
+        {lastSession!.participants.map(({ id, user: { name, image } }) => (
+          <Image
+            key={id}
+            alt={name!}
+            src={image!}
+            width={AVATAR_SIZE}
+            height={AVATAR_SIZE}
+            quality={80}
+            loader={
+              image!.includes(UPLOADCARE_CDN_URL)
+                ? uploadcareLoader // Use uploadcore for custom uploaded images
+                : undefined
+            }
+          />
         ))}
       </AvatarGroup>
     </>
@@ -181,7 +204,9 @@ const CallStatus: FC<{ active: boolean }> = (props) => {
 
   return (
     <Stack
-      css={(theme) => [lightBackgroundContainer(theme, { active })]}
+      css={(theme) => [
+        lightBackgroundContainer(theme, { active: isActiveSession }),
+      ]}
       alignItems="center"
       width="80%"
       gap={1}
@@ -190,7 +215,7 @@ const CallStatus: FC<{ active: boolean }> = (props) => {
       position="absolute"
       bottom={100}
     >
-      {active ? renderActiveStatus() : renderInactiveStatus()}
+      {isActiveSession ? renderActiveStatus() : renderInactiveStatus()}
     </Stack>
   );
 };
