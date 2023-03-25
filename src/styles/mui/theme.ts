@@ -1,11 +1,18 @@
 import { createTheme } from '@mui/material/styles';
-import { Poppins } from 'next/font/google';
+import { Poppins, Fira_Code } from 'next/font/google';
 
 export const poppins = Poppins({
   weight: ['300', '400', '700', '900'],
   subsets: ['latin'],
   display: 'swap',
   fallback: ['Helvetica', 'Arial', 'sans-serif'],
+});
+
+export const firaCode = Fira_Code({
+  weight: ['300', '400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['Courier', 'sans-serif'],
 });
 
 const defaultTheme = createTheme({
@@ -49,6 +56,13 @@ const defaultTheme = createTheme({
 
 export const theme = createTheme({
   ...defaultTheme,
+  typography: {
+    ...defaultTheme.typography,
+    monospace: {
+      ...defaultTheme.typography.h5,
+      fontFamily: firaCode.style.fontFamily,
+    },
+  },
   components: {
     ...defaultTheme.components,
     MuiCssBaseline: {
