@@ -17,8 +17,8 @@ model Room {
     id          String        @id @default(cuid())
     name        String        @db.VarChar(300)
     description String?       @db.Text
-    creator_id  String
-    creator     User          @relation(fields: [creator_id], references: [id])
+    creatorId   String        @map("creator_id")
+    creator     User          @relation(fields: [creatorId], references: [id])
     createdAt   DateTime      @default(now()) @map("created_at")
     inviteCode  String        @unique @map("invite_code")
     sessions    RoomSession[]
@@ -28,8 +28,8 @@ model Room {
 
 model RoomSession {
     id           String               @id @default(cuid())
-    room_id      String
-    room         Room                 @relation(fields: [room_id], references: [id])
+    roomId       String               @map("room_id")
+    room         Room                 @relation(fields: [roomId], references: [id])
     startedAt    DateTime             @default(now()) @map("started_at")
     finishedAt   DateTime             @map("finished_at")
     participants SessionParticipant[]
