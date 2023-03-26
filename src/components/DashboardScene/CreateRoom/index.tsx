@@ -30,10 +30,7 @@ const DashboardCreateRoom: FC = () => {
 
   const handleCreateAndJoinClick = async (): Promise<boolean> => {
     const { id: newRoomId } = await createRoom(getValues());
-    return router.push(
-      { pathname: '/preview', query: { room_id: newRoomId } },
-      undefined,
-    );
+    return router.push(`/preview/${newRoomId}`);
   };
 
   return (

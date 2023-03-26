@@ -22,6 +22,7 @@ export type TracksStatus = 'loading' | 'error' | 'ready';
 
 const Preview: FC = () => {
   const router = useRouter();
+  const roomId = router.query.roomId as string;
 
   const { data: session } = useSession();
   const user = session!.user!;
@@ -70,7 +71,7 @@ const Preview: FC = () => {
                 onTracksError={() => setTracksStatus('error')}
               />
             </Stack>
-            <CallRoomPreview tracksStatus={tracksStatus} />
+            <CallRoomPreview roomId={roomId} tracksStatus={tracksStatus} />
           </Stack>
         </Stack>
       </Container>
@@ -79,8 +80,6 @@ const Preview: FC = () => {
 };
 
 const AuthPreview: NextAuthComponentType = Preview;
-AuthPreview.auth = {
-  required: true,
-};
+AuthPreview.auth = { required: true };
 
 export default AuthPreview;

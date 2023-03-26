@@ -39,7 +39,7 @@ const RoomJoin: FC<{ activeRoomId: string }> = (props) => {
 
   const router = useRouter();
   const handleJoinClick = async (): Promise<boolean> =>
-    router.push({ pathname: '/preview', query: { room_id: activeRoomId } });
+    router.push(`/preview/${activeRoomId}`);
 
   return (
     <Stack

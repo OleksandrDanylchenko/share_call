@@ -40,10 +40,7 @@ const DashboardJoinCall: FC = () => {
   useEffect(() => {
     if (inviteRoom) {
       const { id: roomId } = inviteRoom;
-      router.push(
-        { pathname: '/preview', query: { room_id: roomId } },
-        undefined,
-      );
+      router.push(`/preview/${roomId}`);
     }
   }, [inviteRoom, router]);
 
