@@ -166,4 +166,48 @@ export const roomsRouter = createTRPCRouter({
         sessionId: activeSession.id,
       };
     }),
+  disconnectParticipant: protectedProcedure
+    .input(
+      z.object({
+        roomId: z
+          .string()
+          .cuid()
+          .refine(
+            async (id) => (await prisma.room.count({ where: { id } })) !== 0,
+            'The room for the provided id does not exist',
+          ),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+      const { roomId } = input;
+
+      const activeSession = await ctx.prisma.roomSession.findFirst({
+        where: { roomId, finishedAt: null },
+        orderBy: { startedAt: 'desc' },
+        select: { id: true },
+      });
+      if (!activeSession) {
+        throw new Error('No active session found!');
+      }
+
+      await ctx.prisma.sessionParticipant.update({
+        where: { userId_sessionId: { userId, sessionId: activeSession.id } },
+        data: { active: false },
+      });
+
+      // Finish the empty session
+      await ctx.prisma.roomSession.updateMany({
+        where: {
+          roomId,
+          finishedAt: null,
+          participants: {
+            every: { active: false },
+          },
+        },
+        data: { finishedAt: new Date() },
+      });
+
+      return { roomId };
+    }),
 });
