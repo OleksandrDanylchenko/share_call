@@ -48,7 +48,6 @@ export const roomsRouter = createTRPCRouter({
               participants: {
                 where: { active: true },
                 select: {
-                  id: true,
                   user: {
                     select: {
                       id: true,
@@ -122,5 +121,46 @@ export const roomsRouter = createTRPCRouter({
         where: { inviteCode },
         select: { id: true },
       });
+    }),
+  connectParticipant: protectedProcedure
+    .input(
+      z.object({
+        roomId: z
+          .string()
+          .cuid()
+          .refine(
+            async (id) => (await prisma.room.count({ where: { id } })) !== 0,
+            'The room for the provided id does not exist',
+          ),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+      const { roomId } = input;
+
+      let activeSession = await ctx.prisma.roomSession.findFirst({
+        where: { roomId, finishedAt: null },
+        orderBy: { startedAt: 'desc' },
+        select: { id: true },
+      });
+      if (!activeSession) {
+        activeSession = await ctx.prisma.roomSession.create({
+          data: { roomId },
+          select: { id: true },
+        });
+      }
+
+      await ctx.prisma.sessionParticipant.upsert({
+        where: { userId_sessionId: { userId, sessionId: activeSession.id } },
+        update: { active: true },
+        create: {
+          userId,
+          sessionId: activeSession.id,
+          active: true,
+          role: 'viewer',
+        },
+      });
+
+      return activeSession;
     }),
 });
