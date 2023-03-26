@@ -31,7 +31,7 @@ model RoomSession {
   roomId       String               @map("room_id")
   room         Room                 @relation(fields: [roomId], references: [id])
   startedAt    DateTime             @default(now()) @map("started_at")
-  finishedAt   DateTime             @map("finished_at")
+  finishedAt   DateTime?            @map("finished_at")
   participants SessionParticipant[]
 
   @@map("room_sessions")
