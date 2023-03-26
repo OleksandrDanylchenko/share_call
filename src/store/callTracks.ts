@@ -2,7 +2,6 @@ import {
   createSelectorFunctions,
   ZustandFuncSelectors,
 } from 'auto-zustand-selectors-hook';
-import { isEmpty } from 'lodash';
 import { ObjectTyped } from 'object-typed';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';

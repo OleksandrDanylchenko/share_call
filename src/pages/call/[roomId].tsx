@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 
 import {
   Box,
@@ -8,15 +8,15 @@ import {
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/router';
+import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import useAsyncEffect from 'use-async-effect';
 import { useEventListener } from 'usehooks-ts';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
 import CallControls from '@/components/CallControls';
-import CallScene, { CallSceneType } from '@/components/CallScene';
+import CallScene from '@/components/CallScene';
 import { clientEnv } from '@/env/schema.mjs';
-import { useCurrentUser } from '@/hooks/index';
 import { useAgoraRtcClient } from '@/hooks/useAgoraRtcClient';
 import {
   selectLocalTracks,
@@ -24,13 +24,19 @@ import {
   useCallTracks,
 } from '@/store/callTracks';
 import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
+import { api } from '@/utils/api';
 
 const viewGradientOffset = 26;
 
-const Call: FC = () => {
-  const router = useRouter();
+interface Props {
+  roomId: string;
+  user: User;
+}
 
-  const user = useCurrentUser();
+const Call: FC<Props> = (props) => {
+  const { roomId, user } = props;
+
+  const router = useRouter();
 
   const userTracks = useCallTracks((state) =>
     selectLocalTracks(state, user.id),
@@ -54,12 +60,12 @@ const Call: FC = () => {
     await rtc.join(appId, 'test-channel', null, user.id);
 
     const { microphone, camera } = userTracks;
-    await Promise.all([
-      microphone?.enabled
-        ? rtc.publish([microphone!.track])
-        : Promise.resolve(),
-      camera?.enabled ? rtc.publish([camera!.track]) : Promise.resolve(),
-    ]);
+    // await Promise.all([
+    //   microphone?.enabled
+    //     ? rtc.publish([microphone!.track])
+    //     : Promise.resolve(),
+    //   camera?.enabled ? rtc.publish([camera!.track]) : Promise.resolve(),
+    // ]);
 
     rtc.on('user-published', async (user, mediaType) => {
       await rtc.subscribe(user, mediaType);
@@ -90,29 +96,28 @@ const Call: FC = () => {
     rtc.on('user-left', (user) => removeTracks(String(user.uid)));
   }, [addTrack, removeTrack, removeTracks, rtc, user.id, userTracks]);
 
+  const apiUtils = api.useContext();
+  const { mutateAsync: disconnectParticipant } =
+    api.rooms.disconnectParticipant.useMutation({
+      async onMutate({ roomId }) {
+        await apiUtils.rooms.getRoom.invalidate({ id: roomId });
+      },
+    });
+
+  const handleParticipantLeave = useCallback(async () => {
+    // const { microphone, camera } = userTracks;
+    // await rtc.unpublish([microphone!.track, camera!.track]); // TODO Test this out
+    await rtc.leave();
+    removeTracks(user.id);
+    await disconnectParticipant({ roomId });
+  }, [disconnectParticipant, removeTracks, roomId, rtc, user.id]);
+
   useEffect(() => {
-    const handleRouteChange = (): void => {
-      rtc.leave();
-      removeTracks(user.id);
-    };
-    router.events.on('routeChangeStart', handleRouteChange);
-    return () => router.events.off('routeChangeStart', handleRouteChange);
-  }, [removeTracks, router.events, rtc, user.id]);
+    router.events.on('routeChangeStart', handleParticipantLeave);
+    return () => router.events.off('routeChangeStart', handleParticipantLeave);
+  }, [handleParticipantLeave, router.events]);
 
-  useEventListener('beforeunload', async () => {
-    const { microphone, camera } = userTracks;
-    await rtc.unpublish([microphone!.track, camera!.track]);
-  });
-
-  const sceneView = useMemo(() => {
-    const scene = CallSceneType.Grid as CallSceneType; // TODO Replace w/ query
-    switch (scene) {
-      case CallSceneType.Grid:
-        return <CallScene.Grid />;
-      case CallSceneType.Spotlight:
-        return <CallScene.Spotlight />;
-    }
-  }, []);
+  useEventListener('beforeunload', handleParticipantLeave);
 
   return (
     <Stack
@@ -171,7 +176,7 @@ const CallContainer: FC = () => {
       </Stack>
     );
   }
-  return <Call />;
+  return <Call user={session!.user!} roomId={roomId} />;
 };
 
 const AuthCall: NextAuthComponentType = CallContainer;
