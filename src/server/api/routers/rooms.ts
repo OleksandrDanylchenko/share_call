@@ -134,7 +134,7 @@ export const roomsRouter = createTRPCRouter({
           ),
       }),
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
       const { roomId } = input;
 
@@ -161,6 +161,9 @@ export const roomsRouter = createTRPCRouter({
         },
       });
 
-      return activeSession;
+      return {
+        roomId,
+        sessionId: activeSession.id,
+      };
     }),
 });

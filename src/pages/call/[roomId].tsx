@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import useAsyncEffect from 'use-async-effect';
 import { useEventListener } from 'usehooks-ts';
 
@@ -23,6 +24,8 @@ import {
   useCallTracks,
 } from '@/store/callTracks';
 import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
+
+const viewGradientOffset = 26;
 
 const Call: FC = () => {
   const router = useRouter();
@@ -115,7 +118,7 @@ const Call: FC = () => {
     <Stack
       css={(theme) => [
         fullViewport,
-        doubleColorGradient(theme, { centerOffset: 26 }),
+        doubleColorGradient(theme, { centerOffset: viewGradientOffset }),
       ]}
     >
       <Box flex={1} overflow="hidden">
@@ -139,22 +142,39 @@ const Call: FC = () => {
 
 const CallContainer: FC = () => {
   const router = useRouter();
+  const roomId = router.query.roomId as string;
 
-  const user = useCurrentUser();
+  const { data: session } = useSession();
 
-  const userTracks = useCallTracks((state) => selectTracks(state, user.id));
+  const userTracks = useCallTracks((state) =>
+    selectTracks(state, session!.user!.id),
+  );
   if (!userTracks) {
-    // Tracks need to be populated before entering the call
-    router.replace('/preview');
-    return null;
+    router.replace(`/preview/${roomId}`); // Tracks need to be populated before entering the call
+    return (
+      <Stack
+        css={(theme) => [
+          fullViewport,
+          doubleColorGradient(theme, { centerOffset: viewGradientOffset }),
+        ]}
+      >
+        <Box flex={1} overflow="hidden">
+          <Container css={fullHeight}>
+            <Stack css={fullHeight} alignItems="center" justifyContent="center">
+              <Stack gap={5} padding={10} borderRadius={5}>
+                <Typography variant="h2">Getting your media data...</Typography>
+                <LinearProgress color="inherit" />
+              </Stack>
+            </Stack>
+          </Container>
+        </Box>
+      </Stack>
+    );
   }
-
   return <Call />;
 };
 
 const AuthCall: NextAuthComponentType = CallContainer;
-AuthCall.auth = {
-  required: true,
-};
+AuthCall.auth = { required: true };
 
 export default AuthCall;
