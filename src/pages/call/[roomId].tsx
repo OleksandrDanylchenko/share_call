@@ -99,7 +99,7 @@ const Call: FC<Props> = (props) => {
   const apiUtils = api.useContext();
   const { mutateAsync: disconnectParticipant } =
     api.rooms.disconnectParticipant.useMutation({
-      async onMutate({ roomId }) {
+      async onSuccess({ roomId }) {
         await apiUtils.rooms.getRoom.invalidate({ id: roomId });
       },
     });
