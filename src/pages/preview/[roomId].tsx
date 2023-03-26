@@ -34,7 +34,7 @@ const Preview: FC = () => {
   const removeTracks = useCallTracks.use.removeTracks();
   useEffect(() => {
     const handleRouteChange = (url: string): void => {
-      if (url !== '/call') {
+      if (!url.includes('/call')) {
         removeTracks(user.id);
       }
     };
