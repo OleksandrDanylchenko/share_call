@@ -29,23 +29,31 @@ import {
 } from '@/styles/mixins';
 import { api, RouterOutputs } from '@/utils/api';
 
-import type { TracksStatus } from '@/pages/preview';
+import type { TracksStatus } from '@/pages/preview/[roomId]';
 
 interface Props {
+  roomId: string;
   tracksStatus: TracksStatus;
 }
 
 const CallRoomPreview: FC<Props> = (props) => {
-  const { tracksStatus } = props;
-
   const router = useRouter();
-  const targetRoomId = router.query.room_id as string;
+
+  const { roomId, tracksStatus } = props;
 
   const {
     data: targetRoom,
     isLoading: isTargetRoomLoading,
     error: targetRoomError,
-  } = api.rooms.getRoom.useQuery({ id: targetRoomId }, { retry: 1 });
+  } = api.rooms.getRoom.useQuery({ id: roomId }, { retry: 1 });
+
+  const { mutateAsync: connectParticipant } =
+    api.rooms.connectParticipant.useMutation();
+
+  const handleJoinRoomClick = async (): Promise<boolean> => {
+    await connectParticipant({ roomId });
+    return router.push(`/call/${roomId}`);
+  };
 
   return (
     <Stack
@@ -145,13 +153,13 @@ const CallRoomPreview: FC<Props> = (props) => {
           <>
             {!targetRoomError && tracksStatus !== 'error' && (
               <LoadingButton
-                type="submit"
                 css={(theme) =>
                   shadowBorder(theme, { color: theme.palette.warning.light })
                 }
                 color="inherit"
                 startIcon={<LoginIcon />}
                 loading={tracksStatus === 'loading'}
+                onClick={handleJoinRoomClick}
               >
                 <span>Join the call</span>
               </LoadingButton>
