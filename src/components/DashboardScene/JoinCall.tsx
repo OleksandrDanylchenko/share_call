@@ -43,7 +43,6 @@ const DashboardJoinCall: FC = () => {
       router.push(
         { pathname: '/preview', query: { room_id: roomId } },
         undefined,
-        { shallow: true },
       );
     }
   }, [inviteRoom, router]);

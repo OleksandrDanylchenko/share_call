@@ -6,12 +6,11 @@ import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { useCopyToClipboard } from 'usehooks-ts';
 
 import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
-import { RouterOutputs } from '@/utils/api';
 
 const RoomInvite: FC<{
-  activeRoom: RouterOutputs['rooms']['getRoom'];
+  inviteCode: string;
 }> = (props) => {
-  const { activeRoom } = props;
+  const { inviteCode } = props;
 
   const [_, copy] = useCopyToClipboard();
   const [showCopied, setShowCopied] = useState(false);
@@ -19,9 +18,7 @@ const RoomInvite: FC<{
   const handleCopyLink = async (): Promise<void> => {
     setShowCopied(true);
 
-    const invitationLink = `${window.location.origin}/invite/${
-      activeRoom!.inviteCode
-    }`;
+    const invitationLink = `${window.location.origin}/invite/${inviteCode}`;
     await copy(invitationLink);
     setTimeout(() => setShowCopied(false), 2500);
   };
@@ -36,7 +33,7 @@ const RoomInvite: FC<{
       alignItems="center"
       justifyContent="space-between"
       px={3}
-      py={1.5}
+      py={1.2}
       borderRadius={6}
     >
       <Stack direction="row" alignItems="baseline" gap={2}>
@@ -45,9 +42,7 @@ const RoomInvite: FC<{
         ) : (
           <>
             <Typography variant="h5">Invitation code:</Typography>
-            <Typography variant="monospace">
-              {activeRoom!.inviteCode}
-            </Typography>
+            <Typography variant="monospace">{inviteCode}</Typography>
           </>
         )}
       </Stack>

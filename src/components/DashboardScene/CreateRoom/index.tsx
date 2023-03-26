@@ -18,14 +18,23 @@ const DashboardCreateRoom: FC = () => {
   const router = useRouter();
 
   const formContext = useForm({ defaultValues: { name: '', description: '' } });
-  const { watch } = formContext;
+  const { watch, getValues } = formContext;
 
-  const { mutate: createRoom, isLoading } = api.rooms.createRoom.useMutation({
-    onSuccess(result) {
-      const { id: roomId } = result;
-      return goToScene(router, DashboardSceneType.Rooms, { room_id: roomId });
-    },
-  });
+  const { mutateAsync: createRoom, isLoading } =
+    api.rooms.createRoom.useMutation();
+
+  const handleCreateRoomClick = async (): Promise<boolean> => {
+    const { id: newRoomId } = await createRoom(getValues());
+    return goToScene(router, DashboardSceneType.Rooms, { room_id: newRoomId });
+  };
+
+  const handleCreateAndJoinClick = async (): Promise<boolean> => {
+    const { id: newRoomId } = await createRoom(getValues());
+    return router.push(
+      { pathname: '/preview', query: { room_id: newRoomId } },
+      undefined,
+    );
+  };
 
   return (
     <Stack css={fullParent} px={5} py={7}>
@@ -42,7 +51,6 @@ const DashboardCreateRoom: FC = () => {
         {({ css }) => (
           <FormContainer
             formContext={formContext}
-            onSuccess={(data) => createRoom(data)}
             FormProps={{
               className: css`
                 display: flex;
@@ -100,26 +108,26 @@ const DashboardCreateRoom: FC = () => {
             </Stack>
             <Stack gap={2} direction="row">
               <LoadingButton
-                type="submit"
-                css={(theme) =>
-                  shadowBorder(theme, { color: theme.palette.warning.light })
-                }
+                css={shadowBorder}
                 color="inherit"
                 startIcon={<AddCircleOutlineIcon />}
                 disabled={!watch('name').length}
                 loading={isLoading}
                 fullWidth
+                onClick={handleCreateRoomClick}
               >
                 <span>Create room</span>
               </LoadingButton>
               <LoadingButton
-                type="submit"
-                css={shadowBorder}
+                css={(theme) =>
+                  shadowBorder(theme, { color: theme.palette.warning.light })
+                }
                 color="inherit"
                 startIcon={<LoginIcon />}
                 disabled={!watch('name').length}
                 loading={isLoading}
                 fullWidth
+                onClick={handleCreateAndJoinClick}
               >
                 <span>Create room and join call</span>
               </LoadingButton>

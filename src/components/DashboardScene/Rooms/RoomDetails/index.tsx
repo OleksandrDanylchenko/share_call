@@ -1,9 +1,12 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 
-import { Stack } from '@mui/material';
+import LoginIcon from '@mui/icons-material/Login';
+import { IconButton, Stack, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
 import RoomInvite from '@/components/DashboardScene/Rooms/RoomInvite';
 import RoomUpdateForm from '@/components/DashboardScene/Rooms/RoomUpdateForm';
+import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
 interface Props {
@@ -23,9 +26,38 @@ const RoomDetails: FC<Required<Props>> = (props) => {
       {activeRoom && (
         <>
           <RoomUpdateForm activeRoom={activeRoom} />
-          <RoomInvite activeRoom={activeRoom} />
+          <RoomInvite inviteCode={activeRoom.inviteCode} />
+          <RoomJoin activeRoomId={activeRoom.id} />
         </>
       )}
+    </Stack>
+  );
+};
+
+const RoomJoin: FC<{ activeRoomId: string }> = (props) => {
+  const { activeRoomId } = props;
+
+  const router = useRouter();
+  const handleJoinClick = async (): Promise<boolean> =>
+    router.push({ pathname: '/preview', query: { room_id: activeRoomId } });
+
+  return (
+    <Stack
+      css={(theme) => [
+        fullWidth,
+        lightBackgroundContainer(theme, { active: true }),
+      ]}
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      px={3}
+      py={1.2}
+      borderRadius={6}
+    >
+      <Typography variant="h5">Join the room</Typography>
+      <IconButton size="large" onClick={handleJoinClick}>
+        <LoginIcon fontSize="large" />
+      </IconButton>
     </Stack>
   );
 };

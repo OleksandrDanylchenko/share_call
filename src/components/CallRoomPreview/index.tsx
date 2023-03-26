@@ -5,11 +5,11 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import LoginIcon from '@mui/icons-material/Login';
 import { LoadingButton } from '@mui/lab';
 import {
-  Avatar,
   AvatarGroup,
   Button,
   Skeleton,
   Stack,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { uploadcareLoader } from '@uploadcare/nextjs-loader';
@@ -78,16 +78,20 @@ const CallRoomPreview: FC<Props> = (props) => {
               </>
             ) : (
               <>
-                <Typography
-                  css={lineClamp(2)}
-                  variant="h3"
-                  color="warning.main"
-                >
-                  {targetRoom?.name}
-                </Typography>
-                <Typography css={lineClamp(7)} variant="subtitle1">
-                  {targetRoom?.description}
-                </Typography>
+                <Tooltip title={targetRoom?.name} placement="top">
+                  <Typography
+                    css={lineClamp(2)}
+                    variant="h3"
+                    color="warning.main"
+                  >
+                    {targetRoom?.name}
+                  </Typography>
+                </Tooltip>
+                <Tooltip title={targetRoom?.description}>
+                  <Typography css={lineClamp(7)} variant="subtitle1">
+                    {targetRoom?.description}
+                  </Typography>
+                </Tooltip>
               </>
             )}
           </>
@@ -192,7 +196,7 @@ const CallStatus: FC<{ targetRoom: RouterOutputs['rooms']['getRoom'] }> = (
         </Typography>
       </Stack>
       <AvatarGroup max={7}>
-        {lastSession!.participants.map(({ id, user: { name, image } }) => (
+        {lastSession!.participants.map(({ user: { id, name, image } }) => (
           <Image
             key={id}
             alt={name!}
