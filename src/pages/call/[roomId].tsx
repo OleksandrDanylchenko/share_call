@@ -130,7 +130,7 @@ const Call: FC = () => {
                 <LinearProgress color="inherit" />
               </Stack>
             ) : (
-              sceneView
+              <CallScene />
             )}
           </Stack>
         </Container>
