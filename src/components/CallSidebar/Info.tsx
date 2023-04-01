@@ -1,7 +1,6 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 import { ClassNames } from '@emotion/react';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoIcon from '@mui/icons-material/Info';
 import {
@@ -15,9 +14,8 @@ import {
 } from '@mui/material';
 import { useToggle } from 'usehooks-ts';
 
-import PillContainer from '@/components/PillContainer';
+import CallDuration from '@/components/CallDuration';
 import RoomInvite from '@/components/RoomInvite';
-import { useDuration } from '@/hooks/useDuration';
 import {
   blurBackgroundContainer,
   fullHeight,
@@ -38,10 +36,6 @@ const CallSidebarInfo: FC<Props> = (props) => {
   const { data: targetRoom } = api.rooms.getRoom.useQuery(
     { id: roomId },
     { retry: 1 },
-  );
-
-  const duration = useDuration(
-    targetRoom?.lastSession?.startedAt || new Date(),
   );
 
   return (
@@ -94,18 +88,9 @@ const CallSidebarInfo: FC<Props> = (props) => {
                   </Tooltip>
                 </Box>
                 <Stack gap={2}>
-                  <PillContainer active>
-                    <Stack direction="row" alignItems="baseline" gap={2}>
-                      <Typography variant="subtitle1">
-                        <AccessTimeFilledIcon
-                          fontSize="small"
-                          sx={{ mr: 1, mb: -0.5 }}
-                        />
-                        Duration:
-                      </Typography>
-                      <Typography variant="subtitle1">{duration}</Typography>
-                    </Stack>
-                  </PillContainer>
+                  <CallDuration
+                    startedAt={targetRoom?.lastSession?.startedAt}
+                  />
                   <RoomInvite
                     inviteCode={targetRoom.inviteCode}
                     sx={{

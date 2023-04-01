@@ -12,7 +12,7 @@ export const useDuration = (start: Date): string => {
     };
 
     updateDuration();
-    const minuteInterval = setInterval(updateDuration, 1000 * 60);
+    const minuteInterval = setInterval(updateDuration, 1000);
 
     return () => clearInterval(minuteInterval);
   }, [start]);
