@@ -36,7 +36,7 @@ const Auth: FC<Props> = (props) => {
 
   const { status, data: session } = useSession();
   if (status === 'loading') {
-    return <div>{loadingScreen || <DefaultLoadingScreen />}</div>;
+    return <div>{loadingScreen || <SessionLoadingScreen />}</div>;
   }
 
   if (required && !session) {
@@ -52,7 +52,7 @@ const Auth: FC<Props> = (props) => {
   return <>{children}</>;
 };
 
-const DefaultLoadingScreen: FC = () => (
+export const SessionLoadingScreen: FC = () => (
   <Stack
     css={[fullViewport, doubleColorGradient]}
     alignItems="center"

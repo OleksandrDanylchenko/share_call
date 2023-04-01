@@ -11,6 +11,10 @@ import SignInOptions from '@/components/SignInForm/SignInOptions';
 import { AuthProvider } from '@/pages/api/auth/[...nextauth]';
 import { fullHeight, fullWidth } from '@/styles/mixins';
 
+interface Props {
+  callbackUrl?: string;
+}
+
 export type OathProviderOptions = {
   provider: AuthProvider;
   label: string;
@@ -33,15 +37,17 @@ const oAuthProviders: Array<OathProviderOptions> = [
   },
 ];
 
-const SignInForm: FC = () => {
+const SignInForm: FC<Props> = (props) => {
+  const { callbackUrl = '/' } = props;
+
   const [emailLinkRequested, setEmailLinkRequested] = useState(false);
 
   const handleSignIn = async (provider: AuthProvider): Promise<void> => {
-    await signIn(provider, { callbackUrl: '/' });
+    await signIn(provider, { callbackUrl });
   };
 
   const handleEmailSignIn = async (email: string): Promise<void> => {
-    await signIn('email', { email, redirect: false });
+    await signIn('email', { email, redirect: false, callbackUrl });
   };
 
   const [animateParent] = useAutoAnimate();
