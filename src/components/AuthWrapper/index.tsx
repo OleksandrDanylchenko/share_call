@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { UseSessionOptions } from 'next-auth/react/types';
 
-import { useGuestUserInfo } from '@/store/guestUserInfo';
 import { doubleColorGradient, fullViewport } from '@/styles/mixins';
 
 export interface AuthProps extends UseSessionOptions<boolean> {
