@@ -106,7 +106,12 @@ const Call: FC<Props> = (props) => {
 
   useEffect(() => {
     const handleRouteChange = async (): Promise<void> => {
-      await rtc?.leave?.();
+      if (rtc.connectionState === 'CONNECTED') {
+        await rtc.leave();
+      } else {
+        setTimeout(() => rtc.leave(), 200);
+      }
+
       await disconnectParticipant({ roomId });
       removeTracks(user.id);
       router.reload(); // TODO Remove hack upon https://agora-ticket.agora.io/issue/c8908e2cea5445cfaadbbcff6061ccf5 resolution
