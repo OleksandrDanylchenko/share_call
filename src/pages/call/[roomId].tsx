@@ -138,23 +138,21 @@ const Call: FC<Props> = (props) => {
         doubleColorGradient(theme, { centerOffset: viewGradientOffset }),
       ]}
     >
-      <Box flex={1} overflow="hidden">
-        <Container css={fullHeight}>
-          <Stack css={fullHeight} alignItems="center" justifyContent="center">
-            {isLoadingRtcClient ? (
-              <Stack gap={5} padding={10} borderRadius={5}>
-                <Typography variant="h2">Joining the call...</Typography>
-                <LinearProgress color="inherit" />
-              </Stack>
-            ) : (
-              <>
-                <CallHeader roomId={roomId} />
-                <CallScene roomId={roomId} />
-                <CallMediaControls />
-              </>
-            )}
-          </Stack>
-        </Container>
+      <Box flex={1} overflow="hidden" px={5}>
+        <Stack css={fullHeight} alignItems="center" justifyContent="center">
+          {isLoadingRtcClient ? (
+            <Stack gap={5} padding={10} borderRadius={5}>
+              <Typography variant="h2">Joining the call...</Typography>
+              <LinearProgress color="inherit" />
+            </Stack>
+          ) : (
+            <>
+              <CallHeader roomId={roomId} />
+              <CallScene roomId={roomId} />
+              <CallMediaControls />
+            </>
+          )}
+        </Stack>
       </Box>
     </Stack>
   );
