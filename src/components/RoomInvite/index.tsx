@@ -3,14 +3,18 @@ import React, { FC, useState } from 'react';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import LinkIcon from '@mui/icons-material/Link';
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 import { useCopyToClipboard } from 'usehooks-ts';
 
 import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
 
-const RoomInvite: FC<{
+interface Props {
   inviteCode: string;
-}> = (props) => {
-  const { inviteCode } = props;
+  sx?: SxProps<Theme>;
+}
+
+const RoomInvite: FC<Props> = (props) => {
+  const { inviteCode, sx } = props;
 
   const [_, copy] = useCopyToClipboard();
   const [showCopied, setShowCopied] = useState(false);
@@ -35,6 +39,7 @@ const RoomInvite: FC<{
       px={3}
       py={1.2}
       borderRadius={6}
+      sx={[...(Array.isArray(sx) ? sx : [sx])]}
     >
       <Stack direction="row" alignItems="baseline" gap={2}>
         {showCopied ? (

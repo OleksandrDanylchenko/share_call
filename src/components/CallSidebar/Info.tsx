@@ -5,6 +5,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { Drawer, IconButton, Typography, Tooltip } from '@mui/material';
 import { useToggle } from 'usehooks-ts';
 
+import RoomInvite from '@/components/RoomInvite';
 import {
   blurBackgroundContainer,
   lineClamp,
@@ -67,6 +68,25 @@ const CallSidebarInfo: FC<Props> = (props) => {
                 {targetRoom!.description}
               </Typography>
             </Tooltip>
+            <RoomInvite
+              inviteCode={targetRoom!.inviteCode}
+              sx={{
+                position: 'absolute',
+                bottom: 20,
+                left: 0,
+                right: 0,
+                width: '90% !important',
+                mx: 'auto',
+                padding: 0,
+                pl: 2,
+                '.MuiTypography-root': {
+                  fontSize: theme.typography.subtitle1.fontSize,
+                },
+                '.MuiSvgIcon-root': {
+                  fontSize: 35,
+                },
+              }}
+            />
           </Drawer>
         )}
       </ClassNames>
