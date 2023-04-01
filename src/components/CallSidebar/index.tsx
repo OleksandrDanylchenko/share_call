@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 
-import InfoIcon from '@mui/icons-material/Info';
-import { IconButton, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 
-import { blurBackgroundContainer, shadowBorder } from '@/styles/mixins';
+import CallSidebarInfo from '@/components/CallSidebar/Info';
+import { blurBackgroundContainer } from '@/styles/mixins';
 
 interface Props {
   roomId: string;
@@ -11,7 +11,6 @@ interface Props {
 
 const CallSidebar: FC<Props> = (props) => {
   const { roomId } = props;
-
   return (
     <Stack
       css={blurBackgroundContainer}
@@ -23,17 +22,7 @@ const CallSidebar: FC<Props> = (props) => {
       py={2}
       gap={2}
     >
-      <IconButton
-        css={(theme) =>
-          shadowBorder(theme, {
-            blurRadius: '16px',
-            color: theme.palette.warning.main,
-          })
-        }
-        size="medium"
-      >
-        <InfoIcon />
-      </IconButton>
+      <CallSidebarInfo roomId={roomId} />
     </Stack>
   );
 };
