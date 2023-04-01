@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { ClassNames } from '@emotion/react';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoIcon from '@mui/icons-material/Info';
 import {
@@ -12,7 +13,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { DateTime } from 'luxon';
 import { useToggle } from 'usehooks-ts';
 
 import PillContainer from '@/components/PillContainer';
@@ -88,7 +88,7 @@ const CallSidebarInfo: FC<Props> = (props) => {
                     </Typography>
                   </Tooltip>
                   <Tooltip title={targetRoom.description} placement="bottom">
-                    <Typography css={lineClamp(20)} variant="subtitle1">
+                    <Typography css={lineClamp(21)} variant="subtitle1">
                       {targetRoom.description}
                     </Typography>
                   </Tooltip>
@@ -96,7 +96,13 @@ const CallSidebarInfo: FC<Props> = (props) => {
                 <Stack gap={2}>
                   <PillContainer active>
                     <Stack direction="row" alignItems="baseline" gap={2}>
-                      <Typography variant="subtitle1">Duration:</Typography>
+                      <Typography variant="subtitle1">
+                        <AccessTimeFilledIcon
+                          fontSize="small"
+                          sx={{ mr: 1, mb: -0.5 }}
+                        />
+                        Duration:
+                      </Typography>
                       <Typography variant="subtitle1">{duration}</Typography>
                     </Stack>
                   </PillContainer>
