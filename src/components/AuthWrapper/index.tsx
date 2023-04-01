@@ -36,13 +36,11 @@ const Auth: FC<Props> = (props) => {
   const router = useRouter();
 
   const { status, data: session } = useSession();
-  const guest = useGuestUserInfo.use.guest?.();
-
   if (status === 'loading') {
     return <div>{loadingScreen || <DefaultLoadingScreen />}</div>;
   }
 
-  if (required && !session && !guest?.name) {
+  if (required && !session) {
     if (onUnauthenticated) {
       onUnauthenticated();
     } else if (unauthenticatedUrl) {
