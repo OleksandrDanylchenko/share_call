@@ -1,20 +1,20 @@
 import { FC } from 'react';
 
 import { Stack } from '@mui/material';
+import { useSession } from 'next-auth/react';
 
 import DeviceToggleButton from '@/components/DeviceToggleButton';
-import { useCurrentUser } from '@/hooks/index';
 import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
 import { DeviceType } from '@/types/agora';
 
 const CallControls: FC = () => {
-  const user = useCurrentUser();
+  const { data: session } = useSession();
 
   const microphoneState = useCallTracks((state) =>
-    selectLocalTrackState(state, user.id, 'microphone'),
+    selectLocalTrackState(state, session!.user!.id, 'microphone'),
   )!;
   const cameraState = useCallTracks((state) =>
-    selectLocalTrackState(state, user.id, 'camera'),
+    selectLocalTrackState(state, session!.user!.id, 'camera'),
   )!;
 
   const setTrackEnabled = useCallTracks.use.setTrackEnabled();
@@ -23,7 +23,7 @@ const CallControls: FC = () => {
       deviceType === 'microphone'
         ? microphoneState?.enabled
         : cameraState?.enabled;
-    setTrackEnabled(user.id, deviceType, !enabled);
+    setTrackEnabled(session!.user!.id, deviceType, !enabled);
   };
 
   return (
