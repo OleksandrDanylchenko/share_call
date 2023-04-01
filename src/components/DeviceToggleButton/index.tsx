@@ -1,14 +1,10 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC } from 'react';
 
-import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/MicOff';
-import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { IconButton, Tooltip } from '@mui/material';
 
-import DeviceIcon from '@/components/DeviceIcon';
 import { shadowBorder } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
+import DeviceToggleIcon from 'components/DeviceToggleIcon';
 
 interface Props {
   deviceType: DeviceType;
@@ -36,7 +32,11 @@ const DeviceToggleButton: FC<Props> = (props) => {
       aria-label={label}
       onClick={onClick}
     >
-      <DeviceIcon deviceType={deviceType} enabled={enabled} fontSize="large" />
+      <DeviceToggleIcon
+        deviceType={deviceType}
+        enabled={enabled}
+        fontSize="large"
+      />
     </IconButton>
   );
 

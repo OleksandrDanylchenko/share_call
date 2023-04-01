@@ -3,9 +3,9 @@ import React, { FC, PropsWithChildren } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 import { Box, Stack, Theme, Typography } from '@mui/material';
 
-import DeviceIcon from '@/components/DeviceIcon';
 import { selectTrackState, useCallTracks } from '@/store/callTracks';
 import { fullParent, shadowBorder } from '@/styles/mixins';
+import DeviceToggleIcon from 'components/DeviceToggleIcon';
 
 interface Props extends PropsWithChildren {
   userId: string;
@@ -61,13 +61,13 @@ const CallPlayerOverlay: FC<Props> = (props) => {
             alignItems="center"
             gap={1.5}
           >
-            <DeviceIcon
+            <DeviceToggleIcon
               deviceType="camera"
               fontSize="small"
               enabled={cameraState?.enabled}
               color={cameraState?.enabled ? 'inherit' : 'error'}
             />
-            <DeviceIcon
+            <DeviceToggleIcon
               deviceType="microphone"
               fontSize="small"
               enabled={microphoneState?.enabled}

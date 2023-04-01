@@ -15,7 +15,7 @@ interface Props extends SvgIconProps {
   enabled: boolean | undefined;
 }
 
-const DeviceIcon: FC<Props> = (props) => {
+const DeviceToggleIcon: FC<Props> = (props) => {
   const { deviceType, enabled, ...iconProps } = props;
 
   switch (deviceType) {
@@ -34,4 +34,4 @@ const DeviceIcon: FC<Props> = (props) => {
   }
 };
 
-export default DeviceIcon;
+export default DeviceToggleIcon;
