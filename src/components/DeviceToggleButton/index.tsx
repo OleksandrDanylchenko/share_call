@@ -23,12 +23,12 @@ const DeviceToggleButton: FC<Props> = (props) => {
       css={(theme) => {
         const { warning, error } = theme.palette;
         return shadowBorder(theme, {
-          blurRadius: '40px',
+          blurRadius: '30px',
           color: enabled ? warning.main : error.main,
         });
       }}
       className={className}
-      size="large"
+      size="medium"
       aria-label={label}
       onClick={onClick}
     >

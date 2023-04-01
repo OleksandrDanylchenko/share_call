@@ -22,10 +22,11 @@ const CallFooter: FC<Props> = (props) => {
     <Stack
       css={[fullWidth]}
       direction="row"
-      py={1}
+      pt={1}
+      pb={2}
       justifyContent="space-between"
     >
-      <Typography css={lineClamp(1)} variant="h5" color="warning.main">
+      <Typography css={lineClamp(1)} fontSize={30} color="warning.main">
         {name}
       </Typography>
     </Stack>

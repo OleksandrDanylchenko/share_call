@@ -32,7 +32,7 @@ const CallMediaControls: FC = () => {
       alignItems="center"
       justifyContent="center"
       p={2}
-      gap={4}
+      gap={2}
     >
       <DeviceToggleButton
         label={`${
