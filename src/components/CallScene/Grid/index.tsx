@@ -1,11 +1,11 @@
 import { FC, useRef } from 'react';
 
 import Grid from '@mui/material/Unstable_Grid2';
+import { useSession } from 'next-auth/react';
 
 import CallPlayerOverlay from '@/components/CallPlayerOverlay';
 import { useGridItemDimensions } from '@/components/CallScene/Grid/useGridItemWidth';
 import TracksPlayer from '@/components/TracksPlayer';
-import { useCurrentUser } from '@/hooks/index';
 import { useCallTracks } from '@/store/callTracks';
 import { fullParent } from '@/styles/mixins';
 import { AgoraTracks } from '@/types/agora';
@@ -18,11 +18,9 @@ interface Props {
 const GridScene: FC<Props> = (props) => {
   const { roomId } = props;
 
-  const user = useCurrentUser();
+  const { data: session } = useSession();
 
   const gridContainerRef = useRef<HTMLDivElement | null>(null);
-
-  const tracks = useCallTracks.use.tracks();
 
   const { data: targetRoom } = api.rooms.getRoom.useQuery(
     { id: roomId },
@@ -36,6 +34,8 @@ const GridScene: FC<Props> = (props) => {
     spacing: 8,
   });
 
+  const tracks = useCallTracks.use.tracks();
+
   return (
     <Grid
       ref={gridContainerRef}
@@ -48,13 +48,13 @@ const GridScene: FC<Props> = (props) => {
     >
       {lastSession!.participants.map((participant) => {
         const {
-          user: { id: userId },
+          user: { id: userId, name },
         } = participant;
         const userTracks = tracks[userId];
 
         return (
           <Grid key={userId} {...itemDimensions}>
-            <CallPlayerOverlay userId={userId}>
+            <CallPlayerOverlay userId={userId} name={name}>
               <TracksPlayer
                 tracks={
                   {
@@ -62,7 +62,7 @@ const GridScene: FC<Props> = (props) => {
                     videoTrack: userTracks?.camera?.track,
                   } as Partial<AgoraTracks>
                 }
-                playAudio={userId !== user?.id}
+                playAudio={userId !== session!.user!.id}
               />
             </CallPlayerOverlay>
           </Grid>

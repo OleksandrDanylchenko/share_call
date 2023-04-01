@@ -10,6 +10,7 @@ import DeviceToggleIcon from 'components/DeviceToggleIcon';
 interface Props extends PropsWithChildren {
   userId: string;
   showName?: boolean;
+  name?: string | null;
   showTracksStatus?: boolean;
   className?: string;
 }
@@ -18,6 +19,7 @@ const CallPlayerOverlay: FC<Props> = (props) => {
   const {
     userId,
     showName = true,
+    name,
     showTracksStatus = true,
     className,
     children,
@@ -77,12 +79,12 @@ const CallPlayerOverlay: FC<Props> = (props) => {
         ) : (
           <>&nbsp;</>
         )}
-        {showName ? (
+        {showName && name ? (
           <Typography
             css={(theme) => overlay(theme, { side: 'right-bottom' })}
             variant="subtitle2"
           >
-            {userId}
+            {name}
           </Typography>
         ) : (
           <>&nbsp;</>
