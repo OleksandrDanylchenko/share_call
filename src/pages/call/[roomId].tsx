@@ -14,7 +14,6 @@ import useAsyncEffect from 'use-async-effect';
 import { useEventListener, useIsFirstRender } from 'usehooks-ts';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
-import CallControls from '@/components/CallControls';
 import CallScene from '@/components/CallScene';
 import { clientEnv } from '@/env/schema.mjs';
 import { useAgoraRtcClient } from '@/hooks/useAgoraRtcClient';
@@ -25,6 +24,8 @@ import {
 } from '@/store/callTracks';
 import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
 import { api } from '@/utils/api';
+import CallHeader from 'components/CallHeader';
+import CallMediaControls from 'components/CallMediaControls';
 
 const viewGradientOffset = 26;
 
@@ -56,8 +57,7 @@ const Call: FC<Props> = (props) => {
       throw new Error('Missing Agora App ID!');
     }
 
-    hasJoinRequested.current = true;
-    await rtc.join(appId, 'test-channel', null, user.id);
+    // await rtc.join(appId, 'test-channel', null, user.id);
 
     const { microphone, camera } = userTracks;
     // await Promise.all([
@@ -147,12 +147,15 @@ const Call: FC<Props> = (props) => {
                 <LinearProgress color="inherit" />
               </Stack>
             ) : (
-              <CallScene roomId={roomId} />
+              <>
+                <CallHeader roomId={roomId} />
+                <CallScene roomId={roomId} />
+                <CallMediaControls />
+              </>
             )}
           </Stack>
         </Container>
       </Box>
-      <CallControls />
     </Stack>
   );
 };

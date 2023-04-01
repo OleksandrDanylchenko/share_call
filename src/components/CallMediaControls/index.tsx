@@ -7,7 +7,7 @@ import DeviceToggleButton from '@/components/DeviceToggleButton';
 import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
 import { DeviceType } from '@/types/agora';
 
-const CallControls: FC = () => {
+const CallMediaControls: FC = () => {
   const { data: session } = useSession();
 
   const microphoneState = useCallTracks((state) =>
@@ -54,4 +54,4 @@ const CallControls: FC = () => {
   );
 };
 
-export default CallControls;
+export default CallMediaControls;
