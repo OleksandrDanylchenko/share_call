@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { Stack } from '@mui/material';
 
 import CallSidebarInfo from '@/components/CallSidebar/Info';
+import ParticipantsSidebarInfo from '@/components/CallSidebar/Participants';
 import { blurBackgroundContainer } from '@/styles/mixins';
 
 interface Props {
@@ -23,6 +24,7 @@ const CallSidebar: FC<Props> = (props) => {
       gap={2}
     >
       <CallSidebarInfo roomId={roomId} />
+      <ParticipantsSidebarInfo roomId={roomId} />
     </Stack>
   );
 };
