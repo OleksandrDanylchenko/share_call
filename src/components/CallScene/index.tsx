@@ -8,22 +8,28 @@ import { fullParent } from '@/styles/mixins';
 
 import GridScene from './Grid';
 
+interface Props {
+  roomId: string;
+}
+
 export enum CallSceneType {
   Grid = 'grid',
   Spotlight = 'spotlight',
 }
 
-const CallScene: FC = () => {
+const CallScene: FC<Props> = (props) => {
+  const { roomId } = props;
+
   const scene = CallSceneType.Grid as CallSceneType;
 
   const sceneView = useMemo(() => {
     switch (scene) {
       case CallSceneType.Grid:
-        return <GridScene />;
+        return <GridScene roomId={roomId} />;
       case CallSceneType.Spotlight:
         return <SpotlightScene />;
     }
-  }, [scene]);
+  }, [roomId, scene]);
 
   const [animateParent] = useAutoAnimate();
   return (
