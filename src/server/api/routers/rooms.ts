@@ -1,4 +1,4 @@
-import { isUndefined, omitBy } from 'lodash';
+import { isUndefined, last, omitBy } from 'lodash';
 import { z } from 'zod';
 
 import { shortNanoid } from '@/server/api/services/random';
@@ -33,9 +33,10 @@ export const roomsRouter = createTRPCRouter({
           ),
       }),
     )
-    .query(({ input, ctx }) => {
+    .query(async ({ input, ctx }) => {
       const { id } = input;
-      return ctx.prisma.room.findUnique({
+
+      const room = await ctx.prisma.room.findUnique({
         where: { id },
         include: {
           sessions: {
@@ -62,6 +63,13 @@ export const roomsRouter = createTRPCRouter({
           },
         },
       });
+      if (!room) return room;
+
+      const { sessions, ...roomProps } = room;
+      return {
+        ...roomProps,
+        lastSession: last(sessions),
+      };
     }),
   createRoom: protectedProcedure
     .input(

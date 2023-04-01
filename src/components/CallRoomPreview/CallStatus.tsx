@@ -3,7 +3,6 @@ import React, { FC, ReactElement } from 'react';
 import { ClassNames } from '@emotion/react';
 import { Avatar, AvatarGroup, Stack, Typography } from '@mui/material';
 import { uploadcareLoader } from '@uploadcare/nextjs-loader';
-import { first } from 'lodash';
 import Image from 'next/image';
 
 import BlinkingCircle from '@/components/BlinkingCircle';
@@ -18,7 +17,7 @@ interface Props {
 const CallStatus: FC<Props> = (props) => {
   const { targetRoom } = props;
 
-  const lastSession = first(targetRoom!.sessions);
+  const { lastSession } = targetRoom!;
   const isActiveSession = lastSession?.finishedAt === null;
 
   const renderInactiveStatus = (): ReactElement => (

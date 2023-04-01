@@ -147,7 +147,7 @@ const Call: FC<Props> = (props) => {
                 <LinearProgress color="inherit" />
               </Stack>
             ) : (
-              <CallScene />
+              <CallScene roomId={roomId} />
             )}
           </Stack>
         </Container>
