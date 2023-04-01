@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -95,9 +95,10 @@ const CallSidebarInfo: FC<Props> = (props) => {
                 </Box>
                 <Stack gap={2}>
                   <PillContainer active>
-                    <Typography variant="subtitle1">
-                      Duration: {duration}
-                    </Typography>
+                    <Stack direction="row" alignItems="baseline" gap={2}>
+                      <Typography variant="subtitle1">Duration:</Typography>
+                      <Typography variant="subtitle1">{duration}</Typography>
+                    </Stack>
                   </PillContainer>
                   <RoomInvite
                     inviteCode={targetRoom.inviteCode}
