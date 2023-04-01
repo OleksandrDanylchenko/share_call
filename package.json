@@ -38,6 +38,7 @@
     "clsx": "^1.2.1",
     "immer": "^9.0.19",
     "lodash": "^4.17.21",
+    "luxon": "^3.3.0",
     "material-ui-popup-state": "^5.0.5",
     "nanoid": "^4.0.1",
     "next": "13.2.4",
@@ -62,6 +63,7 @@
   "devDependencies": {
     "@ls-lint/ls-lint": "^1.11.2",
     "@mui/icons-material": "^5.11.11",
+    "@types/luxon": "^3.2.0",
     "@types/node": "^18.15.3",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",

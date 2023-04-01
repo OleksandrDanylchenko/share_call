@@ -20,6 +20,7 @@ specifiers:
   '@trpc/react-query': ^10.16.0
   '@trpc/server': ^10.16.0
   '@types/lodash': ^4.14.191
+  '@types/luxon': ^3.2.0
   '@types/node': ^18.15.3
   '@types/react': ^18.0.28
   '@types/react-dom': ^18.0.11
@@ -40,6 +41,7 @@ specifiers:
   eslint-plugin-prettier: ^4.2.1
   immer: ^9.0.19
   lodash: ^4.17.21
+  luxon: ^3.3.0
   material-ui-popup-state: ^5.0.5
   nanoid: ^4.0.1
   next: 13.2.4
@@ -73,7 +75,7 @@ dependencies:
   '@mui/lab': 5.0.0-alpha.123_ugjihivlx7hzkcasxdumj5y3om
   '@mui/material': 5.11.13_xqeqsl5kvjjtyxwyi3jhw3yuli
   '@mui/utils': 5.11.13_react@18.2.0
-  '@mui/x-date-pickers': 5.0.20_l373ulu4ptjllna27wowrldyqm
+  '@mui/x-date-pickers': 5.0.20_v7svm36v3wbwxcdp3lf2my4cu4
   '@next-auth/prisma-adapter': 1.0.5_knaw3qxw4zwoiwojd3fn43zthi
   '@prisma/client': 4.11.0_prisma@4.11.0
   '@tanstack/react-query': 4.27.0_biqbaboplfbrettd7655fr4n2y
@@ -90,6 +92,7 @@ dependencies:
   clsx: 1.2.1
   immer: 9.0.19
   lodash: 4.17.21
+  luxon: 3.3.0
   material-ui-popup-state: 5.0.5_xqeqsl5kvjjtyxwyi3jhw3yuli
   nanoid: 4.0.1
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
@@ -114,6 +117,7 @@ dependencies:
 devDependencies:
   '@ls-lint/ls-lint': 1.11.2
   '@mui/icons-material': 5.11.11_4lyzeezzeeal3x6jtb4ni26w7u
+  '@types/luxon': 3.2.0
   '@types/node': 18.15.3
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
@@ -200,7 +204,7 @@ packages:
       '@date-io/core': 2.16.0
     dev: false
 
-  /@date-io/luxon/2.16.1:
+  /@date-io/luxon/2.16.1_luxon@3.3.0:
     resolution: {integrity: sha512-aeYp5K9PSHV28946pC+9UKUi/xMMYoaGelrpDibZSgHu2VWHXrr7zWLEr+pMPThSs5vt8Ei365PO+84pCm37WQ==}
     peerDependencies:
       luxon: ^1.21.3 || ^2.x || ^3.x
@@ -209,6 +213,7 @@ packages:
         optional: true
     dependencies:
       '@date-io/core': 2.16.0
+      luxon: 3.3.0
     dev: false
 
   /@date-io/moment/2.16.1:
@@ -607,7 +612,7 @@ packages:
       react: 18.2.0
       react-is: 18.2.0
 
-  /@mui/x-date-pickers/5.0.20_l373ulu4ptjllna27wowrldyqm:
+  /@mui/x-date-pickers/5.0.20_v7svm36v3wbwxcdp3lf2my4cu4:
     resolution: {integrity: sha512-ERukSeHIoNLbI1C2XRhF9wRhqfsr+Q4B1SAw2ZlU7CWgcG8UBOxgqRKDEOVAIoSWL+DWT6GRuQjOKvj6UXZceA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -639,7 +644,7 @@ packages:
       '@date-io/core': 2.16.0
       '@date-io/date-fns': 2.16.0
       '@date-io/dayjs': 2.16.0
-      '@date-io/luxon': 2.16.1
+      '@date-io/luxon': 2.16.1_luxon@3.3.0
       '@date-io/moment': 2.16.1
       '@emotion/react': 11.10.6_pmekkgnqduwlme35zpnqhenc34
       '@emotion/styled': 11.10.6_oouaibmszuch5k64ms7uxp2aia
@@ -647,6 +652,7 @@ packages:
       '@mui/utils': 5.11.13_react@18.2.0
       '@types/react-transition-group': 4.4.5
       clsx: 1.2.1
+      luxon: 3.3.0
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -945,6 +951,10 @@ packages:
   /@types/lodash/4.14.191:
     resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: false
+
+  /@types/luxon/3.2.0:
+    resolution: {integrity: sha512-lGmaGFoaXHuOLXFvuju2bfvZRqxAqkHPx9Y9IQdQABrinJJshJwfNCKV+u7rR3kJbiqfTF/NhOkcxxAFrObyaA==}
+    dev: true
 
   /@types/node/18.15.3:
     resolution: {integrity: sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==}
@@ -2567,6 +2577,11 @@ packages:
     dependencies:
       yallist: 4.0.0
 
+  /luxon/3.3.0:
+    resolution: {integrity: sha512-An0UCfG/rSiqtAIiBPO0Y9/zAnHUZxAMiCpTd5h2smgsj7GGmcenvrvww2cqNA8/4A5ZrD1gJpHN2mIHZQF+Mg==}
+    engines: {node: '>=12'}
+    dev: false
+
   /material-ui-popup-state/5.0.5_xqeqsl5kvjjtyxwyi3jhw3yuli:
     resolution: {integrity: sha512-ZFEazmfaeDOeG5KFOfwEpzlL0HlRE1tVqwGkSuSMhGlz9/apAHfixIBR3oIJYVroTcgdUmBtKcS01QqEq/rg0A==}
     peerDependencies:
@@ -3027,7 +3042,7 @@ packages:
     dependencies:
       '@mui/icons-material': 5.11.11_4lyzeezzeeal3x6jtb4ni26w7u
       '@mui/material': 5.11.13_xqeqsl5kvjjtyxwyi3jhw3yuli
-      '@mui/x-date-pickers': 5.0.20_l373ulu4ptjllna27wowrldyqm
+      '@mui/x-date-pickers': 5.0.20_v7svm36v3wbwxcdp3lf2my4cu4
       react: 18.2.0
       react-hook-form: 7.43.7_react@18.2.0
     dev: false

@@ -5,3 +5,4 @@ export * from './useMicCamTracks';
 export * from './usePrevious';
 export * from './useElementContentDimensions';
 export * from './useHistoricalRoutes';
+export * from './useDuration';

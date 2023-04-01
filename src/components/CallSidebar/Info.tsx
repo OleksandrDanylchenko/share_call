@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -12,9 +12,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { DateTime } from 'luxon';
 import { useToggle } from 'usehooks-ts';
 
+import PillContainer from '@/components/PillContainer';
 import RoomInvite from '@/components/RoomInvite';
+import { useDuration } from '@/hooks/useDuration';
 import {
   blurBackgroundContainer,
   fullHeight,
@@ -35,6 +38,10 @@ const CallSidebarInfo: FC<Props> = (props) => {
   const { data: targetRoom } = api.rooms.getRoom.useQuery(
     { id: roomId },
     { retry: 1 },
+  );
+
+  const duration = useDuration(
+    targetRoom?.lastSession?.startedAt || new Date(),
   );
 
   return (
@@ -80,13 +87,18 @@ const CallSidebarInfo: FC<Props> = (props) => {
                       {targetRoom.name}
                     </Typography>
                   </Tooltip>
-                  <Tooltip title={targetRoom!.description} placement="bottom">
+                  <Tooltip title={targetRoom.description} placement="bottom">
                     <Typography css={lineClamp(20)} variant="subtitle1">
                       {targetRoom.description}
                     </Typography>
                   </Tooltip>
                 </Box>
                 <Stack gap={2}>
+                  <PillContainer active>
+                    <Typography variant="subtitle1">
+                      Duration: {duration}
+                    </Typography>
+                  </PillContainer>
                   <RoomInvite
                     inviteCode={targetRoom.inviteCode}
                     sx={{

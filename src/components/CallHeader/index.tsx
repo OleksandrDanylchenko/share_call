@@ -16,7 +16,6 @@ const CallFooter: FC<Props> = (props) => {
     { id: roomId },
     { retry: 1 },
   );
-  const { name } = targetRoom!;
 
   return (
     <Stack
@@ -27,7 +26,7 @@ const CallFooter: FC<Props> = (props) => {
       justifyContent="space-between"
     >
       <Typography css={lineClamp(1)} fontSize={30} color="warning.main">
-        {name}
+        {targetRoom?.name}
       </Typography>
     </Stack>
   );
