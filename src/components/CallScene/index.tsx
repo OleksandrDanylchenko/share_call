@@ -33,7 +33,7 @@ const CallScene: FC<Props> = (props) => {
 
   const [animateParent] = useAutoAnimate();
   return (
-    <Box ref={animateParent} css={fullParent}>
+    <Box ref={animateParent} css={fullParent} px={8}>
       {sceneView}
     </Box>
   );

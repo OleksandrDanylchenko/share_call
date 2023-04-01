@@ -15,6 +15,7 @@ import { useEventListener, useIsFirstRender } from 'usehooks-ts';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
 import CallScene from '@/components/CallScene';
+import CallSidebar from '@/components/CallSidebar';
 import { clientEnv } from '@/env/schema.mjs';
 import { useAgoraRtcClient } from '@/hooks/useAgoraRtcClient';
 import {
@@ -22,7 +23,12 @@ import {
   selectTracks,
   useCallTracks,
 } from '@/store/callTracks';
-import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
+import {
+  doubleColorGradient,
+  fullHeight,
+  fullViewport,
+  fullWidth,
+} from '@/styles/mixins';
 import { api } from '@/utils/api';
 import CallHeader from 'components/CallHeader';
 import CallMediaControls from 'components/CallMediaControls';
@@ -149,6 +155,7 @@ const Call: FC<Props> = (props) => {
             <>
               <CallHeader roomId={roomId} />
               <CallScene roomId={roomId} />
+              <CallSidebar roomId={roomId} />
               <CallMediaControls />
             </>
           )}
