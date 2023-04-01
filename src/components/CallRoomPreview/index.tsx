@@ -8,6 +8,7 @@ import { range } from 'lodash';
 import { useRouter } from 'next/router';
 
 import CallStatus from '@/components/CallRoomPreview/CallStatus';
+import { useGoPrevRoute } from '@/hooks/useHistoricalRoutes';
 import {
   blurBackgroundContainer,
   fullHeight,
@@ -42,6 +43,8 @@ const CallRoomPreview: FC<Props> = (props) => {
     await connectParticipant({ roomId });
     return router.push(`/call/${roomId}`);
   };
+
+  const handleBackClick = useGoPrevRoute();
 
   return (
     <Stack
@@ -126,7 +129,7 @@ const CallRoomPreview: FC<Props> = (props) => {
           color="inherit"
           sx={{ width: '30%' }}
           startIcon={<ArrowBackIosIcon />}
-          onClick={() => router.back()}
+          onClick={handleBackClick}
         >
           Back
         </Button>
