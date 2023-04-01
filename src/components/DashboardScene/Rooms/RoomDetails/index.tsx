@@ -5,7 +5,7 @@ import { IconButton, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import RoomUpdateForm from '@/components/DashboardScene/Rooms/RoomUpdateForm';
-import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
+import PillContainer from '@/components/PillContainer';
 import { api } from '@/utils/api';
 import RoomInvite from 'components/RoomInvite';
 
@@ -42,23 +42,12 @@ const RoomJoin: FC<{ activeRoomId: string }> = (props) => {
     router.push(`/preview/${activeRoomId}`);
 
   return (
-    <Stack
-      css={(theme) => [
-        fullWidth,
-        lightBackgroundContainer(theme, { active: true }),
-      ]}
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      px={3}
-      py={1.2}
-      borderRadius={6}
-    >
+    <PillContainer active>
       <Typography variant="h5">Join the room</Typography>
       <IconButton size="large" onClick={handleJoinClick}>
         <LoginIcon fontSize="large" />
       </IconButton>
-    </Stack>
+    </PillContainer>
   );
 };
 

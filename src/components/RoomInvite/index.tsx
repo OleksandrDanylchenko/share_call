@@ -6,7 +6,7 @@ import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useCopyToClipboard } from 'usehooks-ts';
 
-import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
+import PillContainer from '@/components/PillContainer';
 
 interface Props {
   inviteCode: string;
@@ -28,19 +28,7 @@ const RoomInvite: FC<Props> = (props) => {
   };
 
   return (
-    <Stack
-      css={(theme) => [
-        fullWidth,
-        lightBackgroundContainer(theme, { active: showCopied }),
-      ]}
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      px={3}
-      py={1.2}
-      borderRadius={6}
-      sx={[...(Array.isArray(sx) ? sx : [sx])]}
-    >
+    <PillContainer sx={sx}>
       <Stack direction="row" alignItems="baseline" gap={2}>
         {showCopied ? (
           <Typography variant="h5">Invitation link has been copied</Typography>
@@ -60,7 +48,7 @@ const RoomInvite: FC<Props> = (props) => {
           )}
         </IconButton>
       </Tooltip>
-    </Stack>
+    </PillContainer>
   );
 };
 
