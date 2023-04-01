@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 import {
   Box,
@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import useAsyncEffect from 'use-async-effect';
-import { useEventListener } from 'usehooks-ts';
+import { useEventListener, useIsFirstRender } from 'usehooks-ts';
 
 import { NextAuthComponentType } from '@/components/AuthWrapper';
 import CallControls from '@/components/CallControls';
@@ -104,20 +104,27 @@ const Call: FC<Props> = (props) => {
       },
     });
 
-  const handleParticipantLeave = useCallback(async () => {
-    // const { microphone, camera } = userTracks;
-    // await rtc.unpublish([microphone!.track, camera!.track]); // TODO Test this out
-    await rtc.leave();
-    removeTracks(user.id);
-    await disconnectParticipant({ roomId });
-  }, [disconnectParticipant, removeTracks, roomId, rtc, user.id]);
-
   useEffect(() => {
-    router.events.on('routeChangeStart', handleParticipantLeave);
-    return () => router.events.off('routeChangeStart', handleParticipantLeave);
-  }, [handleParticipantLeave, router.events]);
+    const handleRouteChange = async (): Promise<void> => {
+      await rtc?.leave?.();
+      await disconnectParticipant({ roomId });
+      removeTracks(user.id);
+      router.reload(); // TODO Remove hack upon https://agora-ticket.agora.io/issue/c8908e2cea5445cfaadbbcff6061ccf5 resolution
+    };
 
-  useEventListener('beforeunload', handleParticipantLeave);
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => router.events.off('routeChangeStart', handleRouteChange);
+  }, [
+    disconnectParticipant,
+    removeTracks,
+    roomId,
+    router,
+    router.events,
+    rtc,
+    user.id,
+  ]);
+
+  useEventListener('beforeunload', () => disconnectParticipant({ roomId }));
 
   return (
     <Stack
@@ -151,32 +158,50 @@ const CallContainer: FC = () => {
 
   const { data: session } = useSession();
 
+  const isFirstRender = useIsFirstRender();
+
   const userTracks = useCallTracks((state) =>
     selectTracks(state, session!.user!.id),
   );
-  if (!userTracks) {
-    router.replace(`/preview/${roomId}`); // Tracks need to be populated before entering the call
-    return (
-      <Stack
-        css={(theme) => [
-          fullViewport,
-          doubleColorGradient(theme, { centerOffset: viewGradientOffset }),
-        ]}
-      >
-        <Box flex={1} overflow="hidden">
-          <Container css={fullHeight}>
-            <Stack css={fullHeight} alignItems="center" justifyContent="center">
-              <Stack gap={5} padding={10} borderRadius={5}>
-                <Typography variant="h2">Getting your media data...</Typography>
-                <LinearProgress color="inherit" />
+
+  useEffect(() => {
+    if (!userTracks && isFirstRender) {
+      router.replace(`/preview/${roomId}`); // Tracks need to be populated before entering the call
+    }
+  }, [isFirstRender, roomId, router, userTracks]);
+
+  return (
+    <>
+      {!userTracks && (
+        <Stack
+          css={(theme) => [
+            fullViewport,
+            doubleColorGradient(theme, { centerOffset: viewGradientOffset }),
+          ]}
+        >
+          <Box flex={1} overflow="hidden">
+            <Container css={fullHeight}>
+              <Stack
+                css={fullHeight}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Stack gap={5} padding={10} borderRadius={5}>
+                  <Typography variant="h2">
+                    {isFirstRender
+                      ? 'Getting your media data...'
+                      : 'Leaving the call'}
+                  </Typography>
+                  <LinearProgress color="inherit" />
+                </Stack>
               </Stack>
-            </Stack>
-          </Container>
-        </Box>
-      </Stack>
-    );
-  }
-  return <Call user={session!.user!} roomId={roomId} />;
+            </Container>
+          </Box>
+        </Stack>
+      )}
+      {userTracks && <Call user={session!.user!} roomId={roomId} />}
+    </>
+  );
 };
 
 const AuthCall: NextAuthComponentType = CallContainer;

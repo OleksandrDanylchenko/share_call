@@ -10,7 +10,11 @@ import DeviceToggleButton from '@/components/DeviceToggleButton';
 import TracksPlayer from '@/components/TracksPlayer';
 import { useDevices } from '@/hooks/useDevices';
 import { useMicCamTracks } from '@/hooks/useMicCamTracks';
-import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
+import {
+  selectLocalTrackState,
+  selectTracks,
+  useCallTracks,
+} from '@/store/callTracks';
 import { fullParent, fullWidth } from '@/styles/mixins';
 import { AgoraRTCErrorCode, DeviceType } from '@/types/agora';
 
@@ -37,9 +41,11 @@ const CallMediaPreview: FC<Props> = (props) => {
   const { tracks, errorCode: tracksErrorCode } = useMicCamTracks();
   const { devices } = useDevices();
 
+  const userTracks = useCallTracks((state) => selectTracks(state, user!.id));
+
   useEffect(() => {
-    if (tracks) addTracks(user.id, tracks);
-  }, [addTracks, tracks, user]);
+    if (tracks && !userTracks) addTracks(user.id, tracks);
+  }, [addTracks, tracks, userTracks, user]);
 
   useEffect(() => {
     if (tracks) {
