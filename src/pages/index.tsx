@@ -2,7 +2,9 @@ import React, { FC } from 'react';
 
 import { Container, Stack } from '@mui/material';
 import { type NextPage } from 'next';
-import { getSession, GetSessionParams, useSession } from 'next-auth/react';
+import { GetServerSideProps } from 'next';
+import { getServerSession, Session } from 'next-auth';
+import { useSession } from 'next-auth/react';
 
 import Catchphrase from '@/components/Catchphrase';
 import Dashboard from '@/components/Dashboard';
@@ -13,6 +15,11 @@ import {
   fullHeight,
   fullViewport,
 } from '@/styles/mixins';
+import { authOptions } from 'pages/api/auth/[...nextauth]';
+
+interface Props {
+  session: Session | null;
+}
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -50,8 +57,10 @@ const Landing: FC = () => (
   </Stack>
 );
 
-export const getServerSideProps = async (ctx: GetSessionParams) => {
-  const session = await getSession(ctx);
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context,
+) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
   return { props: { session } };
 };
 
