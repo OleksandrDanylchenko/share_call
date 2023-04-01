@@ -2,12 +2,12 @@ import React, { FC } from 'react';
 
 import LoginIcon from '@mui/icons-material/Login';
 import { IconButton, Stack, Typography } from '@mui/material';
-import RoomInvite from 'components/DashboardScene/Rooms/RoomInviteButton';
 import { useRouter } from 'next/router';
 
 import RoomUpdateForm from '@/components/DashboardScene/Rooms/RoomUpdateForm';
 import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
 import { api } from '@/utils/api';
+import RoomInvite from 'components/RoomInvite';
 
 interface Props {
   activeRoomId?: string;

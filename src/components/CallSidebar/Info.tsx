@@ -1,13 +1,23 @@
 import React, { FC } from 'react';
 
 import { ClassNames } from '@emotion/react';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoIcon from '@mui/icons-material/Info';
-import { Drawer, IconButton, Typography, Tooltip } from '@mui/material';
+import {
+  Box,
+  Button,
+  Drawer,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { useToggle } from 'usehooks-ts';
 
 import RoomInvite from '@/components/RoomInvite';
 import {
   blurBackgroundContainer,
+  fullHeight,
   lineClamp,
   shadowBorder,
 } from '@/styles/mixins';
@@ -58,35 +68,49 @@ const CallSidebarInfo: FC<Props> = (props) => {
               ),
             }}
           >
-            <Tooltip title={targetRoom!.name} placement="bottom">
-              <Typography css={lineClamp(4)} variant="h3" color="warning.main">
-                {targetRoom!.name}
-              </Typography>
-            </Tooltip>
-            <Tooltip title={targetRoom!.description} placement="bottom">
-              <Typography css={lineClamp(20)} variant="subtitle1">
-                {targetRoom!.description}
-              </Typography>
-            </Tooltip>
-            <RoomInvite
-              inviteCode={targetRoom!.inviteCode}
-              sx={{
-                position: 'absolute',
-                bottom: 20,
-                left: 0,
-                right: 0,
-                width: '90% !important',
-                mx: 'auto',
-                padding: 0,
-                pl: 2,
-                '.MuiTypography-root': {
-                  fontSize: theme.typography.subtitle1.fontSize,
-                },
-                '.MuiSvgIcon-root': {
-                  fontSize: 35,
-                },
-              }}
-            />
+            {targetRoom && (
+              <Stack css={fullHeight} justifyContent="space-between">
+                <Box>
+                  <Tooltip title={targetRoom.name} placement="bottom">
+                    <Typography
+                      css={lineClamp(4)}
+                      variant="h3"
+                      color="warning.main"
+                    >
+                      {targetRoom.name}
+                    </Typography>
+                  </Tooltip>
+                  <Tooltip title={targetRoom!.description} placement="bottom">
+                    <Typography css={lineClamp(20)} variant="subtitle1">
+                      {targetRoom.description}
+                    </Typography>
+                  </Tooltip>
+                </Box>
+                <Stack gap={2}>
+                  <RoomInvite
+                    inviteCode={targetRoom.inviteCode}
+                    sx={{
+                      padding: 0,
+                      pl: 2,
+                      '.MuiTypography-root': {
+                        fontSize: theme.typography.subtitle1.fontSize,
+                      },
+                      '.MuiSvgIcon-root': {
+                        fontSize: 35,
+                      },
+                    }}
+                  />
+                  <Button
+                    color="inherit"
+                    sx={{ width: '30%', alignSelf: 'flex-end' }}
+                    endIcon={<ArrowForwardIosIcon />}
+                    onClick={toggleShowInfo}
+                  >
+                    Close
+                  </Button>
+                </Stack>
+              </Stack>
+            )}
           </Drawer>
         )}
       </ClassNames>
