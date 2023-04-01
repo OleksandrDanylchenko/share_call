@@ -8,6 +8,7 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 
 import AuthWrapper, { NextAuthComponentType } from '@/components/AuthWrapper';
+import { useCaptureRoutes } from '@/hooks/useHistoricalRoutes';
 import { createEmotionCache } from '@/styles/mui/create-emotion-cache';
 import { theme } from '@/styles/mui/theme';
 import { api } from '@/utils/api';
@@ -29,6 +30,8 @@ const MyApp: AppType<Props> = ({
   Component,
   pageProps: { session, emotionCache = clientSideEmotionCache, ...pageProps },
 }) => {
+  useCaptureRoutes();
+
   const AuthComponent = Component as NextAuthComponentType;
   return (
     <CacheProvider value={emotionCache}>
