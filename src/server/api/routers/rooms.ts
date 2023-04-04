@@ -110,6 +110,21 @@ export const roomsRouter = createTRPCRouter({
         select: { id: true, name: true, description: true },
       });
     }),
+  deleteRoom: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ input, ctx }) => {
+      const { id: roomId } = input;
+      const userId = ctx.session.user.id;
+
+      const room = await ctx.prisma.room.findUnique({
+        where: { id: roomId },
+      });
+      if (room?.creatorId !== userId) {
+        throw new Error('You are not the creator of this room');
+      }
+
+      await ctx.prisma.room.delete({ where: { id: roomId } });
+    }),
   getRoomByInviteCode: protectedProcedure
     .input(
       z.object({
