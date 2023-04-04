@@ -118,8 +118,9 @@ const Call: FC<Props> = (props) => {
         setTimeout(() => rtc.leave(), 200);
       }
 
+      await rtc.leave();
+
       await disconnectParticipant({ roomId });
-      removeTracks(user.id);
       router.reload(); // TODO Remove hack upon https://agora-ticket.agora.io/issue/c8908e2cea5445cfaadbbcff6061ccf5 resolution
     };
 
