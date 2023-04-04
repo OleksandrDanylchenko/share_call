@@ -1,14 +1,24 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 
 import DeviceToggleButton from '@/components/DeviceToggleButton';
 import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
+import { shadowBorder } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
 
-const CallMediaControls: FC = () => {
+interface Props {
+  roomId: string;
+}
+
+const CallControls: FC<Props> = (props) => {
+  const { roomId } = props;
+
   const { data: session } = useSession();
+
+  const router = useRouter();
 
   const microphoneState = useCallTracks((state) =>
     selectLocalTrackState(state, session!.user!.id, 'microphone'),
@@ -24,6 +34,10 @@ const CallMediaControls: FC = () => {
         ? microphoneState?.enabled
         : cameraState?.enabled;
     setTrackEnabled(session!.user!.id, deviceType, !enabled);
+  };
+
+  const handleLeaveClick = (): void => {
+    router.push(`/preview/${roomId}`);
   };
 
   return (
@@ -50,8 +64,21 @@ const CallMediaControls: FC = () => {
         enabled={microphoneState.enabled}
         onClick={toggleEnabledChange('microphone')}
       />
+      <Button
+        css={(theme) =>
+          shadowBorder(theme, { color: theme.palette.error.main })
+        }
+        sx={{
+          position: 'absolute',
+          right: (theme) => theme.spacing(2.5),
+        }}
+        color="inherit"
+        onClick={handleLeaveClick}
+      >
+        <span>Leave the call</span>
+      </Button>
     </Stack>
   );
 };
 
-export default CallMediaControls;
+export default CallControls;

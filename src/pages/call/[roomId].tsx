@@ -30,8 +30,8 @@ import {
   fullWidth,
 } from '@/styles/mixins';
 import { api } from '@/utils/api';
+import CallControls from 'components/CallControls';
 import CallHeader from 'components/CallHeader';
-import CallMediaControls from 'components/CallMediaControls';
 
 const viewGradientOffset = 26;
 
@@ -112,6 +112,8 @@ const Call: FC<Props> = (props) => {
 
   useEffect(() => {
     const handleRouteChange = async (): Promise<void> => {
+      router.reload(); // TODO Remove hack upon https://agora-ticket.agora.io/issue/c8908e2cea5445cfaadbbcff6061ccf5 resolution
+
       if (rtc.connectionState === 'CONNECTED') {
         await rtc.leave();
       } else {
@@ -119,9 +121,7 @@ const Call: FC<Props> = (props) => {
       }
 
       await rtc.leave();
-
       await disconnectParticipant({ roomId });
-      router.reload(); // TODO Remove hack upon https://agora-ticket.agora.io/issue/c8908e2cea5445cfaadbbcff6061ccf5 resolution
     };
 
     router.events.on('routeChangeStart', handleRouteChange);
@@ -157,7 +157,7 @@ const Call: FC<Props> = (props) => {
               <CallHeader roomId={roomId} />
               <CallScene roomId={roomId} />
               <CallSidebar roomId={roomId} />
-              <CallMediaControls />
+              <CallControls roomId={roomId} />
             </>
           )}
         </Stack>
