@@ -34,44 +34,54 @@ const InviteLinkPage: NextPage<Props> = (props) => {
     <main css={[fullViewport, doubleColorGradient]}>
       <Container css={fullHeight}>
         <Stack css={fullParent} alignItems="center" justifyContent="center">
-          {!isInviteCodeValid && (
-            <Stack
-              css={blurBackgroundContainer}
-              alignItems="center"
-              justifyContent="center"
-              flexShrink={0}
-              width={400}
-              height="70%"
-              gap={3}
-              px={4}
-              py={2}
-            >
-              <InvalidInviteCode />
-            </Stack>
-          )}
-          {isInviteCodeValid && (
-            <Stack
-              css={blurBackgroundContainer}
-              alignItems="center"
-              justifyContent="center"
-              flexShrink={0}
-              width={400}
-              height="80%"
-              gap={3}
-              px={4}
-              py={2}
-            >
-              <Typography
-                css={fullWidth}
-                color="warning.main"
-                variant="h3"
-                fontWeight={400}
+          <Stack
+            css={fullWidth}
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            gap={4}
+            height="70%"
+          >
+            {!isInviteCodeValid && (
+              <Stack
+                css={blurBackgroundContainer}
+                alignItems="center"
+                justifyContent="center"
+                flexShrink={0}
+                width={400}
+                height="70%"
+                gap={3}
+                px={4}
+                py={2}
               >
-                The room for the invite code was found
-              </Typography>
-              <SignInForm callbackUrl={callbackUrl} />
-            </Stack>
-          )}
+                <InvalidInviteCode />
+              </Stack>
+            )}
+            {isInviteCodeValid && (
+              <>
+                <Typography
+                  css={fullWidth}
+                  color="warning.main"
+                  variant="h2"
+                  fontWeight={400}
+                >
+                  The room for the invite code was found
+                </Typography>
+                <Stack
+                  css={[fullHeight, blurBackgroundContainer]}
+                  alignItems="center"
+                  justifyContent="center"
+                  flexShrink={0}
+                  width={400}
+                  gap={3}
+                  px={4}
+                  py={2}
+                >
+                  <SignInForm callbackUrl={callbackUrl} />
+                </Stack>
+              </>
+            )}
+          </Stack>
         </Stack>
       </Container>
     </main>
