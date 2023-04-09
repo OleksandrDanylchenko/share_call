@@ -3,6 +3,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import PeopleIcon from '@mui/icons-material/People';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import {
   Avatar,
   AvatarGroup,
@@ -88,14 +89,18 @@ const ListSessionItem: FC<{
     >
       <ListItemText classes={{}} sx={{ display: 'flex', alignItems: 'center' }}>
         Call {serialNumber}
-        <Stack direction="row" gap={1}>
-          <Stack direction="row" gap={1} mt={0.5}>
-            <AccessTimeFilledIcon fontSize="small" />
+        <Stack direction="row" gap={2} mt={0.5}>
+          <Stack direction="row" gap={1}>
+            <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
             {duration}
           </Stack>
-          <Stack direction="row" gap={1} mt={0.5}>
-            <PeopleIcon fontSize="small" />
+          <Stack direction="row" gap={1}>
+            <PeopleIcon fontSize="small" sx={{ mt: 0.1 }} />
             {participants.length}
+          </Stack>
+          <Stack direction="row" gap={1}>
+            <TextSnippetIcon fontSize="small" sx={{ mt: 0.1 }} />
+            ??
           </Stack>
         </Stack>
       </ListItemText>
