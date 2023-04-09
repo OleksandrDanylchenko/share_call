@@ -25,6 +25,7 @@ import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
 import RoomUpdateForm from '@/components/DashboardScene/Rooms/RoomUpdateForm';
+import { goToScene } from '@/components/DashboardScene/routing';
 import PillContainer from '@/components/PillContainer';
 import { shadowBorder } from '@/styles/mixins';
 import { api } from '@/utils/api';
@@ -59,22 +60,33 @@ const RoomDetails: FC<Required<Props>> = (props) => {
 const RoomDelete: FC<{ activeRoomId: string }> = (props) => {
   const { activeRoomId } = props;
 
+  const router = useRouter();
+
   const dialogState = usePopupState({ variant: 'dialog' });
   const { close } = dialogState;
 
+  const apiUtils = api.useContext();
   const { mutate: deleteRoom, isLoading: deletingRoom } =
-    api.rooms.deleteRoom.useMutation({ onSuccess: close });
-
-  const handleDeleteClick = (): void => {
-    deleteRoom({ id: activeRoomId });
-  };
+    api.rooms.deleteRoom.useMutation({
+      async onMutate() {
+        await apiUtils.rooms.getRoom.reset({ id: activeRoomId });
+        apiUtils.rooms.getRooms.setData(undefined, (prevRooms) =>
+          prevRooms?.filter(({ id: roomId }) => roomId !== activeRoomId),
+        );
+        await goToScene(router, DashboardSceneType.Rooms);
+        close();
+      },
+      async onSettled() {
+        await apiUtils.rooms.getRooms.invalidate();
+      },
+    });
 
   return (
     <>
       <IconButton
         css={(theme) =>
           shadowBorder(theme, {
-            blurRadius: '5px',
+            blurRadius: '10px',
             color: theme.palette.error.main,
           })
         }
@@ -86,12 +98,7 @@ const RoomDelete: FC<{ activeRoomId: string }> = (props) => {
         }}
         {...bindTrigger(dialogState)}
       >
-        <DeleteOutlineIcon
-          sx={{
-            color: (theme) => theme.palette.error.light,
-          }}
-          fontSize="medium"
-        />
+        <DeleteOutlineIcon fontSize="medium" />
       </IconButton>
       <Dialog
         {...bindDialog(dialogState)}
@@ -104,7 +111,10 @@ const RoomDelete: FC<{ activeRoomId: string }> = (props) => {
           <Button disabled={deletingRoom} onClick={close}>
             Nope!
           </Button>
-          <LoadingButton loading={deletingRoom} onClick={handleDeleteClick}>
+          <LoadingButton
+            loading={deletingRoom}
+            onClick={() => deleteRoom({ id: activeRoomId })}
+          >
             Yes, I&apos;m sure!
           </LoadingButton>
         </DialogActions>
