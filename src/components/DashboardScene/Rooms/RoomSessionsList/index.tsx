@@ -141,23 +141,7 @@ const ListSessionItem: FC<{
             </Stack>
           </Stack>
         </ListItemText>
-        {!showDetails && (
-          <AvatarGroup max={5}>
-            {participants.map(({ user: { id, name, image } }) => (
-              <Avatar key={id}>
-                <Image
-                  alt={name!}
-                  src={image!}
-                  width={AVATAR_SIZE}
-                  height={AVATAR_SIZE}
-                  quality={80}
-                  loader={getImageLoader(image!)}
-                />
-              </Avatar>
-            ))}
-          </AvatarGroup>
-        )}
-
+        {!showDetails && <ParticipantsList participants={participants} />}
         {!finishedAt && <BlinkingCircle />}
         <ArrowForwardIosIcon
           sx={{ transform: `rotate(${showDetails ? '90deg' : 0})` }}
@@ -183,24 +167,37 @@ const ListSessionItem: FC<{
                 Active participants number: {totalParticipantsNum}
               </Typography>
             )}
-            <AvatarGroup max={5}>
-              {participants.map(({ user: { id, name, image } }) => (
-                <Avatar key={id}>
-                  <Image
-                    alt={name!}
-                    src={image!}
-                    width={AVATAR_SIZE}
-                    height={AVATAR_SIZE}
-                    quality={80}
-                    loader={getImageLoader(image!)}
-                  />
-                </Avatar>
-              ))}
-            </AvatarGroup>
+            <ParticipantsList participants={participants} />
           </Stack>
         </Stack>
       )}
     </ListItemButton>
+  );
+};
+
+const ParticipantsList: FC<{
+  participants: RouterOutputs['rooms']['getRoomSession'][number]['participants'];
+}> = (props) => {
+  const { participants } = props;
+  return (
+    <AvatarGroup
+      max={5}
+      sx={{ borderRadius: 6 }}
+      css={(theme) => lightBackgroundContainer(theme, { active: false })}
+    >
+      {participants.map(({ user: { id, name, image } }) => (
+        <Avatar key={id}>
+          <Image
+            alt={name!}
+            src={image!}
+            width={AVATAR_SIZE}
+            height={AVATAR_SIZE}
+            quality={80}
+            loader={getImageLoader(image!)}
+          />
+        </Avatar>
+      ))}
+    </AvatarGroup>
   );
 };
 
