@@ -1,8 +1,14 @@
-import { CSSProperties, FC, PropsWithChildren, ReactElement } from 'react';
+import React, {
+  CSSProperties,
+  FC,
+  PropsWithChildren,
+  ReactElement,
+} from 'react';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import LoginIcon from '@mui/icons-material/Login';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import { Button, Stack, Typography, useTheme } from '@mui/material';
 import { useRouter } from 'next/router';
 
@@ -19,11 +25,18 @@ const DashboardOptions: FC = () => {
       <Option
         layout="horizontal"
         stretch={false}
-        borderColor={theme.palette.warning.light}
         icon={<FormatListBulletedIcon />}
         onClick={() => goToScene(router, DashboardSceneType.Rooms)}
       >
         My rooms
+      </Option>
+      <Option
+        layout="horizontal"
+        stretch={false}
+        icon={<TextSnippetIcon />}
+        onClick={() => goToScene(router, DashboardSceneType.Notes)}
+      >
+        My notes
       </Option>
       <Stack
         direction="row"
@@ -33,12 +46,14 @@ const DashboardOptions: FC = () => {
         flex={1}
       >
         <Option
+          borderColor={theme.palette.warning.light}
           icon={<AddCircleOutlineIcon />}
           onClick={() => goToScene(router, DashboardSceneType.CreateRoom)}
         >
           Create a room
         </Option>
         <Option
+          borderColor={theme.palette.warning.light}
           icon={<LoginIcon />}
           onClick={() => goToScene(router, DashboardSceneType.JoinCall)}
         >

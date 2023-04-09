@@ -12,6 +12,7 @@ import { fullParent } from '@/styles/mixins';
 
 export enum DashboardSceneType {
   Rooms = 'rooms',
+  Notes = 'notes',
   CreateRoom = 'create-room',
   JoinCall = 'join-call',
 }
