@@ -28,8 +28,22 @@ const RoomInvite: FC<Props> = (props) => {
   };
 
   return (
-    <PillContainer sx={sx}>
-      <Stack direction="row" alignItems="baseline" gap={2}>
+    <PillContainer
+      sx={[
+        ...(Array.isArray(sx) ? sx : [sx]),
+        { containerType: 'inline-size', gap: 1, pr: 1 },
+      ]}
+    >
+      <Stack
+        sx={{
+          '@container (max-width: 400px)': {
+            alignItems: 'center',
+          },
+        }}
+        direction="row"
+        alignItems="baseline"
+        gap={2}
+      >
         {showCopied ? (
           <Typography variant="h5">Invitation link has been copied</Typography>
         ) : (

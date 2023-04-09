@@ -5,6 +5,7 @@ import { IconButton, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import RoomDeleteButton from '@/components/DashboardScene/Rooms/RoomDeleteButton';
+import RoomSessionsList from '@/components/DashboardScene/Rooms/RoomSessionsList';
 import RoomUpdateForm from '@/components/DashboardScene/Rooms/RoomUpdateForm';
 import PillContainer from '@/components/PillContainer';
 import { api } from '@/utils/api';
@@ -28,8 +29,11 @@ const RoomDetails: FC<Required<Props>> = (props) => {
         <>
           <RoomDeleteButton activeRoomId={activeRoom.id} />
           <RoomUpdateForm activeRoom={activeRoom} />
-          <RoomInvite inviteCode={activeRoom.inviteCode} />
-          <RoomJoin activeRoomId={activeRoom.id} />
+          <Stack direction="row" gap={2}>
+            <RoomInvite inviteCode={activeRoom.inviteCode} />
+            <RoomJoin activeRoomId={activeRoom.id} />
+          </Stack>
+          <RoomSessionsList activeRoomId={activeRoom.id} />
         </>
       )}
     </Stack>
