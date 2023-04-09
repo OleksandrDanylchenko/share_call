@@ -1,30 +1,12 @@
 import React, { FC } from 'react';
 
-import { ClassNames } from '@emotion/react';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import LoginIcon from '@mui/icons-material/Login';
-import { LoadingButton } from '@mui/lab';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  IconButton,
-  Stack,
-  Typography,
-} from '@mui/material';
-import {
-  bindDialog,
-  bindTrigger,
-  usePopupState,
-} from 'material-ui-popup-state/hooks';
+import { IconButton, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import { DashboardSceneType } from '@/components/DashboardScene';
+import RoomDeleteButton from '@/components/DashboardScene/Rooms/RoomDeleteButton';
 import RoomUpdateForm from '@/components/DashboardScene/Rooms/RoomUpdateForm';
-import { goToScene } from '@/components/DashboardScene/routing';
 import PillContainer from '@/components/PillContainer';
-import { blurBackgroundContainer, shadowBorder } from '@/styles/mixins';
 import { api } from '@/utils/api';
 import RoomInvite from 'components/RoomInvite';
 
@@ -44,94 +26,13 @@ const RoomDetails: FC<Required<Props>> = (props) => {
     <Stack flex={1} gap={4}>
       {activeRoom && (
         <>
-          <RoomDelete activeRoomId={activeRoom.id} />
+          <RoomDeleteButton activeRoomId={activeRoom.id} />
           <RoomUpdateForm activeRoom={activeRoom} />
           <RoomInvite inviteCode={activeRoom.inviteCode} />
           <RoomJoin activeRoomId={activeRoom.id} />
         </>
       )}
     </Stack>
-  );
-};
-
-const RoomDelete: FC<{ activeRoomId: string }> = (props) => {
-  const { activeRoomId } = props;
-
-  const router = useRouter();
-
-  const dialogState = usePopupState({ variant: 'dialog' });
-  const { close } = dialogState;
-
-  const apiUtils = api.useContext();
-  const { mutate: deleteRoom, isLoading: deletingRoom } =
-    api.rooms.deleteRoom.useMutation({
-      async onMutate() {
-        await apiUtils.rooms.getRoom.reset({ id: activeRoomId });
-        apiUtils.rooms.getRooms.setData(undefined, (prevRooms) =>
-          prevRooms?.filter(({ id: roomId }) => roomId !== activeRoomId),
-        );
-        await goToScene(router, DashboardSceneType.Rooms);
-        close();
-      },
-      async onSettled() {
-        await apiUtils.rooms.getRooms.invalidate();
-      },
-    });
-
-  return (
-    <>
-      <IconButton
-        css={(theme) =>
-          shadowBorder(theme, {
-            blurRadius: '10px',
-            color: theme.palette.error.main,
-          })
-        }
-        aria-label="Delete a room"
-        sx={{
-          position: 'absolute',
-          right: 20,
-          top: 20,
-        }}
-        {...bindTrigger(dialogState)}
-      >
-        <DeleteOutlineIcon fontSize="medium" />
-      </IconButton>
-      <ClassNames>
-        {({ css, theme }) => (
-          <Dialog
-            {...bindDialog(dialogState)}
-            aria-labelledby="room-delete-alert-title"
-            PaperProps={{
-              sx: { p: 3 },
-              className: css(
-                shadowBorder(theme, { color: theme.palette.error.light }),
-                blurBackgroundContainer,
-              ),
-            }}
-          >
-            <DialogTitle id="room-delete-alert-title">
-              Are you sure you want to delete this room?
-            </DialogTitle>
-            <DialogActions>
-              <Button color="inherit" disabled={deletingRoom} onClick={close}>
-                Nope!
-              </Button>
-              <LoadingButton
-                color="inherit"
-                css={(theme) =>
-                  shadowBorder(theme, { color: theme.palette.primary.main })
-                }
-                loading={deletingRoom}
-                onClick={() => deleteRoom({ id: activeRoomId })}
-              >
-                Yes, I&apos;m sure!
-              </LoadingButton>
-            </DialogActions>
-          </Dialog>
-        )}
-      </ClassNames>
-    </>
   );
 };
 
