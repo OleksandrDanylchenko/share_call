@@ -2,6 +2,7 @@ import React, { FC, Fragment } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PeopleIcon from '@mui/icons-material/People';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import {
@@ -18,7 +19,9 @@ import {
   Typography,
 } from '@mui/material';
 import { range } from 'lodash';
+import { DateTime } from 'luxon';
 import Image from 'next/image';
+import { useToggle } from 'usehooks-ts';
 
 import BlinkingCircle from '@/components/BlinkingCircle';
 import { AVATAR_SIZE } from '@/constants/index';
@@ -71,6 +74,11 @@ const RoomSessionsList: FC<Props> = (props) => {
   );
 };
 
+const dateFormat = {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+} as const;
+
 const ListSessionItem: FC<{
   session: RouterOutputs['rooms']['getRoomSession'][number];
   serialNumber: number;
@@ -80,45 +88,118 @@ const ListSessionItem: FC<{
     serialNumber,
   } = props;
 
+  const startedAtFormatted =
+    DateTime.fromJSDate(startedAt).toLocaleString(dateFormat);
+  const finishedAtFormatted = finishedAt
+    ? DateTime.fromJSDate(finishedAt).toLocaleString(dateFormat)
+    : null;
   const duration = useDuration(startedAt, finishedAt, 'full');
+
+  const totalParticipantsNum = participants.length;
+
+  const [showDetails, toggleShowDetails] = useToggle(true);
 
   return (
     <ListItemButton
-      sx={{ borderRadius: 6, gap: 1 }}
+      sx={{
+        borderRadius: 6,
+        gap: 1,
+        flexDirection: 'column',
+        alignItems: 'stretch',
+      }}
       css={(theme) => lightBackgroundContainer(theme)}
+      onClick={toggleShowDetails}
     >
-      <ListItemText classes={{}} sx={{ display: 'flex', alignItems: 'center' }}>
-        Call {serialNumber}
-        <Stack direction="row" gap={2} mt={0.5}>
-          <Stack direction="row" gap={1}>
-            <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
-            {duration}
+      <Stack
+        direction="row"
+        alignItems="center"
+        flex={1}
+        gap={1.5}
+        borderRadius="inherit"
+        ml={-1}
+        mr={-1}
+        pl={2}
+        pr={2}
+        css={(theme) =>
+          showDetails && lightBackgroundContainer(theme, { active: true })
+        }
+      >
+        <ListItemText>
+          Call {serialNumber} — {startedAtFormatted}
+          <Stack direction="row" gap={2} mt={0.5}>
+            <Stack direction="row" gap={1}>
+              <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
+              {duration}
+            </Stack>
+            <Stack direction="row" gap={1}>
+              <PeopleIcon fontSize="small" sx={{ mt: 0.1 }} />
+              {participants.length}
+            </Stack>
+            <Stack direction="row" gap={1}>
+              <TextSnippetIcon fontSize="small" sx={{ mt: 0.1 }} />
+              ??
+            </Stack>
           </Stack>
-          <Stack direction="row" gap={1}>
-            <PeopleIcon fontSize="small" sx={{ mt: 0.1 }} />
-            {participants.length}
+        </ListItemText>
+        {!showDetails && (
+          <AvatarGroup max={5}>
+            {participants.map(({ user: { id, name, image } }) => (
+              <Avatar key={id}>
+                <Image
+                  alt={name!}
+                  src={image!}
+                  width={AVATAR_SIZE}
+                  height={AVATAR_SIZE}
+                  quality={80}
+                  loader={getImageLoader(image!)}
+                />
+              </Avatar>
+            ))}
+          </AvatarGroup>
+        )}
+
+        {!finishedAt && <BlinkingCircle />}
+        <ArrowForwardIosIcon
+          sx={{ transform: `rotate(${showDetails ? '90deg' : 0})` }}
+        />
+      </Stack>
+      {showDetails && (
+        <Stack direction="row" gap={4}>
+          <Stack gap={1}>
+            <Typography>Started at: {startedAtFormatted}</Typography>
+            <Typography
+              color={finishedAtFormatted ? 'inherit' : 'warning.main'}
+            >
+              Finished at: {finishedAtFormatted || 'In Progress'}
+            </Typography>
+            <Typography>Duration: {duration}</Typography>
           </Stack>
-          <Stack direction="row" gap={1}>
-            <TextSnippetIcon fontSize="small" sx={{ mt: 0.1 }} />
-            ??
+          <Stack gap={1}>
+            <Typography>
+              Total participants number: {totalParticipantsNum}
+            </Typography>
+            {!finishedAt && (
+              <Typography>
+                Active participants number: {totalParticipantsNum}
+              </Typography>
+            )}
+            <AvatarGroup max={5}>
+              {participants.map(({ user: { id, name, image } }) => (
+                <Avatar key={id}>
+                  <Image
+                    alt={name!}
+                    src={image!}
+                    width={AVATAR_SIZE}
+                    height={AVATAR_SIZE}
+                    quality={80}
+                    loader={getImageLoader(image!)}
+                  />
+                </Avatar>
+              ))}
+            </AvatarGroup>
           </Stack>
         </Stack>
-      </ListItemText>
-      <AvatarGroup max={5}>
-        {participants.map(({ user: { id, name, image } }) => (
-          <Avatar key={id}>
-            <Image
-              alt={name!}
-              src={image!}
-              width={AVATAR_SIZE}
-              height={AVATAR_SIZE}
-              quality={80}
-              loader={getImageLoader(image!)}
-            />
-          </Avatar>
-        ))}
-      </AvatarGroup>
-      {!finishedAt && <BlinkingCircle />}
+      )}
     </ListItemButton>
   );
 };
