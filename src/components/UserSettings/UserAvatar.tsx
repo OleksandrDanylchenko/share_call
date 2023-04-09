@@ -3,15 +3,15 @@ import React, { FC } from 'react';
 import { ClassNames } from '@emotion/react';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { Box, css, Drawer, Skeleton, Tooltip } from '@mui/material';
-import { uploadcareLoader } from '@uploadcare/nextjs-loader';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useToggle } from 'usehooks-ts';
 
 import AvatarEditor from '@/components/AvatarEditor';
 import Dimmer from '@/components/Dimmer';
-import { AVATAR_SIZE, UPLOADCARE_CDN_URL } from '@/constants/index';
+import { AVATAR_SIZE } from '@/constants/index';
 import { blurBackgroundContainer, shadowBorder } from '@/styles/mixins';
+import { getImageLoader } from '@/utils/files';
 
 export const UserAvatarSetting: FC = () => {
   const { status, data: session } = useSession();
@@ -50,11 +50,7 @@ export const UserAvatarSetting: FC = () => {
                 width={AVATAR_SIZE}
                 height={AVATAR_SIZE}
                 quality={80}
-                loader={
-                  sessionImage.includes(UPLOADCARE_CDN_URL)
-                    ? uploadcareLoader // Use uploadcore for custom uploaded images
-                    : undefined
-                }
+                loader={getImageLoader(sessionImage)}
               />
             </Dimmer>
           </Tooltip>

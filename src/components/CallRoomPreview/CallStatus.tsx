@@ -2,13 +2,13 @@ import React, { FC, ReactElement } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import { Avatar, AvatarGroup, Stack, Typography } from '@mui/material';
-import { uploadcareLoader } from '@uploadcare/nextjs-loader';
 import Image from 'next/image';
 
 import BlinkingCircle from '@/components/BlinkingCircle';
-import { AVATAR_SIZE, UPLOADCARE_CDN_URL } from '@/constants/index';
+import { AVATAR_SIZE } from '@/constants/index';
 import { lightBackgroundContainer } from '@/styles/mixins';
 import { RouterOutputs } from '@/utils/api';
+import { getImageLoader } from '@/utils/files';
 
 interface Props {
   targetRoom: RouterOutputs['rooms']['getRoom'];
@@ -53,11 +53,7 @@ const CallStatus: FC<Props> = (props) => {
               width={AVATAR_SIZE}
               height={AVATAR_SIZE}
               quality={80}
-              loader={
-                image!.includes(UPLOADCARE_CDN_URL)
-                  ? uploadcareLoader // Use uploadcore for custom uploaded images
-                  : undefined
-              }
+              loader={getImageLoader(image!)}
             />
           </Avatar>
         ))}

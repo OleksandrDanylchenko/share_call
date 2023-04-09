@@ -1,3 +1,7 @@
+import { uploadcareLoader } from '@uploadcare/nextjs-loader';
+
+import { UPLOADCARE_CDN_URL } from '@/constants/index';
+
 /**
  * Inspired with https://uploadcare.com/docs/uploads/file-uploader/#upload-an-image-from-base64
  */
@@ -12,3 +16,10 @@ export const dataURLtoFile = (dataUrl: string, filename: string): File => {
   }
   return new File([u8arr], filename, { type: mime });
 };
+
+export const getImageLoader = (
+  src?: string,
+): typeof uploadcareLoader | undefined =>
+  src?.includes(UPLOADCARE_CDN_URL)
+    ? uploadcareLoader // Use uploadcore for custom uploaded images
+    : undefined;

@@ -18,11 +18,10 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { uploadcareLoader } from '@uploadcare/nextjs-loader';
 import Image from 'next/image';
 import { useToggle } from 'usehooks-ts';
 
-import { AVATAR_SIZE, UPLOADCARE_CDN_URL } from '@/constants/index';
+import { AVATAR_SIZE } from '@/constants/index';
 import {
   blurBackgroundContainer,
   fullHeight,
@@ -30,6 +29,7 @@ import {
   shadowBorder,
 } from '@/styles/mixins';
 import { api } from '@/utils/api';
+import { getImageLoader } from '@/utils/files';
 
 interface Props {
   roomId: string;
@@ -106,11 +106,7 @@ const ParticipantsSidebarInfo: FC<Props> = (props) => {
                                       width={AVATAR_SIZE}
                                       height={AVATAR_SIZE}
                                       quality={80}
-                                      loader={
-                                        image!.includes(UPLOADCARE_CDN_URL)
-                                          ? uploadcareLoader // Use uploadcore for custom uploaded images
-                                          : undefined
-                                      }
+                                      loader={getImageLoader(image!)}
                                     />
                                   </Avatar>
                                 </ListItemAvatar>
