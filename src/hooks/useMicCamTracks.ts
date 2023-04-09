@@ -4,18 +4,18 @@ import useAsyncEffect from 'use-async-effect';
 
 import { audioConfig, videoConfig } from '@/constants/index';
 import { useDevices } from '@/hooks/useDevices';
-import { AgoraRTCErrorCode, DeviceTracksState } from '@/types/agora';
+import { AgoraRTCErrorCode, DeviceLocalTracksState } from '@/types/agora';
 
 export const useMicCamTracks = (): {
   isLoading: boolean;
-  tracks?: DeviceTracksState;
+  tracks?: DeviceLocalTracksState;
   errorCode?: AgoraRTCErrorCode;
 } => {
   const localTracksRequested = useRef(false);
 
   const [isLoading, setLoading] = useState(true);
 
-  const [localTracks, setLocalTracks] = useState<DeviceTracksState>();
+  const [localTracks, setLocalTracks] = useState<DeviceLocalTracksState>();
   const [errorCode, setErrorCode] = useState<AgoraRTCErrorCode>();
 
   const { devices } = useDevices();
