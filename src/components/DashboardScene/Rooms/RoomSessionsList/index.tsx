@@ -1,6 +1,7 @@
 import React, { FC, Fragment } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
+import { ClassNames } from '@emotion/react';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PeopleIcon from '@mui/icons-material/People';
@@ -16,16 +17,11 @@ import {
   ListItemText,
   Skeleton,
   Stack,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { range } from 'lodash';
 import { DateTime } from 'luxon';
-import {
-  bindHover,
-  bindPopover,
-  usePopupState,
-} from 'material-ui-popup-state/hooks';
-import HoverPopover from 'material-ui-popup-state/HoverPopover';
 import Image from 'next/image';
 import { useToggle } from 'usehooks-ts';
 
@@ -103,7 +99,7 @@ const ListSessionItem: FC<{
 
   const totalParticipantsNum = participants.length;
 
-  const [showDetails, toggleShowDetails] = useToggle(true);
+  const [showDetails, toggleShowDetails] = useToggle(false);
 
   return (
     <ListItemButton
@@ -185,62 +181,61 @@ const ParticipantsList: FC<{
   participants: RouterOutputs['rooms']['getRoomSession'][number]['participants'];
 }> = (props) => {
   const { participants } = props;
-
-  const popoverState = usePopupState({ variant: 'popover' });
-
   return (
-    <>
-      <AvatarGroup
-        {...bindHover(popoverState)}
-        max={5}
-        sx={{ borderRadius: 6 }}
-        css={(theme) => lightBackgroundContainer(theme, { active: false })}
-      >
-        {participants.map(({ user: { id, name, image } }) => (
-          <Avatar key={id}>
-            <Image
-              alt={name!}
-              src={image!}
-              width={AVATAR_SIZE}
-              height={AVATAR_SIZE}
-              quality={80}
-              loader={getImageLoader(image!)}
-            />
-          </Avatar>
-        ))}
-      </AvatarGroup>
-      <HoverPopover
-        {...bindPopover(popoverState)}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <List>
-          {participants.map(({ user: { id, name, email, image } }) => (
-            <ListItem key={id}>
-              <ListItemAvatar>
-                <Avatar>
-                  <Image
-                    alt={name!}
-                    src={image!}
-                    width={AVATAR_SIZE}
-                    height={AVATAR_SIZE}
-                    quality={80}
-                    loader={getImageLoader(image!)}
-                  />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={name} secondary={email} />
-            </ListItem>
-          ))}
-        </List>
-      </HoverPopover>
-    </>
+    <ClassNames>
+      {({ css, theme }) => (
+        <Tooltip
+          classes={{
+            tooltip: css`
+              background-color: ${theme.palette.background.paper};
+              border-radius: ${theme.spacing(3)};
+              min-width: ${theme.spacing(45)};
+            `,
+          }}
+          placement="right-start"
+          title={
+            <List>
+              {participants.map(({ user: { id, name, email, image } }) => (
+                <ListItem key={id}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <Image
+                        alt={name!}
+                        src={image!}
+                        width={AVATAR_SIZE}
+                        height={AVATAR_SIZE}
+                        quality={80}
+                        loader={getImageLoader(image!)}
+                      />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={name} secondary={email} />
+                </ListItem>
+              ))}
+            </List>
+          }
+        >
+          <AvatarGroup
+            max={5}
+            sx={{ borderRadius: 6 }}
+            css={(theme) => lightBackgroundContainer(theme, { active: false })}
+          >
+            {participants.map(({ user: { id, name, image } }) => (
+              <Avatar key={id}>
+                <Image
+                  alt={name!}
+                  src={image!}
+                  width={AVATAR_SIZE}
+                  height={AVATAR_SIZE}
+                  quality={80}
+                  loader={getImageLoader(image!)}
+                />
+              </Avatar>
+            ))}
+          </AvatarGroup>
+        </Tooltip>
+      )}
+    </ClassNames>
   );
 };
 
