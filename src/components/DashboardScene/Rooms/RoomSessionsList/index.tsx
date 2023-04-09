@@ -1,11 +1,11 @@
 import React, { FC, Fragment } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
-import { ClassNames } from '@emotion/react';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PeopleIcon from '@mui/icons-material/People';
 import {
+  Avatar,
+  AvatarGroup,
   Box,
   Divider,
   List,
@@ -17,15 +17,18 @@ import {
   Typography,
 } from '@mui/material';
 import { range } from 'lodash';
+import Image from 'next/image';
 
+import BlinkingCircle from '@/components/BlinkingCircle';
+import { AVATAR_SIZE } from '@/constants/index';
 import { useDuration } from '@/hooks/useDuration';
 import {
   fullHeight,
   fullWidth,
   lightBackgroundContainer,
-  lineClamp,
 } from '@/styles/mixins';
 import { api, RouterOutputs } from '@/utils/api';
+import { getImageLoader } from '@/utils/files';
 
 interface Props {
   activeRoomId: string;
@@ -76,37 +79,41 @@ const ListSessionItem: FC<{
     serialNumber,
   } = props;
 
-  const duration = useDuration(startedAt, finishedAt);
-  const participantsCount = participants.length;
-
-  console.log({ participants });
+  const duration = useDuration(startedAt, finishedAt, 'full');
 
   return (
     <ListItemButton
-      sx={{ borderRadius: 6, gap: 1.45 }}
+      sx={{ borderRadius: 6, gap: 1 }}
       css={(theme) => lightBackgroundContainer(theme)}
     >
-      <ClassNames>
-        {({ css }) => (
-          <ListItemText
-            classes={{}}
-            sx={{ display: 'flex', alignItems: 'center' }}
-          >
-            Call {serialNumber}
-            <Stack direction="row" gap={1}>
-              <Stack direction="row" gap={1} mt={0.5}>
-                <AccessTimeFilledIcon fontSize="small" />
-                {duration}
-              </Stack>
-              <Stack direction="row" gap={1} mt={0.5}>
-                <PeopleIcon fontSize="small" />
-                {participantsCount}
-              </Stack>
-            </Stack>
-          </ListItemText>
-        )}
-      </ClassNames>
-      <ArrowForwardIosIcon />
+      <ListItemText classes={{}} sx={{ display: 'flex', alignItems: 'center' }}>
+        Call {serialNumber}
+        <Stack direction="row" gap={1}>
+          <Stack direction="row" gap={1} mt={0.5}>
+            <AccessTimeFilledIcon fontSize="small" />
+            {duration}
+          </Stack>
+          <Stack direction="row" gap={1} mt={0.5}>
+            <PeopleIcon fontSize="small" />
+            {participants.length}
+          </Stack>
+        </Stack>
+      </ListItemText>
+      <AvatarGroup max={5}>
+        {participants.map(({ user: { id, name, image } }) => (
+          <Avatar key={id}>
+            <Image
+              alt={name!}
+              src={image!}
+              width={AVATAR_SIZE}
+              height={AVATAR_SIZE}
+              quality={80}
+              loader={getImageLoader(image!)}
+            />
+          </Avatar>
+        ))}
+      </AvatarGroup>
+      {!finishedAt && <BlinkingCircle />}
     </ListItemButton>
   );
 };

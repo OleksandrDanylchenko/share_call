@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react';
 
 import { DateTime } from 'luxon';
 
-export const useDuration = (start: Date, end?: Date | null): string => {
+export const useDuration = (
+  start: Date,
+  end?: Date | null,
+  formatting: 'auto' | 'full' = 'auto',
+): string => {
   const [duration, setDuration] = useState('');
   useEffect(() => {
     const updateDuration = (): void => {
@@ -10,7 +14,9 @@ export const useDuration = (start: Date, end?: Date | null): string => {
       const endDate = end ? DateTime.fromJSDate(end) : DateTime.local();
       const duration = endDate.diff(startDate, ['hours', 'minutes', 'seconds']);
       setDuration(
-        duration.toFormat(duration.minutes > 1 ? 'hh:mm' : 'hh:mm:ss'),
+        duration.toFormat(
+          formatting === 'auto' && duration.minutes > 1 ? 'hh:mm' : 'hh:mm:ss',
+        ),
       );
     };
     updateDuration();
@@ -19,7 +25,7 @@ export const useDuration = (start: Date, end?: Date | null): string => {
 
     const minuteInterval = setInterval(updateDuration, 1000);
     return () => clearInterval(minuteInterval);
-  }, [start, end]);
+  }, [start, end, formatting]);
 
   return duration;
 };
