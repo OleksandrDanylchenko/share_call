@@ -17,6 +17,7 @@ import {
 } from '@/store/callTracks';
 import { fullParent, fullWidth } from '@/styles/mixins';
 import { AgoraRTCErrorCode, DeviceType } from '@/types/agora';
+import { getSomeAgoraTracksLive } from '@/utils/tracks';
 
 interface Props {
   user: User;
@@ -44,7 +45,13 @@ const CallMediaPreview: FC<Props> = (props) => {
   const userTracks = useCallTracks((state) => selectTracks(state, user!.id));
 
   useEffect(() => {
-    if (tracks && !userTracks) addTracks(user.id, tracks);
+    const isTracksLive = getSomeAgoraTracksLive(
+      tracks?.camera?.track,
+      tracks?.microphone?.track,
+    );
+    if (tracks && isTracksLive && !userTracks) {
+      addTracks(user.id, tracks);
+    }
   }, [addTracks, tracks, userTracks, user]);
 
   useEffect(() => {
