@@ -34,10 +34,10 @@ export const roomsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input, ctx }) => {
-      const { id } = input;
+      const { id: roomId } = input;
 
       const room = await ctx.prisma.room.findUnique({
-        where: { id },
+        where: { id: roomId },
         include: {
           sessions: {
             orderBy: { startedAt: 'desc' },
@@ -70,6 +70,43 @@ export const roomsRouter = createTRPCRouter({
         ...roomProps,
         lastSession: last(sessions),
       };
+    }),
+  getRoomSession: protectedProcedure
+    .input(
+      z.object({
+        id: z
+          .string()
+          .cuid()
+          .refine(
+            async (id) => (await prisma.room.count({ where: { id } })) !== 0,
+            'The room for the provided id does not exist',
+          ),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { id: roomId } = input;
+      return ctx.prisma.roomSession.findMany({
+        where: { roomId },
+        orderBy: { startedAt: 'desc' },
+        select: {
+          id: true,
+          startedAt: true,
+          finishedAt: true,
+          participants: {
+            where: { active: true },
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      });
     }),
   createRoom: protectedProcedure
     .input(
