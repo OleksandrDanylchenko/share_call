@@ -53,7 +53,11 @@ const Call: FC<Props> = (props) => {
   const removeTracks = useCallTracks.use.removeTracks();
 
   const hasJoinRequested = useRef(false);
-  const { isLoading: isLoadingRtcClient, client: rtc } = useAgoraRtcClient();
+  const {
+    isLoading: isLoadingRtcClient,
+    client: rtc,
+    destroy: destroyRtc,
+  } = useAgoraRtcClient();
 
   useAsyncEffect(async () => {
     if (!rtc || hasJoinRequested.current) return;
@@ -63,7 +67,8 @@ const Call: FC<Props> = (props) => {
       throw new Error('Missing Agora App ID!');
     }
 
-    // await rtc.join(appId, 'test-channel', null, user.id);
+    hasJoinRequested.current = true;
+    await rtc.join(appId, 'test-channel', null, user.id);
 
     const { microphone, camera } = userTracks;
     // await Promise.all([
@@ -112,29 +117,13 @@ const Call: FC<Props> = (props) => {
 
   useEffect(() => {
     const handleRouteChange = async (): Promise<void> => {
-      router.reload(); // TODO Remove hack upon https://agora-ticket.agora.io/issue/c8908e2cea5445cfaadbbcff6061ccf5 resolution
-
-      if (rtc.connectionState === 'CONNECTED') {
-        await rtc.leave();
-      } else {
-        setTimeout(() => rtc.leave(), 200);
-      }
-
-      await rtc.leave();
+      await destroyRtc();
       await disconnectParticipant({ roomId });
     };
 
     router.events.on('routeChangeStart', handleRouteChange);
     return () => router.events.off('routeChangeStart', handleRouteChange);
-  }, [
-    disconnectParticipant,
-    removeTracks,
-    roomId,
-    router,
-    router.events,
-    rtc,
-    user.id,
-  ]);
+  }, [destroyRtc, disconnectParticipant, roomId, router.events]);
 
   useEventListener('beforeunload', () => disconnectParticipant({ roomId }));
 
