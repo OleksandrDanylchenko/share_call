@@ -36,8 +36,13 @@ const CallRoomPreview: FC<Props> = (props) => {
     error: targetRoomError,
   } = api.rooms.getRoom.useQuery({ id: roomId }, { retry: 1 });
 
+  const apiUtils = api.useContext();
   const { mutateAsync: connectParticipant } =
-    api.rooms.connectParticipant.useMutation();
+    api.rooms.connectParticipant.useMutation({
+      async onSuccess() {
+        await apiUtils.rooms.getRoom.invalidate({ id: roomId });
+      },
+    });
 
   const handleJoinRoomClick = async (): Promise<boolean> => {
     await connectParticipant({ roomId });
