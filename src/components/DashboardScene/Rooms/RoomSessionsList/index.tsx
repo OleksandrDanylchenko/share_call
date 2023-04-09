@@ -4,7 +4,6 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PeopleIcon from '@mui/icons-material/People';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import {
   Avatar,
   AvatarGroup,
@@ -12,6 +11,7 @@ import {
   Divider,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemButton,
   ListItemText,
   Skeleton,
@@ -20,6 +20,12 @@ import {
 } from '@mui/material';
 import { range } from 'lodash';
 import { DateTime } from 'luxon';
+import {
+  bindHover,
+  bindPopover,
+  usePopupState,
+} from 'material-ui-popup-state/hooks';
+import HoverPopover from 'material-ui-popup-state/HoverPopover';
 import Image from 'next/image';
 import { useToggle } from 'usehooks-ts';
 
@@ -135,10 +141,10 @@ const ListSessionItem: FC<{
               <PeopleIcon fontSize="small" sx={{ mt: 0.1 }} />
               {participants.length}
             </Stack>
-            <Stack direction="row" gap={1}>
-              <TextSnippetIcon fontSize="small" sx={{ mt: 0.1 }} />
-              ??
-            </Stack>
+            {/*<Stack direction="row" gap={1}>*/}
+            {/*  <TextSnippetIcon fontSize="small" sx={{ mt: 0.1 }} />*/}
+            {/*  ??*/}
+            {/*</Stack>*/}
           </Stack>
         </ListItemText>
         {!showDetails && <ParticipantsList participants={participants} />}
@@ -148,7 +154,7 @@ const ListSessionItem: FC<{
         />
       </Stack>
       {showDetails && (
-        <Stack direction="row" gap={4}>
+        <Stack direction="row" gap={6}>
           <Stack gap={1}>
             <Typography>Started at: {startedAtFormatted}</Typography>
             <Typography
@@ -179,25 +185,62 @@ const ParticipantsList: FC<{
   participants: RouterOutputs['rooms']['getRoomSession'][number]['participants'];
 }> = (props) => {
   const { participants } = props;
+
+  const popoverState = usePopupState({ variant: 'popover' });
+
   return (
-    <AvatarGroup
-      max={5}
-      sx={{ borderRadius: 6 }}
-      css={(theme) => lightBackgroundContainer(theme, { active: false })}
-    >
-      {participants.map(({ user: { id, name, image } }) => (
-        <Avatar key={id}>
-          <Image
-            alt={name!}
-            src={image!}
-            width={AVATAR_SIZE}
-            height={AVATAR_SIZE}
-            quality={80}
-            loader={getImageLoader(image!)}
-          />
-        </Avatar>
-      ))}
-    </AvatarGroup>
+    <>
+      <AvatarGroup
+        {...bindHover(popoverState)}
+        max={5}
+        sx={{ borderRadius: 6 }}
+        css={(theme) => lightBackgroundContainer(theme, { active: false })}
+      >
+        {participants.map(({ user: { id, name, image } }) => (
+          <Avatar key={id}>
+            <Image
+              alt={name!}
+              src={image!}
+              width={AVATAR_SIZE}
+              height={AVATAR_SIZE}
+              quality={80}
+              loader={getImageLoader(image!)}
+            />
+          </Avatar>
+        ))}
+      </AvatarGroup>
+      <HoverPopover
+        {...bindPopover(popoverState)}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <List>
+          {participants.map(({ user: { id, name, email, image } }) => (
+            <ListItem key={id}>
+              <ListItemAvatar>
+                <Avatar>
+                  <Image
+                    alt={name!}
+                    src={image!}
+                    width={AVATAR_SIZE}
+                    height={AVATAR_SIZE}
+                    quality={80}
+                    loader={getImageLoader(image!)}
+                  />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={name} secondary={email} />
+            </ListItem>
+          ))}
+        </List>
+      </HoverPopover>
+    </>
   );
 };
 
