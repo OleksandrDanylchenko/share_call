@@ -49,7 +49,7 @@ const CallRoomPreview: FC<Props> = (props) => {
     return router.push(`/call/${roomId}`);
   };
 
-  const handleBackClick = useGoPrevRoute();
+  const handleBackClick = useGoPrevRoute('/', ['/call']);
 
   return (
     <Stack

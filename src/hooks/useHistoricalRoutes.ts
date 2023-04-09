@@ -35,11 +35,19 @@ export const useHistoricalRoutes = (): { prev: string; current: string } => {
   return { prev, current };
 };
 
-export const useGoPrevRoute = (fallbackUrl = '/'): (() => void) => {
+export const useGoPrevRoute = (
+  fallbackUrl = '/',
+  preventRoutes?: string[],
+): (() => void) => {
   const router = useRouter();
 
   const { prev, current } = useHistoricalRoutes();
-  const prevRoutePath = prev && prev !== current ? prev : fallbackUrl;
+  const prevRoutePath =
+    prev &&
+    prev !== current &&
+    !preventRoutes?.some((preventRoute) => prev.includes(preventRoute))
+      ? prev
+      : fallbackUrl;
 
   return () => router.push(prevRoutePath);
 };
