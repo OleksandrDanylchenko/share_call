@@ -29,7 +29,7 @@ model Room {
 model RoomSession {
     id           String               @id @default(cuid())
     roomId       String               @map("room_id")
-    room         Room                 @relation(fields: [roomId], references: [id])
+    room         Room                 @relation(fields: [roomId], references: [id], onDelete: Cascade)
     startedAt    DateTime             @default(now()) @map("started_at")
     finishedAt   DateTime?            @map("finished_at")
     participants SessionParticipant[]
@@ -41,7 +41,7 @@ model SessionParticipant {
     userId    String      @map("user_id")
     user      User        @relation(fields: [userId], references: [id])
     sessionId String      @map("session_id")
-    session   RoomSession @relation(fields: [sessionId], references: [id])
+    session   RoomSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
     role      SessionRole
     active    Boolean     @default(false)
 
