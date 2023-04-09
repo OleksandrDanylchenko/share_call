@@ -93,7 +93,6 @@ export const roomsRouter = createTRPCRouter({
           startedAt: true,
           finishedAt: true,
           participants: {
-            where: { active: true },
             select: {
               user: {
                 select: {

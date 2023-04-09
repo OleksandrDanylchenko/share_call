@@ -2,6 +2,9 @@ import React, { FC, Fragment } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import { ClassNames } from '@emotion/react';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import PeopleIcon from '@mui/icons-material/People';
 import {
   Box,
   Divider,
@@ -15,6 +18,7 @@ import {
 } from '@mui/material';
 import { range } from 'lodash';
 
+import { useDuration } from '@/hooks/useDuration';
 import {
   fullHeight,
   fullWidth,
@@ -46,7 +50,10 @@ const RoomSessionsList: FC<Props> = (props) => {
                 <List sx={{ height, overflowY: 'auto' }}>
                   {sessions?.map((session, index, arr) => (
                     <Fragment key={session.id}>
-                      <ListSessionItem session={session} />
+                      <ListSessionItem
+                        session={session}
+                        serialNumber={arr.length - index - 1} // Count from the end
+                      />
                       {index !== arr.length - 1 && <ListDivider />}
                     </Fragment>
                   ))}
@@ -62,29 +69,44 @@ const RoomSessionsList: FC<Props> = (props) => {
 
 const ListSessionItem: FC<{
   session: RouterOutputs['rooms']['getRoomSession'][number];
+  serialNumber: number;
 }> = (props) => {
-  const { session } = props;
+  const {
+    session: { startedAt, finishedAt, participants },
+    serialNumber,
+  } = props;
+
+  const duration = useDuration(startedAt, finishedAt);
+  const participantsCount = participants.length;
+
+  console.log({ participants });
 
   return (
     <ListItemButton
-      sx={{ borderRadius: 6 }}
+      sx={{ borderRadius: 6, gap: 1.45 }}
       css={(theme) => lightBackgroundContainer(theme)}
     >
       <ClassNames>
         {({ css }) => (
           <ListItemText
-            classes={{
-              primary: css`
-                ${lineClamp()}
-              `,
-              secondary: css`
-                ${lineClamp(3)}
-              `,
-            }}
-            primary={'Hello'}
-          />
+            classes={{}}
+            sx={{ display: 'flex', alignItems: 'center' }}
+          >
+            Call {serialNumber}
+            <Stack direction="row" gap={1}>
+              <Stack direction="row" gap={1} mt={0.5}>
+                <AccessTimeFilledIcon fontSize="small" />
+                {duration}
+              </Stack>
+              <Stack direction="row" gap={1} mt={0.5}>
+                <PeopleIcon fontSize="small" />
+                {participantsCount}
+              </Stack>
+            </Stack>
+          </ListItemText>
         )}
       </ClassNames>
+      <ArrowForwardIosIcon />
     </ListItemButton>
   );
 };
