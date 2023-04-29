@@ -38,4 +38,28 @@ export const notesRouter = createTRPCRouter({
         },
       });
     }),
+  createNote: protectedProcedure
+    .input(
+      z.object({
+        content: z
+          .string()
+          .min(1, 'Content should be at least 1 character long'),
+        roomId: z.string().cuid(),
+        roomSessionId: z.string().cuid().optional(),
+      }),
+    )
+    .mutation(({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+      const { content, roomId, roomSessionId } = input;
+
+      return ctx.prisma.note.create({
+        data: {
+          content,
+          roomId,
+          roomSessionId,
+          creatorId: userId,
+        },
+        select: { id: true },
+      });
+    }),
 });
