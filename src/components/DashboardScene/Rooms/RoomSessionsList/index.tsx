@@ -93,7 +93,7 @@ const ListSessionItem: FC<{
     serialNumber,
   } = props;
 
-  const [showDetails, setShowDetails] = useState(activeSessionId === sessionId);
+  const showDetails = activeSessionId === sessionId;
   const listItemRef = useRef<HTMLDivElement | null>(null);
 
   const startedAtInstance = DateTime.fromJSDate(startedAt);
@@ -113,8 +113,6 @@ const ListSessionItem: FC<{
 
   const handleToggleShowDetails = async (): Promise<void> => {
     const nextShowDetails = !showDetails;
-    setShowDetails(nextShowDetails);
-
     await router.replace(
       {
         query: {

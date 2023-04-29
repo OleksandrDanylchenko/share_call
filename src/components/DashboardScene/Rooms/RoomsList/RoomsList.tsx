@@ -5,7 +5,6 @@ import { ClassNames } from '@emotion/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import SearchIcon from '@mui/icons-material/Search';
 import {
-  alpha,
   Box,
   Divider,
   InputAdornment,
@@ -37,7 +36,9 @@ const RoomsList: FC<Props> = (props) => {
 
   const router = useRouter();
 
-  const [activeRoomItem, setActiveRoomItem] = useState<any>();
+  const [activeRoomItem, setActiveRoomItem] = useState<HTMLDivElement | null>(
+    null,
+  );
   useEffect(() => {
     if (activeRoomItem && !checkIsElementInView(activeRoomItem)) {
       activeRoomItem?.scrollIntoView({ behavior: 'smooth' });
