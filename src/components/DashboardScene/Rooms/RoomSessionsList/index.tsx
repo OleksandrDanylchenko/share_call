@@ -1,4 +1,4 @@
-import { FC, Fragment, MouseEvent, useState } from 'react';
+import { FC, Fragment, MouseEvent, useRef, useState } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -24,6 +24,7 @@ import { range } from 'lodash';
 import { DateTime } from 'luxon';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useEffectOnce } from 'usehooks-ts';
 
 import BlinkingCircle from '@/components/BlinkingCircle';
 import { AVATAR_SIZE } from '@/constants/index';
@@ -76,6 +77,7 @@ const ListSessionItem: FC<{
   serialNumber: number;
 }> = (props) => {
   const router = useRouter();
+  const activeSessionId = router.query.session_id as string | undefined;
 
   const {
     session: {
@@ -88,7 +90,8 @@ const ListSessionItem: FC<{
     serialNumber,
   } = props;
 
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(activeSessionId === sessionId);
+  const listItemRef = useRef<HTMLDivElement | null>(null);
 
   const startedAtInstance = DateTime.fromJSDate(startedAt);
   const finishedAtInstance = finishedAt
@@ -96,6 +99,14 @@ const ListSessionItem: FC<{
     : undefined;
 
   const duration = useDuration(startedAtInstance, finishedAtInstance, 'full');
+
+  // Scroll to the active session item on first render
+  useEffectOnce(() => {
+    const { current: listItem } = listItemRef;
+    if (showDetails) {
+      listItem?.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
 
   const handleToggleShowDetails = async (): Promise<void> => {
     const nextShowDetails = !showDetails;
@@ -115,6 +126,7 @@ const ListSessionItem: FC<{
 
   return (
     <ListItemButton
+      ref={listItemRef}
       sx={{
         borderRadius: 6,
         gap: 1,

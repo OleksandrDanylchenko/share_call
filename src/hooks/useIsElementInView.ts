@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export const checkIsElementInView = <T extends HTMLElement>(
-  targetElement?: T,
+  targetElement?: T | null,
 ): boolean => {
   if (!targetElement) return false;
 
