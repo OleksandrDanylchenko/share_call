@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import DashboardCreateRoom from '@/components/DashboardScene/CreateRoom';
 import DashboardJoinCall from '@/components/DashboardScene/JoinCall';
+import DashboardNotes from '@/components/DashboardScene/Notes';
 import DashboardOptions from '@/components/DashboardScene/Options';
 import DashboardRooms from '@/components/DashboardScene/Rooms';
 import { fullParent } from '@/styles/mixins';
@@ -25,6 +26,8 @@ const DashboardScene: FC = () => {
     switch (sceneQuery) {
       case DashboardSceneType.Rooms:
         return <DashboardRooms />;
+      case DashboardSceneType.Notes:
+        return <DashboardNotes />;
       case DashboardSceneType.CreateRoom:
         return <DashboardCreateRoom />;
       case DashboardSceneType.JoinCall:

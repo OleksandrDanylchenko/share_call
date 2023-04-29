@@ -26,6 +26,9 @@ const Dashboard: FC = () => {
     await signOut({ redirect: false });
   };
 
+  const isContainerExpanded =
+    scene === DashboardSceneType.Rooms || scene === DashboardSceneType.Notes;
+
   const [animateDashboardParent] = useAutoAnimate();
   return (
     <Stack
@@ -39,11 +42,11 @@ const Dashboard: FC = () => {
       <Box
         css={blurBackgroundContainer}
         flex={1}
-        height={scene === DashboardSceneType.Rooms ? '95%' : '80%'}
+        height={isContainerExpanded ? '95%' : '80%'}
       >
         <DashboardScene />
       </Box>
-      {scene !== DashboardSceneType.Rooms && (
+      {!isContainerExpanded && (
         <Stack
           css={blurBackgroundContainer}
           position="relative"

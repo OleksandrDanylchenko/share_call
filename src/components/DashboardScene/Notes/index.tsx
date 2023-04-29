@@ -1,13 +1,10 @@
 import React, { FC, useMemo } from 'react';
 
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import { Button, Divider, IconButton, Stack, Typography } from '@mui/material';
+import { Button, Divider, Stack } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import { DashboardSceneType } from '@/components/DashboardScene';
-import RoomDetails from '@/components/DashboardScene/Rooms/RoomDetails';
+import { ChooseRoom, CreateRoom } from '@/components/DashboardScene/Rooms';
 import {
   RoomsList,
   RoomsListPlaceholder,
@@ -15,9 +12,9 @@ import {
 import { fullHeight, fullParent, fullWidth } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
-import { goToDashboardScene, goToDashboard } from '@/routing/index';
+import { goToDashboard } from '@/routing/index';
 
-const DashboardRooms: FC = () => {
+const DashboardNotes: FC = () => {
   const router = useRouter();
   const activeRoomId = router.query.room_id as string | undefined;
 
@@ -35,13 +32,13 @@ const DashboardRooms: FC = () => {
     ) : null;
   }, [activeRoomId, isLoading, rooms]);
 
-  const roomDetailsElement = useMemo(() => {
+  const roomNotesElement = useMemo(() => {
     if (!rooms || isLoading) {
       return null; // TODO Create placeholder or let the underlying components handle it?
     }
 
     if (activeRoomId) {
-      return <RoomDetails activeRoomId={activeRoomId} />;
+      return <h2>Here will be notes</h2>;
     }
 
     return rooms.length > 0 ? <ChooseRoom /> : <CreateRoom />;
@@ -70,37 +67,10 @@ const DashboardRooms: FC = () => {
             sx={{ height: '95%', alignSelf: 'center' }}
           />
         )}
-        {roomDetailsElement}
+        {roomNotesElement}
       </Stack>
     </Stack>
   );
 };
 
-export const ChooseRoom: FC = () => (
-  <Stack css={fullHeight} justifyContent="center" pl={8}>
-    <Stack alignItems="center" justifyContent="center">
-      <Typography variant="h2" fontSize="6rem">
-        Choose <br /> a room
-      </Typography>
-      <ArrowCircleLeftIcon sx={{ fontSize: '5rem' }} />
-    </Stack>
-  </Stack>
-);
-
-export const CreateRoom: FC = () => (
-  <Stack css={[fullWidth, fullHeight]} justifyContent="center" pl={8}>
-    <Stack alignItems="center" justifyContent="center">
-      <Typography variant="h2" fontSize="6rem">
-        Create <br /> a room
-      </Typography>
-      <IconButton
-        aria-label="Create a room"
-        onClick={() => goToDashboardScene(DashboardSceneType.CreateRoom)}
-      >
-        <AddCircleOutlineIcon sx={{ fontSize: '5rem' }} />
-      </IconButton>
-    </Stack>
-  </Stack>
-);
-
-export default DashboardRooms;
+export default DashboardNotes;
