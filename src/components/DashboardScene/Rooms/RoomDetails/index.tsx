@@ -24,7 +24,7 @@ const RoomDetails: FC<Required<Props>> = (props) => {
   );
 
   return (
-    <Stack flex={1} gap={4}>
+    <Stack flex={1} gap={4} overflow="auto">
       {activeRoom && (
         <>
           <RoomDeleteButton activeRoomId={activeRoom.id} />

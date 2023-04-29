@@ -56,7 +56,12 @@ const DashboardRooms: FC = () => {
       >
         Back to dashboard
       </Button>
-      <Stack css={[fullWidth, fullHeight]} direction="row" gap={3}>
+      <Stack
+        css={[fullWidth, fullHeight]}
+        direction="row"
+        gap={3}
+        overflow="hidden"
+      >
         {roomListElement}
         {activeRoomId && (
           <Divider

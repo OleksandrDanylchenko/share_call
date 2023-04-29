@@ -1,5 +1,4 @@
 import React, { FC, Fragment } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 
 import { ClassNames } from '@emotion/react';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -49,29 +48,23 @@ const RoomSessionsList: FC<Props> = (props) => {
   return (
     <Stack pl={1} gap={2} flex={1}>
       <Typography variant="h5">Calls history:</Typography>
-      <Box css={fullHeight}>
-        <AutoSizer disableWidth>
-          {({ height }) => (
-            <>
-              {isSessionsLoading ? (
-                <ListPlaceholder />
-              ) : (
-                <List sx={{ height, overflowY: 'auto' }}>
-                  {sessions?.map((session, index, arr) => (
-                    <Fragment key={session.id}>
-                      <ListSessionItem
-                        session={session}
-                        serialNumber={arr.length - index - 1} // Count from the end
-                      />
-                      {index !== arr.length - 1 && <ListDivider />}
-                    </Fragment>
-                  ))}
-                </List>
-              )}
-            </>
-          )}
-        </AutoSizer>
-      </Box>
+      <>
+        {isSessionsLoading ? (
+          <ListPlaceholder />
+        ) : (
+          <List>
+            {sessions?.map((session, index, arr) => (
+              <Fragment key={session.id}>
+                <ListSessionItem
+                  session={session}
+                  serialNumber={arr.length - index - 1} // Count from the end
+                />
+                {index !== arr.length - 1 && <ListDivider />}
+              </Fragment>
+            ))}
+          </List>
+        )}
+      </>
     </Stack>
   );
 };
@@ -151,12 +144,12 @@ const ListSessionItem: FC<{
         />
       </Stack>
       {showDetails && (
-        <Stack ml={-1} mr={-1} pl={2} pr={2} gap={3}>
+        <Stack ml={-1} mr={-1} pl={2} pr={2} gap={1}>
           <Stack
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            gap={5}
+            gap={4}
           >
             <CallTimeInfo
               startedAt={startedAtInstance}
@@ -164,6 +157,7 @@ const ListSessionItem: FC<{
             />
             <ParticipantsInfo participants={participants} />
           </Stack>
+          <NotesInfo />
         </Stack>
       )}
     </ListItemButton>
@@ -265,6 +259,10 @@ const ParticipantsList: FC<{
       )}
     </ClassNames>
   );
+};
+
+const NotesInfo: FC = () => {
+  return <Stack>Notes will be here!</Stack>;
 };
 
 const ListPlaceholder: FC = () => (
