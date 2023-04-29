@@ -39,10 +39,12 @@ const CallMediaPreview: FC<Props> = (props) => {
   const setTrackEnabled = useCallTracks.use.setTrackEnabled();
   const setTrackDevice = useCallTracks.use.setTrackDevice();
 
-  const { tracks, errorCode: tracksErrorCode } = useMicCamTracks();
-  const { devices } = useDevices();
-
   const userTracks = useCallTracks((state) => selectTracks(state, user!.id));
+
+  const { tracks, errorCode: tracksErrorCode } = useMicCamTracks({
+    skip: !!userTracks,
+  });
+  const { devices } = useDevices();
 
   useEffect(() => {
     const isTracksLive = getSomeAgoraTracksLive(
@@ -55,12 +57,12 @@ const CallMediaPreview: FC<Props> = (props) => {
   }, [addTracks, tracks, userTracks, user]);
 
   useEffect(() => {
-    if (tracks) {
+    if (tracks || userTracks) {
       onTracksReady();
     } else if (tracksErrorCode) {
       onTracksError(tracksErrorCode);
     }
-  }, [onTracksError, onTracksReady, tracks, tracksErrorCode]);
+  }, [onTracksError, onTracksReady, tracks, tracksErrorCode, userTracks]);
 
   const handleDeviceChange =
     (deviceType: DeviceType) =>

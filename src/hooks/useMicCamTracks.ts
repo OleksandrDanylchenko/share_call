@@ -6,11 +6,15 @@ import { audioConfig, videoConfig } from '@/constants/index';
 import { useDevices } from '@/hooks/useDevices';
 import { AgoraRTCErrorCode, DeviceLocalTracksState } from '@/types/agora';
 
-export const useMicCamTracks = (): {
+export const useMicCamTracks = (props: {
+  skip?: boolean;
+}): {
   isLoading: boolean;
   tracks?: DeviceLocalTracksState;
   errorCode?: AgoraRTCErrorCode;
 } => {
+  const { skip = false } = props;
+
   const localTracksRequested = useRef(false);
 
   const [isLoading, setLoading] = useState(true);
@@ -21,6 +25,8 @@ export const useMicCamTracks = (): {
   const { devices } = useDevices();
 
   useAsyncEffect(async () => {
+    if (skip) return;
+
     /**
      * Prevents the tracks from being requested multiple times
      * and having unreachable zombie tracks
