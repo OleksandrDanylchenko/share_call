@@ -1,3 +1,4 @@
+import { isUndefined, omitBy } from 'lodash';
 import { z } from 'zod';
 
 import { prisma } from '@/server/db';
@@ -61,5 +62,37 @@ export const notesRouter = createTRPCRouter({
         },
         select: { id: true },
       });
+    }),
+  updateNote: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        content: z.string(),
+      }),
+    )
+    .mutation(({ input, ctx }) => {
+      const { id, ...payload } = input;
+      const updatePayload = omitBy(payload, isUndefined);
+
+      return ctx.prisma.note.update({
+        where: { id },
+        data: updatePayload,
+        select: { id: true, content: true },
+      });
+    }),
+  deleteRoom: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ input, ctx }) => {
+      const { id: noteId } = input;
+      const userId = ctx.session.user.id;
+
+      const note = await ctx.prisma.note.findUnique({
+        where: { id: noteId },
+      });
+      if (note?.creatorId !== userId) {
+        throw new Error('You are not the creator of this room');
+      }
+
+      await ctx.prisma.room.delete({ where: { id: noteId } });
     }),
 });
