@@ -9,6 +9,8 @@ import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
 import { shadowBorder } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
 
+import { goToPreviewPage } from '@/routing/index';
+
 interface Props {
   roomId: string;
 }
@@ -17,8 +19,6 @@ const CallControls: FC<Props> = (props) => {
   const { roomId } = props;
 
   const { data: session } = useSession();
-
-  const router = useRouter();
 
   const microphoneState = useCallTracks((state) =>
     selectLocalTrackState(state, session!.user!.id, 'microphone'),
@@ -34,10 +34,6 @@ const CallControls: FC<Props> = (props) => {
         ? microphoneState?.enabled
         : cameraState?.enabled;
     setTrackEnabled(session!.user!.id, deviceType, !enabled);
-  };
-
-  const handleLeaveClick = (): void => {
-    router.push(`/preview/${roomId}`);
   };
 
   return (
@@ -73,7 +69,7 @@ const CallControls: FC<Props> = (props) => {
           right: (theme) => theme.spacing(2.5),
         }}
         color="inherit"
-        onClick={handleLeaveClick}
+        onClick={() => goToPreviewPage(roomId)}
       >
         <span>Leave the call</span>
       </Button>

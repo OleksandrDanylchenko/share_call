@@ -14,7 +14,7 @@ import { ObjectTyped } from 'object-typed';
 import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
-import { goToDashboard } from '@/routing/index';
+import { goToDashboard, goToPreviewPage } from '@/routing/index';
 
 interface JoinCallForm {
   inviteCode: string;
@@ -41,7 +41,7 @@ const DashboardJoinCall: FC = () => {
   useEffect(() => {
     if (inviteRoom) {
       const { id: roomId } = inviteRoom;
-      router.push(`/preview/${roomId}`);
+      goToPreviewPage(roomId);
     }
   }, [inviteRoom, router]);
 

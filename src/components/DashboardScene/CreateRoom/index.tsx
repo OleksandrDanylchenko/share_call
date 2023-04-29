@@ -13,7 +13,11 @@ import { DashboardSceneType } from '@/components/DashboardScene';
 import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
-import { goToDashboardScene, goToDashboard } from '@/routing/index';
+import {
+  goToDashboardScene,
+  goToDashboard,
+  goToPreviewPage,
+} from '@/routing/index';
 
 const DashboardCreateRoom: FC = () => {
   const router = useRouter();
@@ -33,7 +37,7 @@ const DashboardCreateRoom: FC = () => {
 
   const handleCreateAndJoinClick = async (): Promise<boolean> => {
     const { id: newRoomId } = await createRoom(getValues());
-    return router.push(`/preview/${newRoomId}`);
+    return goToPreviewPage(newRoomId);
   };
 
   return (

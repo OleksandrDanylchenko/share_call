@@ -12,3 +12,6 @@ export const goToDashboardScene = (
   Router.push({ query: { scene, ...queryOptions } }, undefined, {
     shallow: true,
   });
+
+export const goToPreviewPage = (roomId: string): Promise<boolean> =>
+  Router.push(`/preview/${roomId}`, undefined, { shallow: true });
