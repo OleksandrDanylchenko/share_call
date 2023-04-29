@@ -107,7 +107,7 @@ const ListSessionItem: FC<{
         flexDirection: 'column',
         alignItems: 'stretch',
       }}
-      css={(theme) => lightBackgroundContainer(theme)}
+      css={(theme) => lightBackgroundContainer(theme, { active: showDetails })}
       onClick={toggleShowDetails}
     >
       <Stack
@@ -151,39 +151,26 @@ const ListSessionItem: FC<{
         />
       </Stack>
       {showDetails && (
-        <Stack gap={3}>
-          <CallTimeline
-            startedAt={startedAtInstance}
-            finishedAt={finishedAtInstance}
-          />
+        <Stack ml={-1} mr={-1} pl={2} pr={2} gap={3}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            gap={5}
+          >
+            <CallTimeInfo
+              startedAt={startedAtInstance}
+              finishedAt={finishedAtInstance}
+            />
+            <ParticipantsInfo participants={participants} />
+          </Stack>
         </Stack>
       )}
     </ListItemButton>
   );
 };
 
-//           <Stack gap={1}>
-//             <Typography>Started at: {startedAtFormatted}</Typography>
-//             <Typography
-//               color={finishedAtFormatted ? 'inherit' : 'warning.main'}
-//             >
-//               Finished at: {finishedAtFormatted || 'In Progress'}
-//             </Typography>
-//             <Typography>Duration: {duration}</Typography>
-//           </Stack>
-//           <Stack gap={1}>
-//             <Typography>
-//               Total participants number: {totalParticipantsNum}
-//             </Typography>
-//             {!finishedAt && (
-//               <Typography>
-//                 Active participants number: {totalParticipantsNum}
-//               </Typography>
-//             )}
-//             <ParticipantsList participants={participants} />
-//           </Stack>
-
-const CallTimeline: FC<{ startedAt: DateTime; finishedAt?: DateTime }> = ({
+const CallTimeInfo: FC<{ startedAt: DateTime; finishedAt?: DateTime }> = ({
   startedAt,
   finishedAt,
 }) => {
@@ -203,10 +190,25 @@ const CallTimeline: FC<{ startedAt: DateTime; finishedAt?: DateTime }> = ({
   );
 };
 
+const ParticipantsInfo: FC<{
+  participants: RouterOutputs['rooms']['getRoomSession'][number]['participants'];
+}> = ({ participants }) => {
+  return (
+    <Stack direction="row" alignItems="center" gap={2}>
+      <Stack direction="row" gap={1}>
+        <PeopleIcon fontSize="small" sx={{ mt: 0.1 }} />
+        {participants.length}
+      </Stack>
+      <ParticipantsList participants={participants} showPlaceholder />
+    </Stack>
+  );
+};
+
 const ParticipantsList: FC<{
   participants: RouterOutputs['rooms']['getRoomSession'][number]['participants'];
+  showPlaceholder?: boolean;
 }> = (props) => {
-  const { participants } = props;
+  const { participants, showPlaceholder = false } = props;
   return (
     <ClassNames>
       {({ css, theme }) => (
@@ -243,7 +245,7 @@ const ParticipantsList: FC<{
         >
           <AvatarGroup
             max={5}
-            sx={{ borderRadius: 6 }}
+            sx={{ borderRadius: 6, minWidth: showPlaceholder ? 190 : 'auto' }}
             css={(theme) => lightBackgroundContainer(theme, { active: false })}
           >
             {participants.map(({ user: { id, name, image } }) => (
