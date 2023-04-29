@@ -120,27 +120,29 @@ const ListSessionItem: FC<{
         mr={-1}
         pl={2}
         pr={2}
-        css={(theme) =>
-          showDetails && lightBackgroundContainer(theme, { active: true })
-        }
       >
         <ListItemText>
-          Call {serialNumber}
+          <Typography component="span" fontWeight={showDetails ? 700 : 400}>
+            Call {serialNumber}
+          </Typography>
           {!showDetails && (
-            <> — {startedAtInstance.toLocaleString(dateTimeFormat)}</>
-          )}
-          <Stack direction="row" gap={2} mt={0.5}>
-            {!showDetails && (
-              <Stack direction="row" gap={1}>
-                <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
-                {duration}
+            <>
+              {' '}
+              — {startedAtInstance.toLocaleString(dateTimeFormat)}
+              <Stack direction="row" gap={2} mt={0.5}>
+                {!showDetails && (
+                  <Stack direction="row" gap={1}>
+                    <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
+                    {duration}
+                  </Stack>
+                )}
+                <Stack direction="row" gap={1}>
+                  <PeopleIcon fontSize="small" sx={{ mt: 0.1 }} />
+                  {participants.length}
+                </Stack>
               </Stack>
-            )}
-            <Stack direction="row" gap={1}>
-              <PeopleIcon fontSize="small" sx={{ mt: 0.1 }} />
-              {participants.length}
-            </Stack>
-          </Stack>
+            </>
+          )}
         </ListItemText>
         {!showDetails && <ParticipantsList participants={participants} />}
         {!finishedAt && <BlinkingCircle />}
