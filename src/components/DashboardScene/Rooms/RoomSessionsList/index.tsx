@@ -76,7 +76,7 @@ const RoomSessionsList: FC<Props> = (props) => {
   );
 };
 
-const dateFormat = {
+const dateTimeFormat = {
   dateStyle: 'medium',
   timeStyle: 'short',
 } as const;
@@ -90,16 +90,14 @@ const ListSessionItem: FC<{
     serialNumber,
   } = props;
 
-  const startedAtFormatted =
-    DateTime.fromJSDate(startedAt).toLocaleString(dateFormat);
-  const finishedAtFormatted = finishedAt
-    ? DateTime.fromJSDate(finishedAt).toLocaleString(dateFormat)
-    : null;
-  const duration = useDuration(startedAt, finishedAt, 'full');
-
-  const totalParticipantsNum = participants.length;
-
   const [showDetails, toggleShowDetails] = useToggle(false);
+
+  const startedAtInstance = DateTime.fromJSDate(startedAt);
+  const finishedAtInstance = finishedAt
+    ? DateTime.fromJSDate(finishedAt)
+    : undefined;
+
+  const duration = useDuration(startedAtInstance, finishedAtInstance, 'full');
 
   return (
     <ListItemButton
@@ -127,20 +125,21 @@ const ListSessionItem: FC<{
         }
       >
         <ListItemText>
-          Call {serialNumber} — {startedAtFormatted}
+          Call {serialNumber}
+          {!showDetails && (
+            <> — {startedAtInstance.toLocaleString(dateTimeFormat)}</>
+          )}
           <Stack direction="row" gap={2} mt={0.5}>
-            <Stack direction="row" gap={1}>
-              <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
-              {duration}
-            </Stack>
+            {!showDetails && (
+              <Stack direction="row" gap={1}>
+                <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
+                {duration}
+              </Stack>
+            )}
             <Stack direction="row" gap={1}>
               <PeopleIcon fontSize="small" sx={{ mt: 0.1 }} />
               {participants.length}
             </Stack>
-            {/*<Stack direction="row" gap={1}>*/}
-            {/*  <TextSnippetIcon fontSize="small" sx={{ mt: 0.1 }} />*/}
-            {/*  ??*/}
-            {/*</Stack>*/}
           </Stack>
         </ListItemText>
         {!showDetails && <ParticipantsList participants={participants} />}
@@ -150,30 +149,55 @@ const ListSessionItem: FC<{
         />
       </Stack>
       {showDetails && (
-        <Stack direction="row" gap={6}>
-          <Stack gap={1}>
-            <Typography>Started at: {startedAtFormatted}</Typography>
-            <Typography
-              color={finishedAtFormatted ? 'inherit' : 'warning.main'}
-            >
-              Finished at: {finishedAtFormatted || 'In Progress'}
-            </Typography>
-            <Typography>Duration: {duration}</Typography>
-          </Stack>
-          <Stack gap={1}>
-            <Typography>
-              Total participants number: {totalParticipantsNum}
-            </Typography>
-            {!finishedAt && (
-              <Typography>
-                Active participants number: {totalParticipantsNum}
-              </Typography>
-            )}
-            <ParticipantsList participants={participants} />
-          </Stack>
+        <Stack gap={3}>
+          <CallTimeline
+            startedAt={startedAtInstance}
+            finishedAt={finishedAtInstance}
+          />
         </Stack>
       )}
     </ListItemButton>
+  );
+};
+
+//           <Stack gap={1}>
+//             <Typography>Started at: {startedAtFormatted}</Typography>
+//             <Typography
+//               color={finishedAtFormatted ? 'inherit' : 'warning.main'}
+//             >
+//               Finished at: {finishedAtFormatted || 'In Progress'}
+//             </Typography>
+//             <Typography>Duration: {duration}</Typography>
+//           </Stack>
+//           <Stack gap={1}>
+//             <Typography>
+//               Total participants number: {totalParticipantsNum}
+//             </Typography>
+//             {!finishedAt && (
+//               <Typography>
+//                 Active participants number: {totalParticipantsNum}
+//               </Typography>
+//             )}
+//             <ParticipantsList participants={participants} />
+//           </Stack>
+
+const CallTimeline: FC<{ startedAt: DateTime; finishedAt?: DateTime }> = ({
+  startedAt,
+  finishedAt,
+}) => {
+  const startDate = startedAt.toLocaleString({ dateStyle: 'medium' });
+  const startTime = startedAt.toLocaleString({ timeStyle: 'short' });
+  const finishedTime = finishedAt
+    ? finishedAt.toLocaleString({ timeStyle: 'short' })
+    : 'present';
+
+  const duration = useDuration(startedAt, finishedAt, 'full');
+
+  return (
+    <Stack direction="row" gap={1}>
+      <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
+      {startDate} {startTime} — {finishedTime} ({duration})
+    </Stack>
   );
 };
 
