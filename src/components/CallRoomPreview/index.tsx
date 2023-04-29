@@ -5,7 +5,6 @@ import LoginIcon from '@mui/icons-material/Login';
 import { LoadingButton } from '@mui/lab';
 import { Button, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { range } from 'lodash';
-import { useRouter } from 'next/router';
 
 import CallStatus from '@/components/CallRoomPreview/CallStatus';
 import { useGoPrevRoute } from '@/hooks/useHistoricalRoutes';
@@ -19,6 +18,7 @@ import {
 import { api } from '@/utils/api';
 
 import type { TracksStatus } from '@/pages/preview/[roomId]';
+import { goToCallPage } from '@/routing/index';
 
 interface Props {
   roomId: string;
@@ -26,8 +26,6 @@ interface Props {
 }
 
 const CallRoomPreview: FC<Props> = (props) => {
-  const router = useRouter();
-
   const { roomId, tracksStatus } = props;
 
   const {
@@ -46,7 +44,7 @@ const CallRoomPreview: FC<Props> = (props) => {
 
   const handleJoinRoomClick = async (): Promise<boolean> => {
     await connectParticipant({ roomId });
-    return router.push(`/call/${roomId}`);
+    return goToCallPage(roomId);
   };
 
   const handleBackClick = useGoPrevRoute('/', ['/call']);

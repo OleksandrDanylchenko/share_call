@@ -2,8 +2,10 @@ import Router from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
 
-export const goToDashboard = (): Promise<boolean> =>
-  Router.push('/', undefined, { shallow: true });
+const goToPage = (path: string): Promise<boolean> =>
+  Router.push(path, undefined, { shallow: true });
+
+export const goToDashboard = (): Promise<boolean> => goToPage('/');
 
 export const goToDashboardScene = (
   scene: DashboardSceneType,
@@ -14,4 +16,7 @@ export const goToDashboardScene = (
   });
 
 export const goToPreviewPage = (roomId: string): Promise<boolean> =>
-  Router.push(`/preview/${roomId}`, undefined, { shallow: true });
+  goToPage(`/preview/${roomId}`);
+
+export const goToCallPage = (roomId: string): Promise<boolean> =>
+  goToPage(`/call/${roomId}`);
