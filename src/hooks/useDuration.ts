@@ -3,15 +3,22 @@ import { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
 
 export const useDuration = (
-  start: Date,
-  end?: Date | null,
+  start: Date | DateTime,
+  end?: Date | DateTime | null,
   formatting: 'auto' | 'full' = 'auto',
 ): string => {
   const [duration, setDuration] = useState('');
   useEffect(() => {
     const updateDuration = (): void => {
-      const startDate = DateTime.fromJSDate(start);
-      const endDate = end ? DateTime.fromJSDate(end) : DateTime.local();
+      const startDate =
+        start instanceof DateTime ? start : DateTime.fromJSDate(start);
+
+      const endDate = end
+        ? end instanceof DateTime
+          ? end
+          : DateTime.fromJSDate(end)
+        : DateTime.local();
+
       const duration = endDate.diff(startDate, ['hours', 'minutes', 'seconds']);
       setDuration(
         duration.toFormat(
