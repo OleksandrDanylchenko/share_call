@@ -10,9 +10,10 @@ import { Button, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
-import { goToOptions, goToScene } from '@/components/DashboardScene/routing';
 import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
 import { api } from '@/utils/api';
+
+import { goToDashboardScene, goToDashboard } from '@/routing/index';
 
 const DashboardCreateRoom: FC = () => {
   const router = useRouter();
@@ -25,7 +26,9 @@ const DashboardCreateRoom: FC = () => {
 
   const handleCreateRoomClick = async (): Promise<boolean> => {
     const { id: newRoomId } = await createRoom(getValues());
-    return goToScene(router, DashboardSceneType.Rooms, { room_id: newRoomId });
+    return goToDashboardScene(router, DashboardSceneType.Rooms, {
+      room_id: newRoomId,
+    });
   };
 
   const handleCreateAndJoinClick = async (): Promise<boolean> => {
@@ -40,7 +43,7 @@ const DashboardCreateRoom: FC = () => {
         sx={{ width: 'fit-content' }}
         startIcon={<ArrowBackIosIcon />}
         disabled={isLoading}
-        onClick={() => goToOptions(router)}
+        onClick={() => goToDashboard(router)}
       >
         Back to dashboard
       </Button>

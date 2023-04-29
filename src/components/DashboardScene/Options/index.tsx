@@ -13,8 +13,9 @@ import { Button, Stack, Typography, useTheme } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
-import { goToScene } from '@/components/DashboardScene/routing';
 import { fullParent, shadowBorder } from '@/styles/mixins';
+
+import { goToDashboardScene } from '@/routing/index';
 
 const DashboardOptions: FC = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const DashboardOptions: FC = () => {
         layout="horizontal"
         stretch={false}
         icon={<FormatListBulletedIcon />}
-        onClick={() => goToScene(router, DashboardSceneType.Rooms)}
+        onClick={() => goToDashboardScene(router, DashboardSceneType.Rooms)}
       >
         My rooms
       </Option>
@@ -34,7 +35,7 @@ const DashboardOptions: FC = () => {
         layout="horizontal"
         stretch={false}
         icon={<TextSnippetIcon />}
-        onClick={() => goToScene(router, DashboardSceneType.Notes)}
+        onClick={() => goToDashboardScene(router, DashboardSceneType.Notes)}
       >
         My notes
       </Option>
@@ -48,14 +49,18 @@ const DashboardOptions: FC = () => {
         <Option
           borderColor={theme.palette.warning.light}
           icon={<AddCircleOutlineIcon />}
-          onClick={() => goToScene(router, DashboardSceneType.CreateRoom)}
+          onClick={() =>
+            goToDashboardScene(router, DashboardSceneType.CreateRoom)
+          }
         >
           Create a room
         </Option>
         <Option
           borderColor={theme.palette.warning.light}
           icon={<LoginIcon />}
-          onClick={() => goToScene(router, DashboardSceneType.JoinCall)}
+          onClick={() =>
+            goToDashboardScene(router, DashboardSceneType.JoinCall)
+          }
         >
           Join a call
         </Option>

@@ -18,9 +18,10 @@ import {
 import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
-import { goToScene } from '@/components/DashboardScene/routing';
 import { blurBackgroundContainer, shadowBorder } from '@/styles/mixins';
 import { api } from '@/utils/api';
+
+import { goToDashboardScene } from '@/routing/index';
 
 interface Props {
   activeRoomId: string;
@@ -42,7 +43,7 @@ const RoomDeleteButton: FC<Props> = (props) => {
         apiUtils.rooms.getRooms.setData(undefined, (prevRooms) =>
           prevRooms?.filter(({ id: roomId }) => roomId !== activeRoomId),
         );
-        await goToScene(router, DashboardSceneType.Rooms);
+        await goToDashboardScene(router, DashboardSceneType.Rooms);
         close();
       },
       async onSettled() {

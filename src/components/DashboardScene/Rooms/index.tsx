@@ -12,9 +12,10 @@ import {
   RoomsList,
   RoomsListPlaceholder,
 } from '@/components/DashboardScene/Rooms/RoomsList';
-import { goToOptions, goToScene } from '@/components/DashboardScene/routing';
 import { fullHeight, fullParent, fullWidth } from '@/styles/mixins';
 import { api } from '@/utils/api';
+
+import { goToDashboardScene, goToDashboard } from '@/routing/index';
 
 const DashboardRooms: FC = () => {
   const router = useRouter();
@@ -52,7 +53,7 @@ const DashboardRooms: FC = () => {
         color="inherit"
         sx={{ width: 'fit-content', marginLeft: -2 }}
         startIcon={<ArrowBackIosIcon />}
-        onClick={() => goToOptions(router)}
+        onClick={() => goToDashboard(router)}
       >
         Back to dashboard
       </Button>
@@ -96,7 +97,9 @@ export const CreateRoom: FC = () => {
         </Typography>
         <IconButton
           aria-label="Create a room"
-          onClick={() => goToScene(router, DashboardSceneType.CreateRoom)}
+          onClick={() =>
+            goToDashboardScene(router, DashboardSceneType.CreateRoom)
+          }
         >
           <AddCircleOutlineIcon sx={{ fontSize: '5rem' }} />
         </IconButton>

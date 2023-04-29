@@ -11,9 +11,10 @@ import { first } from 'lodash';
 import { useRouter } from 'next/router';
 import { ObjectTyped } from 'object-typed';
 
-import { goToOptions } from '@/components/DashboardScene/routing';
 import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
 import { api } from '@/utils/api';
+
+import { goToDashboard } from '@/routing/index';
 
 interface JoinCallForm {
   inviteCode: string;
@@ -66,7 +67,7 @@ const DashboardJoinCall: FC = () => {
         color="inherit"
         sx={{ width: 'fit-content' }}
         startIcon={<ArrowBackIosIcon />}
-        onClick={() => goToOptions(router)}
+        onClick={() => goToDashboard(router)}
       >
         Back to dashboard
       </Button>
