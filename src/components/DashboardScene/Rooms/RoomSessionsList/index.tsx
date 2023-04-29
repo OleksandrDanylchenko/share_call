@@ -1,4 +1,4 @@
-import { FC, Fragment, MouseEvent } from 'react';
+import { FC, Fragment, MouseEvent, useState } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -23,7 +23,7 @@ import {
 import { range } from 'lodash';
 import { DateTime } from 'luxon';
 import Image from 'next/image';
-import { useToggle } from 'usehooks-ts';
+import { useRouter } from 'next/router';
 
 import BlinkingCircle from '@/components/BlinkingCircle';
 import { AVATAR_SIZE } from '@/constants/index';
@@ -75,6 +75,8 @@ const ListSessionItem: FC<{
   session: RouterOutputs['rooms']['getRoomSessions'][number];
   serialNumber: number;
 }> = (props) => {
+  const router = useRouter();
+
   const {
     session: {
       id: sessionId,
@@ -86,7 +88,7 @@ const ListSessionItem: FC<{
     serialNumber,
   } = props;
 
-  const [showDetails, toggleShowDetails] = useToggle(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   const startedAtInstance = DateTime.fromJSDate(startedAt);
   const finishedAtInstance = finishedAt
@@ -94,6 +96,22 @@ const ListSessionItem: FC<{
     : undefined;
 
   const duration = useDuration(startedAtInstance, finishedAtInstance, 'full');
+
+  const handleToggleShowDetails = async (): Promise<void> => {
+    const nextShowDetails = !showDetails;
+    setShowDetails(nextShowDetails);
+
+    await router.replace(
+      {
+        query: {
+          ...router.query,
+          session_id: nextShowDetails ? sessionId : undefined,
+        },
+      },
+      undefined,
+      { shallow: true },
+    );
+  };
 
   return (
     <ListItemButton
@@ -104,7 +122,7 @@ const ListSessionItem: FC<{
         alignItems: 'stretch',
       }}
       css={(theme) => lightBackgroundContainer(theme, { active: showDetails })}
-      onClick={toggleShowDetails}
+      onClick={handleToggleShowDetails}
     >
       <Stack
         direction="row"
