@@ -27,11 +27,14 @@ import { useRouter } from 'next/router';
 import { useEffectOnce } from 'usehooks-ts';
 
 import BlinkingCircle from '@/components/BlinkingCircle';
+import { DashboardSceneType } from '@/components/DashboardScene';
 import { AVATAR_SIZE } from '@/constants/index';
 import { useDuration } from '@/hooks/useDuration';
 import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
 import { api, RouterOutputs } from '@/utils/api';
 import { getImageLoader } from '@/utils/files';
+
+import { goToDashboardScene } from '@/routing/index';
 
 interface Props {
   activeRoomId: string;
@@ -300,9 +303,14 @@ const NotesInfo: FC<{
   sessionId: string;
   noteCount: number;
 }> = ({ sessionId, noteCount }) => {
-  const handleGoToNotesClick = (event: MouseEvent): void => {
+  const router = useRouter();
+
+  const handleGoToNotesClick = async (event: MouseEvent): Promise<void> => {
     event.stopPropagation();
-    // TODO Navigate to notes scene
+    goToDashboardScene(DashboardSceneType.Notes, {
+      ...router.query,
+      session_id: sessionId,
+    });
   };
 
   return (

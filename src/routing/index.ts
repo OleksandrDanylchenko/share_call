@@ -11,7 +11,7 @@ export const goToDashboardScene = (
   scene: DashboardSceneType,
   queryOptions: Record<string, string> = {},
 ): Promise<boolean> =>
-  Router.push({ query: { scene, ...queryOptions } }, undefined, {
+  Router.push({ query: { ...queryOptions, scene } }, undefined, {
     shallow: true,
   });
 
