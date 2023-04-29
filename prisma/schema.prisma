@@ -67,6 +67,8 @@ model Note {
     room          Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
     roomSessionId String?      @map("room_session_id")
     roomSession   RoomSession? @relation(fields: [roomSessionId], references: [id], onDelete: Cascade)
+    creatorId     String       @map("creator_id")
+    creator       User         @relation(fields: [creatorId], references: [id])
 
     @@map("note")
 }
@@ -111,6 +113,7 @@ model User {
     sessions       Session[]
     created_rooms  Room[]
     participations SessionParticipant[]
+    Note           Note[]
 
     @@map("users")
 }
