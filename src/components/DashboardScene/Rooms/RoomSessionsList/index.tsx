@@ -1,13 +1,14 @@
-import React, { FC, Fragment } from 'react';
+import { FC, Fragment, MouseEvent } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PeopleIcon from '@mui/icons-material/People';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import {
   Avatar,
   AvatarGroup,
-  Box,
+  Button,
   Divider,
   List,
   ListItem,
@@ -27,11 +28,7 @@ import { useToggle } from 'usehooks-ts';
 import BlinkingCircle from '@/components/BlinkingCircle';
 import { AVATAR_SIZE } from '@/constants/index';
 import { useDuration } from '@/hooks/useDuration';
-import {
-  fullHeight,
-  fullWidth,
-  lightBackgroundContainer,
-} from '@/styles/mixins';
+import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
 import { api, RouterOutputs } from '@/utils/api';
 import { getImageLoader } from '@/utils/files';
 
@@ -79,7 +76,13 @@ const ListSessionItem: FC<{
   serialNumber: number;
 }> = (props) => {
   const {
-    session: { startedAt, finishedAt, participants },
+    session: {
+      id: sessionId,
+      startedAt,
+      finishedAt,
+      participants,
+      _count: { notes: noteCount },
+    },
     serialNumber,
   } = props;
 
@@ -122,16 +125,18 @@ const ListSessionItem: FC<{
             <>
               {' '}
               — {startedAtInstance.toLocaleString(dateTimeFormat)}
-              <Stack direction="row" gap={2} mt={0.5}>
-                {!showDetails && (
-                  <Stack direction="row" gap={1}>
-                    <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
-                    {duration}
-                  </Stack>
-                )}
+              <Stack direction="row" gap={3} mt={0.5}>
+                <Stack direction="row" gap={1}>
+                  <AccessTimeFilledIcon fontSize="small" sx={{ mt: 0.1 }} />
+                  {duration}
+                </Stack>
                 <Stack direction="row" gap={1}>
                   <PeopleIcon fontSize="small" sx={{ mt: 0.1 }} />
                   {participants.length}
+                </Stack>
+                <Stack direction="row" gap={1}>
+                  <TextSnippetIcon fontSize="small" sx={{ mt: 0.1 }} />
+                  {noteCount}
                 </Stack>
               </Stack>
             </>
@@ -144,7 +149,7 @@ const ListSessionItem: FC<{
         />
       </Stack>
       {showDetails && (
-        <Stack ml={-1} mr={-1} pl={2} pr={2} gap={1}>
+        <Stack ml={-1} mr={-1} pl={2} pr={2} gap={0.5}>
           <Stack
             direction="row"
             alignItems="center"
@@ -157,7 +162,7 @@ const ListSessionItem: FC<{
             />
             <ParticipantsInfo participants={participants} />
           </Stack>
-          <NotesInfo />
+          <NotesInfo sessionId={sessionId} noteCount={noteCount} />
         </Stack>
       )}
     </ListItemButton>
@@ -240,7 +245,7 @@ const ParticipantsList: FC<{
           <AvatarGroup
             max={5}
             sx={{ borderRadius: 6, minWidth: showPlaceholder ? 190 : 'auto' }}
-            css={(theme) => lightBackgroundContainer(theme, { active: false })}
+            css={lightBackgroundContainer}
           >
             {participants.map(({ user: { id, name, image } }) => (
               <Avatar key={id}>
@@ -261,8 +266,32 @@ const ParticipantsList: FC<{
   );
 };
 
-const NotesInfo: FC = () => {
-  return <Stack>Notes will be here!</Stack>;
+const NotesInfo: FC<{
+  sessionId: string;
+  noteCount: number;
+}> = ({ sessionId, noteCount }) => {
+  const handleGoToNotesClick = (event: MouseEvent): void => {
+    event.stopPropagation();
+    // TODO Navigate to notes scene
+  };
+
+  return (
+    <Stack direction="row" alignItems="center" gap={2}>
+      <Stack direction="row" gap={1}>
+        <TextSnippetIcon fontSize="small" sx={{ mt: 0.1 }} />
+        {noteCount}
+      </Stack>
+      <Button
+        color="inherit"
+        endIcon={<ArrowForwardIosIcon fontSize="small" />}
+        sx={{ px: 2, py: 0.5 }}
+        css={lightBackgroundContainer}
+        onClick={handleGoToNotesClick}
+      >
+        go to notes
+      </Button>
+    </Stack>
+  );
 };
 
 const ListPlaceholder: FC = () => (
