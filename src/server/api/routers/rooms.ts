@@ -71,7 +71,7 @@ export const roomsRouter = createTRPCRouter({
         lastSession: last(sessions),
       };
     }),
-  getRoomSession: protectedProcedure
+  getRoomSessions: protectedProcedure
     .input(
       z.object({
         id: z
@@ -102,6 +102,11 @@ export const roomsRouter = createTRPCRouter({
                   image: true,
                 },
               },
+            },
+          },
+          _count: {
+            select: {
+              notes: true,
             },
           },
         },

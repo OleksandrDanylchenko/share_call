@@ -43,7 +43,7 @@ const RoomSessionsList: FC<Props> = (props) => {
   const { activeRoomId } = props;
 
   const { data: sessions, isLoading: isSessionsLoading } =
-    api.rooms.getRoomSession.useQuery({ id: activeRoomId });
+    api.rooms.getRoomSessions.useQuery({ id: activeRoomId });
 
   return (
     <Stack pl={1} gap={2} flex={1}>
@@ -75,7 +75,7 @@ const dateTimeFormat = {
 } as const;
 
 const ListSessionItem: FC<{
-  session: RouterOutputs['rooms']['getRoomSession'][number];
+  session: RouterOutputs['rooms']['getRoomSessions'][number];
   serialNumber: number;
 }> = (props) => {
   const {
@@ -185,7 +185,7 @@ const CallTimeInfo: FC<{ startedAt: DateTime; finishedAt?: DateTime }> = ({
 };
 
 const ParticipantsInfo: FC<{
-  participants: RouterOutputs['rooms']['getRoomSession'][number]['participants'];
+  participants: RouterOutputs['rooms']['getRoomSessions'][number]['participants'];
 }> = ({ participants }) => {
   return (
     <Stack direction="row" alignItems="center" gap={2}>
@@ -199,7 +199,7 @@ const ParticipantsInfo: FC<{
 };
 
 const ParticipantsList: FC<{
-  participants: RouterOutputs['rooms']['getRoomSession'][number]['participants'];
+  participants: RouterOutputs['rooms']['getRoomSessions'][number]['participants'];
   showPlaceholder?: boolean;
 }> = (props) => {
   const { participants, showPlaceholder = false } = props;
