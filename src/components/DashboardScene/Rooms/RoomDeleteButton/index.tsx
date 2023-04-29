@@ -43,7 +43,7 @@ const RoomDeleteButton: FC<Props> = (props) => {
         apiUtils.rooms.getRooms.setData(undefined, (prevRooms) =>
           prevRooms?.filter(({ id: roomId }) => roomId !== activeRoomId),
         );
-        await goToDashboardScene(router, DashboardSceneType.Rooms);
+        await goToDashboardScene(DashboardSceneType.Rooms);
         close();
       },
       async onSettled() {

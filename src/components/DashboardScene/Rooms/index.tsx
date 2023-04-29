@@ -53,7 +53,7 @@ const DashboardRooms: FC = () => {
         color="inherit"
         sx={{ width: 'fit-content', marginLeft: -2 }}
         startIcon={<ArrowBackIosIcon />}
-        onClick={() => goToDashboard(router)}
+        onClick={() => goToDashboard()}
       >
         Back to dashboard
       </Button>
@@ -97,9 +97,7 @@ export const CreateRoom: FC = () => {
         </Typography>
         <IconButton
           aria-label="Create a room"
-          onClick={() =>
-            goToDashboardScene(router, DashboardSceneType.CreateRoom)
-          }
+          onClick={() => goToDashboardScene(DashboardSceneType.CreateRoom)}
         >
           <AddCircleOutlineIcon sx={{ fontSize: '5rem' }} />
         </IconButton>

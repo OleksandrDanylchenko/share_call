@@ -26,7 +26,7 @@ const DashboardCreateRoom: FC = () => {
 
   const handleCreateRoomClick = async (): Promise<boolean> => {
     const { id: newRoomId } = await createRoom(getValues());
-    return goToDashboardScene(router, DashboardSceneType.Rooms, {
+    return goToDashboardScene(DashboardSceneType.Rooms, {
       room_id: newRoomId,
     });
   };
@@ -43,7 +43,7 @@ const DashboardCreateRoom: FC = () => {
         sx={{ width: 'fit-content' }}
         startIcon={<ArrowBackIosIcon />}
         disabled={isLoading}
-        onClick={() => goToDashboard(router)}
+        onClick={() => goToDashboard()}
       >
         Back to dashboard
       </Button>

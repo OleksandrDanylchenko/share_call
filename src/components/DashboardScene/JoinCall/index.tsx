@@ -67,7 +67,7 @@ const DashboardJoinCall: FC = () => {
         color="inherit"
         sx={{ width: 'fit-content' }}
         startIcon={<ArrowBackIosIcon />}
-        onClick={() => goToDashboard(router)}
+        onClick={() => goToDashboard()}
       >
         Back to dashboard
       </Button>

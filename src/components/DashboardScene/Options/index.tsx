@@ -27,7 +27,7 @@ const DashboardOptions: FC = () => {
         layout="horizontal"
         stretch={false}
         icon={<FormatListBulletedIcon />}
-        onClick={() => goToDashboardScene(router, DashboardSceneType.Rooms)}
+        onClick={() => goToDashboardScene(DashboardSceneType.Rooms)}
       >
         My rooms
       </Option>
@@ -35,7 +35,7 @@ const DashboardOptions: FC = () => {
         layout="horizontal"
         stretch={false}
         icon={<TextSnippetIcon />}
-        onClick={() => goToDashboardScene(router, DashboardSceneType.Notes)}
+        onClick={() => goToDashboardScene(DashboardSceneType.Notes)}
       >
         My notes
       </Option>
@@ -49,18 +49,14 @@ const DashboardOptions: FC = () => {
         <Option
           borderColor={theme.palette.warning.light}
           icon={<AddCircleOutlineIcon />}
-          onClick={() =>
-            goToDashboardScene(router, DashboardSceneType.CreateRoom)
-          }
+          onClick={() => goToDashboardScene(DashboardSceneType.CreateRoom)}
         >
           Create a room
         </Option>
         <Option
           borderColor={theme.palette.warning.light}
           icon={<LoginIcon />}
-          onClick={() =>
-            goToDashboardScene(router, DashboardSceneType.JoinCall)
-          }
+          onClick={() => goToDashboardScene(DashboardSceneType.JoinCall)}
         >
           Join a call
         </Option>

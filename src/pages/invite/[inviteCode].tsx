@@ -18,6 +18,8 @@ import {
   shadowBorder,
 } from '@/styles/mixins';
 
+import { goToDashboard } from '@/routing/index';
+
 interface Props {
   session: Session | null;
   isInviteCodeValid: boolean;
@@ -107,7 +109,7 @@ const InvalidInviteCode: FC = () => {
         variant="outlined"
         color="inherit"
         fullWidth
-        onClick={() => router.push('/')}
+        onClick={() => goToDashboard()}
       >
         Go to the home page
       </Button>
