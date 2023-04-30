@@ -324,7 +324,7 @@ const NotesInfo: FC<{
         css={lightBackgroundContainer}
         onClick={handleGoToNotesClick}
       >
-        go to notes
+        notes
       </Button>
     </Stack>
   );

@@ -4,6 +4,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Button, Divider, Stack } from '@mui/material';
 import { useRouter } from 'next/router';
 
+import RoomNotesDetails from '@/components/DashboardScene/Notes/RoomNotesDetails';
 import { ChooseRoom, CreateRoom } from '@/components/DashboardScene/Rooms';
 import {
   RoomsList,
@@ -38,7 +39,7 @@ const DashboardNotes: FC = () => {
     }
 
     if (activeRoomId) {
-      return <h2>Here will be notes</h2>;
+      return <RoomNotesDetails activeRoomId={activeRoomId} />;
     }
 
     return rooms.length > 0 ? <ChooseRoom /> : <CreateRoom />;

@@ -9,7 +9,7 @@ export const goToDashboard = (): Promise<boolean> => goToPage('/');
 
 export const goToDashboardScene = (
   scene: DashboardSceneType,
-  queryOptions: Record<string, string> = {},
+  queryOptions: Record<string, string | undefined> = {},
 ): Promise<boolean> =>
   Router.push({ query: { ...queryOptions, scene } }, undefined, {
     shallow: true,
