@@ -13,9 +13,10 @@ export const roomsRouter = createTRPCRouter({
       where: {
         OR: [
           { creatorId: userId },
-          {
-            sessions: { some: { participants: { some: { userId } } } },
-          },
+          // TODO Check how shared rooms can be handled
+          // {
+          //   sessions: { some: { participants: { some: { userId } } } },
+          // },
         ],
       },
       orderBy: { createdAt: 'desc' },
