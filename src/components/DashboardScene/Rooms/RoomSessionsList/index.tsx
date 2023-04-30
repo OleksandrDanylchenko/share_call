@@ -70,7 +70,7 @@ const RoomSessionsList: FC<Props> = (props) => {
   );
 };
 
-const dateTimeFormat = {
+export const dateTimeFormat = {
   dateStyle: 'medium',
   timeStyle: 'short',
 } as const;

@@ -1,16 +1,27 @@
 import { FC, Fragment } from 'react';
 
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import {
+  Button,
   FormControlLabel,
   List,
   Stack,
   Switch,
   Typography,
 } from '@mui/material';
+import { first } from 'lodash';
+import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
 
-import { ListDivider } from '@/components/DashboardScene/Rooms/RoomSessionsList';
+import { DashboardSceneType } from '@/components/DashboardScene';
+import {
+  dateTimeFormat,
+  ListDivider,
+} from '@/components/DashboardScene/Rooms/RoomSessionsList';
+import { lightBackgroundContainer } from '@/styles/mixins';
 import { api, RouterOutputs } from '@/utils/api';
+
+import { goToDashboardScene } from '@/routing/index';
 
 interface Props {
   activeRoomId: string;
@@ -72,7 +83,56 @@ const RoomNotesGroup: FC<{
 }> = (props) => {
   const { notesGroup, separateByCalls } = props;
 
-  return <h2>Hello there! {notesGroup.sessionId}</h2>;
+  const router = useRouter();
+
+  const session = first(notesGroup.notes)?.roomSession;
+  const startedAtInstance = session
+    ? DateTime.fromJSDate(session?.startedAt)
+    : null;
+
+  const handleCallDetailsClick = async (): Promise<boolean> =>
+    goToDashboardScene(DashboardSceneType.Rooms, {
+      ...router.query,
+      session_id: session?.id,
+    });
+
+  return (
+    <Stack
+      p={2}
+      borderRadius={6}
+      css={(theme) =>
+        separateByCalls ? lightBackgroundContainer(theme) : undefined
+      }
+    >
+      {separateByCalls && (
+        <>
+          {session && startedAtInstance ? (
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              gap={2}
+            >
+              <span>
+                Call 2 — {startedAtInstance.toLocaleString(dateTimeFormat)}
+              </span>
+              <Button
+                color="inherit"
+                endIcon={<ArrowForwardIosIcon fontSize="small" />}
+                sx={{ px: 2, py: 0.5 }}
+                css={lightBackgroundContainer}
+                onClick={handleCallDetailsClick}
+              >
+                details
+              </Button>
+            </Stack>
+          ) : (
+            <Typography component="span">Beyond the call</Typography>
+          )}
+        </>
+      )}
+    </Stack>
+  );
 };
 
 export default RoomNotesList;

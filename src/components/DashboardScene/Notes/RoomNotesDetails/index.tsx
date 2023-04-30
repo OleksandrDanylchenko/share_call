@@ -33,7 +33,7 @@ const RoomInfo: FC<{ activeRoomId: string }> = (props) => {
 
   const { data: activeRoom } = api.rooms.getRoom.useQuery({ id: activeRoomId });
 
-  const handleGoToNotesClick = async (): Promise<boolean> =>
+  const handleRoomDetailsClick = async (): Promise<boolean> =>
     goToDashboardScene(DashboardSceneType.Rooms, {
       ...router.query,
       room_id: activeRoomId,
@@ -51,7 +51,7 @@ const RoomInfo: FC<{ activeRoomId: string }> = (props) => {
         endIcon={<ArrowForwardIosIcon fontSize="small" />}
         sx={{ px: 2, py: 0.5 }}
         css={lightBackgroundContainer}
-        onClick={handleGoToNotesClick}
+        onClick={handleRoomDetailsClick}
       >
         details
       </Button>
