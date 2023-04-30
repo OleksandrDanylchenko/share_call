@@ -23,12 +23,7 @@ import {
   selectTracks,
   useCallTracks,
 } from '@/store/callTracks';
-import {
-  doubleColorGradient,
-  fullHeight,
-  fullViewport,
-  fullWidth,
-} from '@/styles/mixins';
+import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
 import { api } from '@/utils/api';
 import CallControls from 'components/CallControls';
 import CallHeader from 'components/CallHeader';
