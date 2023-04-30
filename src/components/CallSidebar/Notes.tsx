@@ -77,9 +77,19 @@ const CallSidebarNotes: FC<Props> = (props) => {
               ),
             }}
           >
-            {targetRoom && (
-              <Stack css={fullHeight} justifyContent="space-between">
-                <Box>Here will be the notes!</Box>
+            {targetRoom && notes && (
+              <Stack css={fullHeight} justifyContent="space-between" gap={2}>
+                <RoomNotesGrid notes={notes} onViewNote={handleViewNote} />
+                {editingNoteId === null && (
+                  <Button
+                    color="inherit"
+                    sx={{ width: '30%', alignSelf: 'flex-end' }}
+                    endIcon={<ArrowForwardIosIcon />}
+                    onClick={toggleShowInfo}
+                  >
+                    Close
+                  </Button>
+                )}
               </Stack>
             )}
           </Drawer>
