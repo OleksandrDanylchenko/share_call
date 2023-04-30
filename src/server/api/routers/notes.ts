@@ -63,6 +63,16 @@ export const notesRouter = createTRPCRouter({
         return grouped;
       }, []);
     }),
+  getNote: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { id } = input;
+      return ctx.prisma.note.findUnique({ where: { id } });
+    }),
   createNote: protectedProcedure
     .input(
       z.object({
