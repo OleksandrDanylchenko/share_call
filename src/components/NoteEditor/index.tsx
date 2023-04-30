@@ -104,6 +104,7 @@ const NoteEditor: FC<Props> = (props) => {
             }}
           >
             <TextFieldElement
+              css={fullHeight}
               id="content-field"
               name="content"
               variant="standard"
