@@ -80,18 +80,23 @@ export const notesRouter = createTRPCRouter({
           .string()
           .min(1, 'Content should be at least 1 character long'),
         roomId: z.string().cuid(),
-        roomSessionId: z.string().cuid().optional(),
       }),
     )
-    .mutation(({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
-      const { content, roomId, roomSessionId } = input;
+      const { content, roomId } = input;
+
+      const activeSession = await ctx.prisma.roomSession.findFirst({
+        where: { roomId, finishedAt: null },
+        orderBy: { startedAt: 'desc' },
+        select: { id: true },
+      });
 
       return ctx.prisma.note.create({
         data: {
           content,
           roomId,
-          roomSessionId,
+          roomSessionId: activeSession?.id,
           creatorId: userId,
         },
         select: { id: true },
@@ -114,7 +119,7 @@ export const notesRouter = createTRPCRouter({
         select: { id: true, content: true },
       });
     }),
-  deleteRoom: protectedProcedure
+  deleteNote: protectedProcedure
     .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ input, ctx }) => {
       const { id: noteId } = input;
