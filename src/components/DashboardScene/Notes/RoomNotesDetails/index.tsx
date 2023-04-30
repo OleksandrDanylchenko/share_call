@@ -18,10 +18,22 @@ interface Props {
 const RoomNotesDetails: FC<Required<Props>> = (props) => {
   const { activeRoomId } = props;
 
+  const handleCreateNote = async (): Promise<void> => {
+    console.log('gg');
+  };
+
+  const handleViewNote = async (): Promise<void> => {
+    console.log('gg');
+  };
+
   return (
     <Stack flex={1} gap={2} overflow="auto">
       <RoomInfo activeRoomId={activeRoomId} />
-      <RoomNotesList activeRoomId={activeRoomId} />
+      <RoomNotesList
+        activeRoomId={activeRoomId}
+        onCreateNote={handleCreateNote}
+        onViewNote={handleViewNote}
+      />
     </Stack>
   );
 };

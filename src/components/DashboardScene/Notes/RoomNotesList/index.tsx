@@ -1,14 +1,8 @@
 import { FC, Fragment } from 'react';
 
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {
-  Button,
-  FormControlLabel,
-  List,
-  Stack,
-  Switch,
-  Typography,
-} from '@mui/material';
+import { Button, List, Stack, Typography } from '@mui/material';
 import { first } from 'lodash';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
@@ -26,12 +20,12 @@ import { goToDashboardScene } from '@/routing/index';
 
 interface Props {
   activeRoomId: string;
+  onCreateNote: () => void;
+  onViewNote: (noteId: string) => void;
 }
 
 const RoomNotesList: FC<Props> = (props) => {
-  const { activeRoomId } = props;
-
-  const router = useRouter();
+  const { activeRoomId, onCreateNote, onViewNote } = props;
 
   const { data: notesGroups, isLoading: isNotesLoading } =
     api.notes.getGroupedRoomNotes.useQuery({
@@ -41,11 +35,22 @@ const RoomNotesList: FC<Props> = (props) => {
   if (isNotesLoading) return null;
   return (
     <Stack gap={2}>
-      <Typography variant="h5">Notes:</Typography>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Typography variant="h5">Notes:</Typography>
+        <Button
+          color="inherit"
+          startIcon={<AddCircleOutlineIcon fontSize="small" />}
+          sx={{ px: 2, py: 0.5 }}
+          css={(theme) => lightBackgroundContainer(theme, { active: true })}
+          onClick={onCreateNote}
+        >
+          new note
+        </Button>
+      </Stack>
       <List>
         {notesGroups?.map((notesGroup, index, arr) => (
           <Fragment key={`${notesGroup.sessionId}_${index}`}>
-            <RoomNotesGroup notesGroup={notesGroup} />
+            <RoomNotesGroup notesGroup={notesGroup} onViewNote={onViewNote} />
             {index !== arr.length - 1 && <ListDivider />}
           </Fragment>
         ))}
@@ -56,8 +61,9 @@ const RoomNotesList: FC<Props> = (props) => {
 
 const RoomNotesGroup: FC<{
   notesGroup: RouterOutputs['notes']['getGroupedRoomNotes'][number];
+  onViewNote: (noteId: string) => void;
 }> = (props) => {
-  const { notesGroup } = props;
+  const { notesGroup, onViewNote } = props;
 
   const router = useRouter();
 
@@ -103,7 +109,7 @@ const RoomNotesGroup: FC<{
         <Typography component="span">Beyond the call</Typography>
       )}
 
-      <RoomNotesGrid notes={notesGroup.notes} />
+      <RoomNotesGrid notes={notesGroup.notes} onViewNote={onViewNote} />
     </Stack>
   );
 };

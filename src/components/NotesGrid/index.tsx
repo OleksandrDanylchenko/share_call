@@ -7,15 +7,16 @@ import { RouterOutputs } from '@/utils/api';
 
 interface Props {
   notes: RouterOutputs['notes']['getGroupedRoomNotes'][number]['notes'];
+  onViewNote: (noteId: string) => void;
 }
 
 const RoomNotesGrid: FC<Props> = (props) => {
-  const { notes } = props;
+  const { notes, onViewNote } = props;
   return (
     <Grid container spacing={2}>
       {notes.map((note) => (
         <Grid key={note.id}>
-          <NotePreview note={note} />
+          <NotePreview note={note} onViewNote={onViewNote} />
         </Grid>
       ))}
     </Grid>
