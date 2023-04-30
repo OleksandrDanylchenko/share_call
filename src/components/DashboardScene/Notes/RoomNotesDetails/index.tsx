@@ -53,7 +53,7 @@ const RoomInfo: FC<{ activeRoomId: string }> = (props) => {
         css={lightBackgroundContainer}
         onClick={handleRoomDetailsClick}
       >
-        details
+        room details
       </Button>
     </Stack>
   );

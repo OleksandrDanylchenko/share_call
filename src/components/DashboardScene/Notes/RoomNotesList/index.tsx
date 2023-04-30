@@ -18,6 +18,7 @@ import {
   dateTimeFormat,
   ListDivider,
 } from '@/components/DashboardScene/Rooms/RoomSessionsList';
+import RoomNotesGrid from '@/components/NotesGrid';
 import { lightBackgroundContainer } from '@/styles/mixins';
 import { api, RouterOutputs } from '@/utils/api';
 
@@ -98,11 +99,12 @@ const RoomNotesGroup: FC<{
 
   return (
     <Stack
-      p={2}
-      borderRadius={6}
       css={(theme) =>
         separateByCalls ? lightBackgroundContainer(theme) : undefined
       }
+      p={2}
+      borderRadius={6}
+      gap={1.5}
     >
       {separateByCalls && (
         <>
@@ -123,7 +125,7 @@ const RoomNotesGroup: FC<{
                 css={lightBackgroundContainer}
                 onClick={handleCallDetailsClick}
               >
-                details
+                call details
               </Button>
             </Stack>
           ) : (
@@ -131,6 +133,7 @@ const RoomNotesGroup: FC<{
           )}
         </>
       )}
+      <RoomNotesGrid notes={notesGroup.notes} />
     </Stack>
   );
 };
