@@ -20,7 +20,7 @@ export const notesRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { roomId } = input;
-      return ctx.prisma.note.findMany({
+      const notes = await ctx.prisma.note.findMany({
         where: { roomId },
         include: {
           room: {
@@ -37,7 +37,22 @@ export const notesRouter = createTRPCRouter({
             },
           },
         },
+        orderBy: { createdAt: 'desc' },
       });
+
+      return notes.reduce<
+        Array<{ sessionId: string | null; notes: typeof notes }>
+      >((grouped, note) => {
+        const { roomSessionId } = note;
+        const sessionGroup = grouped.find(
+          (group) => group.sessionId === roomSessionId,
+        );
+        if (sessionGroup) {
+          sessionGroup.notes.push(note); // Mutation will do its thing
+          return grouped;
+        }
+        return [...grouped, { sessionId: roomSessionId, notes: [note] }];
+      }, []);
     }),
   createNote: protectedProcedure
     .input(
