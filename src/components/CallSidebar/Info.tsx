@@ -91,19 +91,7 @@ const CallSidebarInfo: FC<Props> = (props) => {
                   <CallDuration
                     startedAt={targetRoom?.lastSession?.startedAt}
                   />
-                  <RoomInvite
-                    inviteCode={targetRoom.inviteCode}
-                    sx={{
-                      padding: 0,
-                      pl: 2,
-                      '.MuiTypography-root': {
-                        fontSize: theme.typography.subtitle1.fontSize,
-                      },
-                      '.MuiSvgIcon-root': {
-                        fontSize: 35,
-                      },
-                    }}
-                  />
+                  <CallInfoInvite inviteCode={targetRoom.inviteCode} />
                   <Button
                     color="inherit"
                     sx={{ width: '30%', alignSelf: 'flex-end' }}
@@ -121,5 +109,25 @@ const CallSidebarInfo: FC<Props> = (props) => {
     </>
   );
 };
+
+const CallInfoInvite: FC<{ inviteCode: string }> = (props) => (
+  <ClassNames>
+    {({ theme }) => (
+      <RoomInvite
+        inviteCode={props.inviteCode}
+        sx={{
+          padding: 0,
+          pl: 2,
+          '.MuiTypography-root': {
+            fontSize: theme.typography.subtitle1.fontSize,
+          },
+          '.MuiSvgIcon-root': {
+            fontSize: 35,
+          },
+        }}
+      />
+    )}
+  </ClassNames>
+);
 
 export default CallSidebarInfo;
