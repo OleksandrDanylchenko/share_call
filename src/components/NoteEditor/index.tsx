@@ -203,7 +203,7 @@ const NoteDeleteButton: FC<{ noteId: string; onClose: () => void }> = (
             }}
           >
             <DialogTitle id="note-delete-alert-title">
-              Are you sure you want to delete this room?
+              Are you sure you want to delete this note?
             </DialogTitle>
             <DialogActions>
               <Button color="inherit" disabled={deletingRoom} onClick={close}>

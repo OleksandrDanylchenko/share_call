@@ -133,6 +133,6 @@ export const notesRouter = createTRPCRouter({
         throw new Error('You are not the creator of this room');
       }
 
-      await ctx.prisma.room.delete({ where: { id: noteId } });
+      await ctx.prisma.note.delete({ where: { id: noteId } });
     }),
 });
