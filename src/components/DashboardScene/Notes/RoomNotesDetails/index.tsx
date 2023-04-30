@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Button, Stack, Typography } from '@mui/material';
@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
 import RoomNotesList from '@/components/DashboardScene/Notes/RoomNotesList';
+import NoteEditor from '@/components/NoteEditor';
 import { lightBackgroundContainer } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
@@ -18,22 +19,40 @@ interface Props {
 const RoomNotesDetails: FC<Required<Props>> = (props) => {
   const { activeRoomId } = props;
 
+  const [editingNoteId, setEditingNoteId] = useState<string | undefined | null>(
+    null,
+  );
+
   const handleCreateNote = async (): Promise<void> => {
-    console.log('gg');
+    setEditingNoteId(undefined);
   };
 
-  const handleViewNote = async (): Promise<void> => {
-    console.log('gg');
+  const handleViewNote = async (noteId: string): Promise<void> => {
+    setEditingNoteId(noteId);
+  };
+
+  const handleClose = (): void => {
+    setEditingNoteId(null);
   };
 
   return (
     <Stack flex={1} gap={2} overflow="auto">
-      <RoomInfo activeRoomId={activeRoomId} />
-      <RoomNotesList
-        activeRoomId={activeRoomId}
-        onCreateNote={handleCreateNote}
-        onViewNote={handleViewNote}
-      />
+      {editingNoteId === null ? (
+        <>
+          <RoomInfo activeRoomId={activeRoomId} />
+          <RoomNotesList
+            activeRoomId={activeRoomId}
+            onCreateNote={handleCreateNote}
+            onViewNote={handleViewNote}
+          />
+        </>
+      ) : (
+        <NoteEditor
+          activeRoomId={activeRoomId}
+          noteId={editingNoteId}
+          onClose={handleClose}
+        />
+      )}
     </Stack>
   );
 };

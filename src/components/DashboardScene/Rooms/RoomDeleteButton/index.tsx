@@ -30,8 +30,6 @@ interface Props {
 const RoomDeleteButton: FC<Props> = (props) => {
   const { activeRoomId } = props;
 
-  const router = useRouter();
-
   const dialogState = usePopupState({ variant: 'dialog' });
   const { close } = dialogState;
 

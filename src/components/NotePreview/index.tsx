@@ -35,6 +35,8 @@ const NotePreview: FC<Props> = (props) => {
         height={150}
         overflow="hidden"
         fontSize={9}
+        fontWeight="normal"
+        textAlign="left"
       >
         {content}
       </Box>
