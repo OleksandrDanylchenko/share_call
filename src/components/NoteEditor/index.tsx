@@ -57,6 +57,12 @@ const NoteEditor: FC<Props> = (props) => {
     });
   const { mutate: updateNote, isLoading: updatingRoom } =
     api.notes.updateNote.useMutation({
+      async onMutate({ id, ...updated }) {
+        apiUtils.notes.getNote.setData({ id }, (prevNote) => ({
+          ...prevNote!,
+          ...updated,
+        }));
+      },
       async onSuccess({ id }) {
         setNoteId(id);
         await apiUtils.notes.getGroupedRoomNotes.invalidate();
@@ -120,7 +126,7 @@ const NoteEditor: FC<Props> = (props) => {
                 `,
               }}
             />
-            <Stack direction="row" justifyContent="flex-end">
+            <Stack direction="row" justifyContent="flex-end" gap={1}>
               <Button
                 color="inherit"
                 sx={{ width: 'fit-content' }}
@@ -130,6 +136,7 @@ const NoteEditor: FC<Props> = (props) => {
                 Back
               </Button>
               <LoadingButton
+                type="submit"
                 css={(theme) =>
                   shadowBorder(theme, { color: theme.palette.common.white })
                 }
