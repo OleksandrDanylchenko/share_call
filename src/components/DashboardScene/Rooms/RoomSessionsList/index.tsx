@@ -1,4 +1,4 @@
-import { FC, Fragment, MouseEvent, useRef, useState } from 'react';
+import { FC, Fragment, MouseEvent, useRef } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';

@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { ClassNames } from '@emotion/react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoIcon from '@mui/icons-material/Info';
+import PeopleIcon from '@mui/icons-material/People';
 import {
   Box,
   Button,
@@ -15,6 +16,7 @@ import {
 import { useToggle } from 'usehooks-ts';
 
 import CallDuration from '@/components/CallDuration';
+import PillContainer from '@/components/PillContainer';
 import RoomInvite from '@/components/RoomInvite';
 import {
   blurBackgroundContainer,
@@ -91,6 +93,11 @@ const CallSidebarInfo: FC<Props> = (props) => {
                   <CallDuration
                     startedAt={targetRoom?.lastSession?.startedAt}
                   />
+                  <CallInfoParticipants
+                    participantCount={
+                      targetRoom?.lastSession?.participants?.length || 0
+                    }
+                  />
                   <CallInfoInvite inviteCode={targetRoom.inviteCode} />
                   <Button
                     color="inherit"
@@ -128,6 +135,18 @@ const CallInfoInvite: FC<{ inviteCode: string }> = (props) => (
       />
     )}
   </ClassNames>
+);
+
+const CallInfoParticipants: FC<{ participantCount: number }> = (props) => (
+  <PillContainer active>
+    <Stack direction="row" alignItems="baseline" gap={2}>
+      <Typography variant="subtitle1">
+        <PeopleIcon fontSize="small" sx={{ mr: 1, mb: -0.5 }} />
+        Participants:
+      </Typography>
+      <Typography variant="subtitle1">{props.participantCount}</Typography>
+    </Stack>
+  </PillContainer>
 );
 
 export default CallSidebarInfo;
