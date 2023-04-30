@@ -4,6 +4,7 @@ import { ClassNames } from '@emotion/react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoIcon from '@mui/icons-material/Info';
 import PeopleIcon from '@mui/icons-material/People';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import {
   Box,
   Button,
@@ -98,7 +99,11 @@ const CallSidebarInfo: FC<Props> = (props) => {
                       targetRoom?.lastSession?.participants?.length || 0
                     }
                   />
+                  <CallInfoNotes
+                    notesCount={targetRoom?.lastSession?._count?.notes || 0}
+                  />
                   <CallInfoInvite inviteCode={targetRoom.inviteCode} />
+
                   <Button
                     color="inherit"
                     sx={{ width: '30%', alignSelf: 'flex-end' }}
@@ -145,6 +150,18 @@ const CallInfoParticipants: FC<{ participantCount: number }> = (props) => (
         Participants:
       </Typography>
       <Typography variant="subtitle1">{props.participantCount}</Typography>
+    </Stack>
+  </PillContainer>
+);
+
+const CallInfoNotes: FC<{ notesCount: number }> = (props) => (
+  <PillContainer active>
+    <Stack direction="row" alignItems="baseline" gap={2}>
+      <Typography variant="subtitle1">
+        <TextSnippetIcon fontSize="small" sx={{ mr: 1, mb: -0.5 }} />
+        Notes:
+      </Typography>
+      <Typography variant="subtitle1">{props.notesCount}</Typography>
     </Stack>
   </PillContainer>
 );

@@ -59,6 +59,11 @@ export const roomsRouter = createTRPCRouter({
                   },
                 },
               },
+              _count: {
+                select: {
+                  notes: true,
+                },
+              },
             },
           },
         },
