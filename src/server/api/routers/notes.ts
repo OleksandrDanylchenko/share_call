@@ -19,9 +19,10 @@ export const notesRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
       const { roomId } = input;
       const notes = await ctx.prisma.note.findMany({
-        where: { roomId },
+        where: { roomId, creatorId: userId },
         include: {
           room: {
             select: {
