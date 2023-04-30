@@ -38,39 +38,15 @@ const RoomNotesList: FC<Props> = (props) => {
       roomId: activeRoomId,
     });
 
-  const separateByCalls = router.query.separate_by_calls === 'true';
-  const handleSeparateByCalls = async (): Promise<void> => {
-    const nextShowDetails = !separateByCalls;
-    await router.replace(
-      {
-        query: {
-          ...router.query,
-          separate_by_calls: nextShowDetails,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
-
   if (isNotesLoading) return null;
   return (
     <Stack gap={2}>
-      <Stack direction="row" justifyContent="space-between" gap={2}>
-        <Typography variant="h5">Notes:</Typography>
-        <FormControlLabel
-          control={<Switch color="primary" onChange={handleSeparateByCalls} />}
-          label="Separate by calls"
-        />
-      </Stack>
+      <Typography variant="h5">Notes:</Typography>
       <List>
         {notesGroups?.map((notesGroup, index, arr) => (
           <Fragment key={`${notesGroup.sessionId}_${index}`}>
-            <RoomNotesGroup
-              notesGroup={notesGroup}
-              separateByCalls={separateByCalls}
-            />
-            {separateByCalls && index !== arr.length - 1 && <ListDivider />}
+            <RoomNotesGroup notesGroup={notesGroup} />
+            {index !== arr.length - 1 && <ListDivider />}
           </Fragment>
         ))}
       </List>
@@ -80,9 +56,8 @@ const RoomNotesList: FC<Props> = (props) => {
 
 const RoomNotesGroup: FC<{
   notesGroup: RouterOutputs['notes']['getGroupedRoomNotes'][number];
-  separateByCalls: boolean;
 }> = (props) => {
-  const { notesGroup, separateByCalls } = props;
+  const { notesGroup } = props;
 
   const router = useRouter();
 
@@ -99,40 +74,35 @@ const RoomNotesGroup: FC<{
 
   return (
     <Stack
-      css={(theme) =>
-        separateByCalls ? lightBackgroundContainer(theme) : undefined
-      }
+      css={(theme) => lightBackgroundContainer(theme)}
       p={2}
       borderRadius={6}
       gap={1.5}
     >
-      {separateByCalls && (
-        <>
-          {session && startedAtInstance ? (
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-              gap={2}
-            >
-              <span>
-                Call 2 — {startedAtInstance.toLocaleString(dateTimeFormat)}
-              </span>
-              <Button
-                color="inherit"
-                endIcon={<ArrowForwardIosIcon fontSize="small" />}
-                sx={{ px: 2, py: 0.5 }}
-                css={lightBackgroundContainer}
-                onClick={handleCallDetailsClick}
-              >
-                call details
-              </Button>
-            </Stack>
-          ) : (
-            <Typography component="span">Beyond the call</Typography>
-          )}
-        </>
+      {session && startedAtInstance ? (
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          gap={2}
+        >
+          <span>
+            Call 2 — {startedAtInstance.toLocaleString(dateTimeFormat)}
+          </span>
+          <Button
+            color="inherit"
+            endIcon={<ArrowForwardIosIcon fontSize="small" />}
+            sx={{ px: 2, py: 0.5 }}
+            css={lightBackgroundContainer}
+            onClick={handleCallDetailsClick}
+          >
+            call details
+          </Button>
+        </Stack>
+      ) : (
+        <Typography component="span">Beyond the call</Typography>
       )}
+
       <RoomNotesGrid notes={notesGroup.notes} />
     </Stack>
   );
