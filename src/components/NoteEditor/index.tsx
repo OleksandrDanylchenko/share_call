@@ -88,41 +88,60 @@ const NoteEditor: FC<Props> = (props) => {
         </Typography>
         {noteId && <NoteDeleteButton noteId={noteId} onClose={onClose} />}
       </Stack>
-      <FormContainer
-        formContext={contentFormContext}
-        onSuccess={handleContentSubmit}
-      >
-        <TextFieldElement
-          id="content-field"
-          name="content"
-          variant="standard"
-          fullWidth
-          required
-          hiddenLabel
-          disabled={creatingRoom || updatingRoom}
-        />
-
-        <Stack direction="row" justifyContent="flex-end">
-          <Button
-            color="inherit"
-            sx={{ width: 'fit-content' }}
-            startIcon={<ArrowBackIosIcon />}
-            onClick={onClose}
+      <ClassNames>
+        {({ css, theme }) => (
+          <FormContainer
+            formContext={contentFormContext}
+            onSuccess={handleContentSubmit}
+            FormProps={{
+              className: css`
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                flex: 1;
+                gap: ${theme.spacing(2)};
+              `,
+            }}
           >
-            Back
-          </Button>
-          <LoadingButton
-            css={(theme) =>
-              shadowBorder(theme, { color: theme.palette.common.white })
-            }
-            variant="outlined"
-            color="inherit"
-            loading={creatingRoom || updatingRoom}
-          >
-            <span>Save</span>
-          </LoadingButton>
-        </Stack>
-      </FormContainer>
+            <TextFieldElement
+              id="content-field"
+              name="content"
+              variant="standard"
+              fullWidth
+              required
+              hiddenLabel
+              multiline
+              disabled={creatingRoom || updatingRoom}
+              InputProps={{
+                className: css`
+                  align-items: flex-start;
+                  height: 100%;
+                `,
+              }}
+            />
+            <Stack direction="row" justifyContent="flex-end">
+              <Button
+                color="inherit"
+                sx={{ width: 'fit-content' }}
+                startIcon={<ArrowBackIosIcon />}
+                onClick={onClose}
+              >
+                Back
+              </Button>
+              <LoadingButton
+                css={(theme) =>
+                  shadowBorder(theme, { color: theme.palette.common.white })
+                }
+                variant="outlined"
+                color="inherit"
+                loading={creatingRoom || updatingRoom}
+              >
+                <span>Save</span>
+              </LoadingButton>
+            </Stack>
+          </FormContainer>
+        )}
+      </ClassNames>
     </Stack>
   );
 };
