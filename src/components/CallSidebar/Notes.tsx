@@ -1,14 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import { Box, Drawer, IconButton, Stack, Typography } from '@mui/material';
+import { Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
 import { useToggle } from 'usehooks-ts';
 
 import NoteEditor from '@/components/NoteEditor';
-import RoomNotesGrid from '@/components/NotesGrid';
+import NotesGroupsList from '@/components/NotesGroupsList';
 import {
   blurBackgroundContainer,
   fullHeight,
@@ -31,11 +31,9 @@ const CallSidebarNotes: FC<Props> = (props) => {
     { retry: 1 },
   );
 
-  const lastSessionId = targetRoom?.lastSession?.id;
-  const { data: notes } = api.notes.getSessionNotes.useQuery(
-    { sessionId: lastSessionId! },
-    { enabled: !!lastSessionId },
-  );
+  const { data: notesGroups } = api.notes.getGroupedRoomNotes.useQuery({
+    roomId,
+  });
 
   const [editingNoteId, setEditingNoteId] = useState<string | undefined | null>(
     null,
@@ -79,7 +77,7 @@ const CallSidebarNotes: FC<Props> = (props) => {
               ),
             }}
           >
-            {targetRoom && notes && (
+            {targetRoom && notesGroups && (
               <Stack css={fullHeight} justifyContent="space-between" gap={2}>
                 {editingNoteId === null ? (
                   <>
@@ -101,7 +99,13 @@ const CallSidebarNotes: FC<Props> = (props) => {
                         new note
                       </Button>
                     </Stack>
-                    <RoomNotesGrid notes={notes} onViewNote={handleViewNote} />
+                    {notesGroups && (
+                      <NotesGroupsList
+                        notesGroups={notesGroups}
+                        onViewNote={handleViewNote}
+                        showDetailsLink={false}
+                      />
+                    )}
                     <Button
                       color="inherit"
                       sx={{ width: '30%', alignSelf: 'flex-end' }}

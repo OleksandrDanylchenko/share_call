@@ -64,26 +64,6 @@ export const notesRouter = createTRPCRouter({
         return grouped;
       }, []);
     }),
-  getSessionNotes: protectedProcedure
-    .input(
-      z.object({
-        sessionId: z
-          .string()
-          .cuid()
-          .refine(
-            async (id) =>
-              (await prisma.roomSession.count({ where: { id } })) !== 0,
-            'The session for the provided id does not exist',
-          ),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id;
-      const { sessionId } = input;
-      return ctx.prisma.note.findMany({
-        where: { roomSessionId: sessionId, creatorId: userId },
-      });
-    }),
   getNote: protectedProcedure
     .input(
       z.object({
