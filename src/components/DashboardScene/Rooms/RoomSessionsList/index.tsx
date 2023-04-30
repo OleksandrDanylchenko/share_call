@@ -343,7 +343,7 @@ const ListPlaceholder: FC = () => (
   </List>
 );
 
-const ListDivider: FC = () => (
+export const ListDivider: FC = () => (
   <Divider
     variant="middle"
     sx={{ width: '95%', marginTop: 2, marginBottom: 2 }}

@@ -6,7 +6,7 @@ import { prisma } from '@/server/db';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 export const notesRouter = createTRPCRouter({
-  getRoomNotes: protectedProcedure
+  getGroupedRoomNotes: protectedProcedure
     .input(
       z.object({
         roomId: z

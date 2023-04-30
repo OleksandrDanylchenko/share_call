@@ -1,10 +1,11 @@
-import React, { FC, MouseEvent } from 'react';
+import { FC } from 'react';
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Button, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
+import RoomNotesList from '@/components/DashboardScene/Notes/RoomNotesList';
 import { lightBackgroundContainer } from '@/styles/mixins';
 import { api } from '@/utils/api';
 
@@ -18,8 +19,9 @@ const RoomNotesDetails: FC<Required<Props>> = (props) => {
   const { activeRoomId } = props;
 
   return (
-    <Stack flex={1} gap={4} overflow="auto">
+    <Stack flex={1} gap={2} overflow="auto">
       <RoomInfo activeRoomId={activeRoomId} />
+      <RoomNotesList activeRoomId={activeRoomId} />
     </Stack>
   );
 };
