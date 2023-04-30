@@ -41,6 +41,7 @@ const NotePreview: FC<Props> = (props) => {
         fontSize={9}
         fontWeight="normal"
         textAlign="left"
+        whiteSpace="pre-wrap"
       >
         {content}
       </Box>
