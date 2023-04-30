@@ -93,7 +93,7 @@ const RoomNotesGroup: FC<{
           gap={2}
         >
           <span>
-            Call N — {startedAtInstance.toLocaleString(dateTimeFormat)}
+            Call 2 — {startedAtInstance.toLocaleString(dateTimeFormat)}
           </span>
           <Button
             color="inherit"

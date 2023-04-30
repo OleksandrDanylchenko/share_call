@@ -1,10 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 
 import { ClassNames } from '@emotion/react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import { Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Drawer, IconButton, Stack, Typography } from '@mui/material';
 import { useToggle } from 'usehooks-ts';
 
 import NoteEditor from '@/components/NoteEditor';

@@ -5,12 +5,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import NotePreview from '@/components/NotePreview';
 import { RouterOutputs } from '@/utils/api';
 
-export type Notes =
-  | RouterOutputs['notes']['getGroupedRoomNotes'][number]['notes']
-  | RouterOutputs['notes']['getSessionNotes'];
-
 interface Props {
-  notes: Notes;
+  notes: RouterOutputs['notes']['getGroupedRoomNotes'][number]['notes'];
   onViewNote: (noteId: string) => void;
 }
 
