@@ -2,7 +2,11 @@ import { FC } from 'react';
 
 import { Box, Button, Typography } from '@mui/material';
 
-import { lightBackgroundContainer, lineClamp } from '@/styles/mixins';
+import {
+  fullWidth,
+  lightBackgroundContainer,
+  lineClamp,
+} from '@/styles/mixins';
 import { RouterOutputs } from '@/utils/api';
 
 interface Props {
@@ -29,7 +33,7 @@ const NotePreview: FC<Props> = (props) => {
       onClick={() => onViewNote(note.id)}
     >
       <Box
-        css={lightBackgroundContainer}
+        css={[fullWidth, lightBackgroundContainer]}
         p={1}
         borderRadius={3}
         height={150}
