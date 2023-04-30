@@ -4,7 +4,14 @@ import { ClassNames } from '@emotion/react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import { Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Drawer,
+  IconButton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useToggle } from 'usehooks-ts';
 
 import NoteEditor from '@/components/NoteEditor';
@@ -78,7 +85,7 @@ const CallSidebarNotes: FC<Props> = (props) => {
             }}
           >
             {targetRoom && notesGroups && (
-              <Stack css={fullHeight} justifyContent="space-between" gap={2}>
+              <Stack justifyContent="space-between" gap={2}>
                 {editingNoteId === null ? (
                   <>
                     <Stack
@@ -99,13 +106,13 @@ const CallSidebarNotes: FC<Props> = (props) => {
                         new note
                       </Button>
                     </Stack>
-                    {notesGroups && (
+                    <Box flex={1}>
                       <NotesGroupsList
                         notesGroups={notesGroups}
                         onViewNote={handleViewNote}
                         showDetailsLink={false}
                       />
-                    )}
+                    </Box>
                     <Button
                       color="inherit"
                       sx={{ width: '30%', alignSelf: 'flex-end' }}
