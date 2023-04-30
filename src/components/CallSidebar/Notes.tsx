@@ -68,7 +68,7 @@ const CallSidebarNotes: FC<Props> = (props) => {
             onClose={toggleShowInfo}
             PaperProps={{
               sx: {
-                width: 420,
+                width: 512,
                 padding: 4,
               },
               className: css(
