@@ -1,4 +1,4 @@
-import { isUndefined, omitBy } from 'lodash';
+import { isUndefined, last, omitBy } from 'lodash';
 import { z } from 'zod';
 
 import { prisma } from '@/server/db';
@@ -44,14 +44,23 @@ export const notesRouter = createTRPCRouter({
         Array<{ sessionId: string | null; notes: typeof notes }>
       >((grouped, note) => {
         const { roomSessionId } = note;
-        const sessionGroup = grouped.find(
-          (group) => group.sessionId === roomSessionId,
-        );
-        if (sessionGroup) {
-          sessionGroup.notes.push(note); // Mutation will do its thing
-          return grouped;
+        if (roomSessionId) {
+          const sessionGroup = grouped.find(
+            (group) => group.sessionId === roomSessionId,
+          );
+          if (sessionGroup) {
+            sessionGroup.notes.push(note); // Mutation will do its thing
+            return grouped;
+          }
+          return [...grouped, { sessionId: roomSessionId, notes: [note] }];
         }
-        return [...grouped, { sessionId: roomSessionId, notes: [note] }];
+
+        const lastGroup = last(grouped);
+        if (!lastGroup || lastGroup.sessionId) {
+          return [...grouped, { sessionId: null, notes: [note] }];
+        }
+        lastGroup.notes.push(note); // Mutation will do its thing
+        return grouped;
       }, []);
     }),
   createNote: protectedProcedure
