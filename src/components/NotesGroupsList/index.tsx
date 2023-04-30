@@ -6,6 +6,7 @@ import { first } from 'lodash';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
 
+import BlinkingCircle from '@/components/BlinkingCircle';
 import { DashboardSceneType } from '@/components/DashboardScene';
 import {
   dateTimeFormat,
@@ -56,8 +57,6 @@ const RoomNotesGroup: FC<{
     ? DateTime.fromJSDate(session?.startedAt)
     : null;
 
-  // TODO Show ongoing calls
-
   const handleCallDetailsClick = async (): Promise<boolean> =>
     goToDashboardScene(DashboardSceneType.Rooms, {
       ...router.query,
@@ -81,17 +80,20 @@ const RoomNotesGroup: FC<{
           <span>
             Call N — {startedAtInstance.toLocaleString(dateTimeFormat)}
           </span>
-          {showDetailsLink && (
-            <Button
-              color="inherit"
-              endIcon={<ArrowForwardIosIcon fontSize="small" />}
-              sx={{ px: 2, py: 0.5 }}
-              css={lightBackgroundContainer}
-              onClick={handleCallDetailsClick}
-            >
-              call details
-            </Button>
-          )}
+          <Stack direction="row" gap={1}>
+            {session && !session.finishedAt && <BlinkingCircle />}
+            {showDetailsLink && (
+              <Button
+                color="inherit"
+                endIcon={<ArrowForwardIosIcon fontSize="small" />}
+                sx={{ px: 2, py: 0.5 }}
+                css={lightBackgroundContainer}
+                onClick={handleCallDetailsClick}
+              >
+                call details
+              </Button>
+            )}
+          </Stack>
         </Stack>
       ) : (
         <Typography component="span">Beyond the call</Typography>
