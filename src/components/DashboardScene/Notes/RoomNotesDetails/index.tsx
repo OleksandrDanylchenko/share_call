@@ -24,10 +24,9 @@ const RoomNotesDetails: FC<Required<Props>> = (props) => {
   );
   const handleCreateNote = async (): Promise<void> =>
     setEditingNoteId(undefined);
-
   const handleViewNote = async (noteId: string): Promise<void> =>
     setEditingNoteId(noteId);
-  const handleClose = (): void => {
+  const handleNoteEditorClose = (): void => {
     setEditingNoteId(null);
   };
 
@@ -46,7 +45,7 @@ const RoomNotesDetails: FC<Required<Props>> = (props) => {
         <NoteEditor
           activeRoomId={activeRoomId}
           noteId={editingNoteId}
-          onClose={handleClose}
+          onClose={handleNoteEditorClose}
         />
       )}
     </Stack>

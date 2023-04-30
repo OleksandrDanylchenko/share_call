@@ -1,15 +1,18 @@
 import React, { FC, useState } from 'react';
 
 import { ClassNames } from '@emotion/react';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import { Button, Drawer, IconButton, Stack } from '@mui/material';
+import { Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
 import { useToggle } from 'usehooks-ts';
 
+import NoteEditor from '@/components/NoteEditor';
 import RoomNotesGrid from '@/components/NotesGrid';
 import {
   blurBackgroundContainer,
   fullHeight,
+  lightBackgroundContainer,
   shadowBorder,
 } from '@/styles/mixins';
 import { api } from '@/utils/api';
@@ -39,10 +42,9 @@ const CallSidebarNotes: FC<Props> = (props) => {
   );
   const handleCreateNote = async (): Promise<void> =>
     setEditingNoteId(undefined);
-
   const handleViewNote = async (noteId: string): Promise<void> =>
     setEditingNoteId(noteId);
-  const handleClose = (): void => {
+  const handleNoteEditorClose = (): void => {
     setEditingNoteId(null);
   };
 
@@ -79,16 +81,42 @@ const CallSidebarNotes: FC<Props> = (props) => {
           >
             {targetRoom && notes && (
               <Stack css={fullHeight} justifyContent="space-between" gap={2}>
-                <RoomNotesGrid notes={notes} onViewNote={handleViewNote} />
-                {editingNoteId === null && (
-                  <Button
-                    color="inherit"
-                    sx={{ width: '30%', alignSelf: 'flex-end' }}
-                    endIcon={<ArrowForwardIosIcon />}
-                    onClick={toggleShowInfo}
-                  >
-                    Close
-                  </Button>
+                {editingNoteId === null ? (
+                  <>
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Typography variant="h5">Notes:</Typography>
+                      <Button
+                        color="inherit"
+                        startIcon={<AddCircleOutlineIcon fontSize="small" />}
+                        sx={{ px: 2, py: 0.5 }}
+                        css={(theme) =>
+                          lightBackgroundContainer(theme, { active: true })
+                        }
+                        onClick={handleCreateNote}
+                      >
+                        new note
+                      </Button>
+                    </Stack>
+                    <RoomNotesGrid notes={notes} onViewNote={handleViewNote} />
+                    <Button
+                      color="inherit"
+                      sx={{ width: '30%', alignSelf: 'flex-end' }}
+                      endIcon={<ArrowForwardIosIcon />}
+                      onClick={toggleShowInfo}
+                    >
+                      Close
+                    </Button>
+                  </>
+                ) : (
+                  <NoteEditor
+                    activeRoomId={roomId}
+                    noteId={editingNoteId}
+                    onClose={handleNoteEditorClose}
+                  />
                 )}
               </Stack>
             )}
