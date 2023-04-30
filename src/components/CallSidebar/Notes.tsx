@@ -1,10 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 import { ClassNames } from '@emotion/react';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import { Box, Drawer, IconButton, Stack } from '@mui/material';
+import { Button, Drawer, IconButton, Stack } from '@mui/material';
 import { useToggle } from 'usehooks-ts';
 
+import RoomNotesGrid from '@/components/NotesGrid';
 import {
   blurBackgroundContainer,
   fullHeight,
@@ -25,6 +27,24 @@ const CallSidebarNotes: FC<Props> = (props) => {
     { id: roomId },
     { retry: 1 },
   );
+
+  const lastSessionId = targetRoom?.lastSession?.id;
+  const { data: notes } = api.notes.getSessionNotes.useQuery(
+    { sessionId: lastSessionId! },
+    { enabled: !!lastSessionId },
+  );
+
+  const [editingNoteId, setEditingNoteId] = useState<string | undefined | null>(
+    null,
+  );
+  const handleCreateNote = async (): Promise<void> =>
+    setEditingNoteId(undefined);
+
+  const handleViewNote = async (noteId: string): Promise<void> =>
+    setEditingNoteId(noteId);
+  const handleClose = (): void => {
+    setEditingNoteId(null);
+  };
 
   return (
     <>

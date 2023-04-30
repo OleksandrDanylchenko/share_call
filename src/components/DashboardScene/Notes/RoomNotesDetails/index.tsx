@@ -22,15 +22,11 @@ const RoomNotesDetails: FC<Required<Props>> = (props) => {
   const [editingNoteId, setEditingNoteId] = useState<string | undefined | null>(
     null,
   );
-
-  const handleCreateNote = async (): Promise<void> => {
+  const handleCreateNote = async (): Promise<void> =>
     setEditingNoteId(undefined);
-  };
 
-  const handleViewNote = async (noteId: string): Promise<void> => {
+  const handleViewNote = async (noteId: string): Promise<void> =>
     setEditingNoteId(noteId);
-  };
-
   const handleClose = (): void => {
     setEditingNoteId(null);
   };

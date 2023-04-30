@@ -7,10 +7,11 @@ import {
   lightBackgroundContainer,
   lineClamp,
 } from '@/styles/mixins';
-import { RouterOutputs } from '@/utils/api';
+
+import type { Notes } from '@/components/NotesGrid';
 
 interface Props {
-  note: RouterOutputs['notes']['getGroupedRoomNotes'][number]['notes'][number];
+  note: Notes[number];
   onViewNote: (noteId: string) => void;
 }
 
