@@ -33,6 +33,7 @@ model RoomSession {
     room         Room                 @relation(fields: [roomId], references: [id], onDelete: Cascade)
     startedAt    DateTime             @default(now()) @map("started_at")
     finishedAt   DateTime?            @map("finished_at")
+    serialNumber Int                  @default(autoincrement())
     participants SessionParticipant[]
     notes        Note[]
 
