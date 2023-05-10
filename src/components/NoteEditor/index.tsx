@@ -50,6 +50,12 @@ const NoteEditor: FC<Props> = (props) => {
         DateTime.DATETIME_SHORT,
       )
     : '';
+  const updatedAtStr =
+    note?.updatedAt && note?.createdAt !== note?.updatedAt
+      ? DateTime.fromJSDate(note.updatedAt).toLocaleString(
+          DateTime.DATETIME_SHORT,
+        )
+      : '';
 
   const contentFormContext = useForm({
     values: { content: note?.content || '' },
@@ -140,9 +146,22 @@ const NoteEditor: FC<Props> = (props) => {
               justifyContent="space-between"
               gap={1}
             >
-              <Typography css={lineClamp(1)} fontSize={12} textAlign="center">
-                {createdAtStr ? `Created at: ${createdAtStr}` : 'New note'}
-              </Typography>
+              <Stack alignItems="flex-start" gap={0.5}>
+                <Typography css={lineClamp(1)} fontSize={12} textAlign="center">
+                  {createdAtStr ? `Created at: ${createdAtStr}` : 'New note'}
+                </Typography>
+                {updatedAtStr && (
+                  <>
+                    <Typography
+                      css={lineClamp(1)}
+                      fontSize={12}
+                      textAlign="center"
+                    >
+                      Updated at: {updatedAtStr}
+                    </Typography>
+                  </>
+                )}
+              </Stack>
               <Stack direction="row" gap={1}>
                 <Button
                   color="inherit"
