@@ -14,6 +14,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { DateTime } from 'luxon';
 import {
   bindDialog,
   bindTrigger,
@@ -23,6 +24,7 @@ import {
 import {
   blurBackgroundContainer,
   fullHeight,
+  lineClamp,
   shadowBorder,
 } from '@/styles/mixins';
 import { api } from '@/utils/api';
@@ -42,6 +44,12 @@ const NoteEditor: FC<Props> = (props) => {
     { id: noteId! },
     { enabled: !!noteId },
   );
+
+  const createdAtStr = note?.createdAt
+    ? DateTime.fromJSDate(note.createdAt).toLocaleString(
+        DateTime.DATETIME_SHORT,
+      )
+    : '';
 
   const contentFormContext = useForm({
     values: { content: note?.content || '' },
@@ -126,26 +134,36 @@ const NoteEditor: FC<Props> = (props) => {
                 `,
               }}
             />
-            <Stack direction="row" justifyContent="flex-end" gap={1}>
-              <Button
-                color="inherit"
-                sx={{ width: 'fit-content' }}
-                startIcon={<ArrowBackIosIcon />}
-                onClick={onClose}
-              >
-                Back
-              </Button>
-              <LoadingButton
-                type="submit"
-                css={(theme) =>
-                  shadowBorder(theme, { color: theme.palette.common.white })
-                }
-                variant="outlined"
-                color="inherit"
-                loading={creatingRoom || updatingRoom}
-              >
-                <span>Save</span>
-              </LoadingButton>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              gap={1}
+            >
+              <Typography css={lineClamp(1)} fontSize={12} textAlign="center">
+                {createdAtStr ? `Created at: ${createdAtStr}` : 'New note'}
+              </Typography>
+              <Stack direction="row" gap={1}>
+                <Button
+                  color="inherit"
+                  sx={{ width: 'fit-content' }}
+                  startIcon={<ArrowBackIosIcon />}
+                  onClick={onClose}
+                >
+                  Back
+                </Button>
+                <LoadingButton
+                  type="submit"
+                  css={(theme) =>
+                    shadowBorder(theme, { color: theme.palette.common.white })
+                  }
+                  variant="outlined"
+                  color="inherit"
+                  loading={creatingRoom || updatingRoom}
+                >
+                  <span>Save</span>
+                </LoadingButton>
+              </Stack>
             </Stack>
           </FormContainer>
         )}

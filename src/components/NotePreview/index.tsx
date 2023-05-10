@@ -20,7 +20,7 @@ const NotePreview: FC<Props> = (props) => {
   const { content, createdAt } = note;
 
   const [firstLine] = content.split('\n');
-  const createdAtDateTime = DateTime.fromJSDate(createdAt).toLocaleString(
+  const createdAtStr = DateTime.fromJSDate(createdAt).toLocaleString(
     DateTime.DATETIME_SHORT,
   );
 
@@ -59,7 +59,7 @@ const NotePreview: FC<Props> = (props) => {
           textAlign="center"
           color="grey.500"
         >
-          {createdAtDateTime}
+          {createdAtStr}
         </Typography>
       </Stack>
     </Button>
