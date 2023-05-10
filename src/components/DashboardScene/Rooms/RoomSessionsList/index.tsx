@@ -56,10 +56,7 @@ const RoomSessionsList: FC<Props> = (props) => {
           <List>
             {sessions?.map((session, index, arr) => (
               <Fragment key={session.id}>
-                <ListSessionItem
-                  session={session}
-                  serialNumber={arr.length - index - 1} // Count from the end
-                />
+                <ListSessionItem session={session} />
                 {index !== arr.length - 1 && <ListDivider />}
               </Fragment>
             ))}
@@ -77,7 +74,6 @@ export const dateTimeFormat = {
 
 const ListSessionItem: FC<{
   session: RouterOutputs['rooms']['getRoomSessions'][number];
-  serialNumber: number;
 }> = (props) => {
   const router = useRouter();
   const activeSessionId = router.query.session_id as string | undefined;
@@ -87,10 +83,10 @@ const ListSessionItem: FC<{
       id: sessionId,
       startedAt,
       finishedAt,
+      serialNumber,
       participants,
       _count: { notes: noteCount },
     },
-    serialNumber,
   } = props;
 
   const showDetails = activeSessionId === sessionId;

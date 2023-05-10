@@ -98,6 +98,7 @@ export const roomsRouter = createTRPCRouter({
           id: true,
           startedAt: true,
           finishedAt: true,
+          serialNumber: true,
           participants: {
             select: {
               user: {
@@ -214,8 +215,16 @@ export const roomsRouter = createTRPCRouter({
         select: { id: true },
       });
       if (!activeSession) {
+        const penultimateSession = await ctx.prisma.roomSession.findFirst({
+          where: { roomId },
+          orderBy: { startedAt: 'desc' },
+          select: { id: true, serialNumber: true },
+        });
         activeSession = await ctx.prisma.roomSession.create({
-          data: { roomId },
+          data: {
+            roomId,
+            serialNumber: (penultimateSession?.serialNumber || 0) + 1,
+          },
           select: { id: true },
         });
       }

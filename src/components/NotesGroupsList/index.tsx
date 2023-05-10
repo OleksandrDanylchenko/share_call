@@ -78,7 +78,8 @@ const RoomNotesGroup: FC<{
           gap={2}
         >
           <span>
-            Call N — {startedAtInstance.toLocaleString(dateTimeFormat)}
+            Call {session?.serialNumber} —{' '}
+            {startedAtInstance.toLocaleString(dateTimeFormat)}
           </span>
           <Stack direction="row" gap={1}>
             {session && !session.finishedAt && <BlinkingCircle />}

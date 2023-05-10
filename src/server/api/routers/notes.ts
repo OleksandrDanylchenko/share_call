@@ -35,6 +35,7 @@ export const notesRouter = createTRPCRouter({
               id: true,
               startedAt: true,
               finishedAt: true,
+              serialNumber: true,
             },
           },
         },
