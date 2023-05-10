@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, Stack } from '@mui/material';
+import { DateTime } from 'luxon';
 
 import {
   fullWidth,
@@ -16,9 +17,12 @@ interface Props {
 
 const NotePreview: FC<Props> = (props) => {
   const { note, onViewNote } = props;
-  const { content } = note;
+  const { content, createdAt } = note;
 
   const [firstLine] = content.split('\n');
+  const createdAtDateTime = DateTime.fromJSDate(createdAt).toLocaleString(
+    DateTime.DATETIME_SHORT,
+  );
 
   return (
     <Button
@@ -45,9 +49,19 @@ const NotePreview: FC<Props> = (props) => {
       >
         {content}
       </Box>
-      <Typography css={lineClamp(1)} fontSize={12} textAlign="center">
-        {firstLine}
-      </Typography>
+      <Stack gap={0.4}>
+        <Typography css={lineClamp(1)} fontSize={12} textAlign="center">
+          {firstLine}
+        </Typography>
+        <Typography
+          css={lineClamp(1)}
+          fontSize={11}
+          textAlign="center"
+          color="grey.500"
+        >
+          {createdAtDateTime}
+        </Typography>
+      </Stack>
     </Button>
   );
 };
