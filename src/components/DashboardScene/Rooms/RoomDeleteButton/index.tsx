@@ -15,20 +15,22 @@ import {
   bindTrigger,
   usePopupState,
 } from 'material-ui-popup-state/hooks';
-import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
-import { blurBackgroundContainer, shadowBorder } from '@/styles/mixins';
-import { api } from '@/utils/api';
-
 import { goToDashboardScene } from '@/routing/index';
+import { blurBackgroundContainer, shadowBorder } from '@/styles/mixins';
+import { api, RouterOutputs } from '@/utils/api';
 
 interface Props {
-  activeRoomId: string;
+  activeRoom: RouterOutputs['rooms']['getRoom'];
 }
 
 const RoomDeleteButton: FC<Props> = (props) => {
-  const { activeRoomId } = props;
+  const { activeRoom } = props;
+  const { id: activeRoomId, creatorId } = activeRoom!;
+
+  const { data: session } = useSession();
 
   const dialogState = usePopupState({ variant: 'dialog' });
   const { close } = dialogState;
@@ -49,6 +51,7 @@ const RoomDeleteButton: FC<Props> = (props) => {
       },
     });
 
+  if (creatorId !== session?.user?.id) return null;
   return (
     <>
       <IconButton

@@ -7,10 +7,9 @@ import RoomDeleteButton from '@/components/DashboardScene/Rooms/RoomDeleteButton
 import RoomSessionsList from '@/components/DashboardScene/Rooms/RoomSessionsList';
 import RoomUpdateForm from '@/components/DashboardScene/Rooms/RoomUpdateForm';
 import PillContainer from '@/components/PillContainer';
+import { goToPreviewPage } from '@/routing/index';
 import { api } from '@/utils/api';
 import RoomInvite from 'components/RoomInvite';
-
-import { goToPreviewPage } from '@/routing/index';
 
 interface Props {
   activeRoomId?: string;
@@ -28,7 +27,7 @@ const RoomDetails: FC<Required<Props>> = (props) => {
     <Stack flex={1} gap={4} overflow="auto">
       {activeRoom && (
         <>
-          <RoomDeleteButton activeRoomId={activeRoom.id} />
+          <RoomDeleteButton activeRoom={activeRoom} />
           <RoomUpdateForm activeRoom={activeRoom} />
           <Stack direction="row" gap={2}>
             <RoomInvite inviteCode={activeRoom.inviteCode} />
