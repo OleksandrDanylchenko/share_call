@@ -10,16 +10,12 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import LoginIcon from '@mui/icons-material/Login';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import { Button, Stack, Typography, useTheme } from '@mui/material';
-import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
+import { goToDashboardScene } from '@/routing/index';
 import { fullParent, shadowBorder } from '@/styles/mixins';
 
-import { goToDashboardScene } from '@/routing/index';
-
 const DashboardOptions: FC = () => {
-  const router = useRouter();
-
   const theme = useTheme();
   return (
     <Stack css={fullParent} px={5} py={7} gap={5}>
@@ -29,7 +25,7 @@ const DashboardOptions: FC = () => {
         icon={<FormatListBulletedIcon />}
         onClick={() => goToDashboardScene(DashboardSceneType.Rooms)}
       >
-        My rooms
+        Rooms
       </Option>
       <Option
         layout="horizontal"
@@ -37,7 +33,7 @@ const DashboardOptions: FC = () => {
         icon={<TextSnippetIcon />}
         onClick={() => goToDashboardScene(DashboardSceneType.Notes)}
       >
-        My notes
+        Notes
       </Option>
       <Stack
         direction="row"
