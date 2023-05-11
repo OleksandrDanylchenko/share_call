@@ -3,6 +3,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 
 import { ClassNames } from '@emotion/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import SearchIcon from '@mui/icons-material/Search';
 import {
   Box,
@@ -16,6 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 import { checkIsElementInView } from '@/hooks/useIsElementInView';
 import {
@@ -34,6 +36,7 @@ interface Props {
 const RoomsList: FC<Props> = (props) => {
   const { rooms, activeRoomId } = props;
 
+  const { data: session } = useSession();
   const router = useRouter();
 
   const [activeRoomItem, setActiveRoomItem] = useState<HTMLDivElement | null>(
@@ -84,43 +87,48 @@ const RoomsList: FC<Props> = (props) => {
         <AutoSizer disableWidth>
           {({ height }) => (
             <List ref={animateListParent} sx={{ height, overflowY: 'auto' }}>
-              {filteredRooms.map(({ id, name, description }, index, arr) => (
-                <Fragment key={id}>
-                  <ListItemButton
-                    ref={activeRoomId === id ? setActiveRoomItem : undefined}
-                    css={(theme) =>
-                      lightBackgroundContainer(theme, {
-                        active: activeRoomId === id,
-                      })
-                    }
-                    sx={{ borderRadius: 6 }}
-                    onClick={() => handleRoomClick(id)}
-                  >
-                    <ClassNames>
-                      {({ css }) => (
-                        <ListItemText
-                          classes={{
-                            primary: css`
-                              ${lineClamp()}
-                            `,
-                            secondary: css`
-                              ${lineClamp(3)}
-                            `,
-                          }}
-                          primary={name}
-                          secondary={description}
-                        />
+              {filteredRooms.map(
+                ({ id, name, description, creatorId }, index, arr) => (
+                  <Fragment key={id}>
+                    <ListItemButton
+                      ref={activeRoomId === id ? setActiveRoomItem : undefined}
+                      css={(theme) =>
+                        lightBackgroundContainer(theme, {
+                          active: activeRoomId === id,
+                        })
+                      }
+                      sx={{ borderRadius: 6, gap: 1 }}
+                      onClick={() => handleRoomClick(id)}
+                    >
+                      <ClassNames>
+                        {({ css }) => (
+                          <ListItemText
+                            classes={{
+                              primary: css`
+                                ${lineClamp()}
+                              `,
+                              secondary: css`
+                                ${lineClamp(3)}
+                              `,
+                            }}
+                            primary={name}
+                            secondary={description}
+                          />
+                        )}
+                      </ClassNames>
+                      {creatorId !== session?.user?.id && (
+                        <GroupAddIcon fontSize="small" />
                       )}
-                    </ClassNames>
-                  </ListItemButton>
-                  {index !== arr.length - 1 && (
-                    <Divider
-                      variant="middle"
-                      sx={{ width: '90%', marginTop: 2, marginBottom: 2 }}
-                    />
-                  )}
-                </Fragment>
-              ))}
+                    </ListItemButton>
+                    {index !== arr.length - 1 && (
+                      <Divider
+                        variant="middle"
+                        sx={{ width: '90%', marginTop: 2, marginBottom: 2 }}
+                      />
+                    )}
+                  </Fragment>
+                ),
+              )}
             </List>
           )}
         </AutoSizer>

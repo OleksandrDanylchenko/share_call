@@ -30,11 +30,10 @@ import BlinkingCircle from '@/components/BlinkingCircle';
 import { DashboardSceneType } from '@/components/DashboardScene';
 import { AVATAR_SIZE } from '@/constants/index';
 import { useDuration } from '@/hooks/useDuration';
+import { goToDashboardScene } from '@/routing/index';
 import { fullWidth, lightBackgroundContainer } from '@/styles/mixins';
 import { api, RouterOutputs } from '@/utils/api';
 import { getImageLoader } from '@/utils/files';
-
-import { goToDashboardScene } from '@/routing/index';
 
 interface Props {
   activeRoomId: string;
@@ -48,7 +47,9 @@ const RoomSessionsList: FC<Props> = (props) => {
 
   return (
     <Stack pl={1} gap={2} flex={1}>
-      <Typography variant="h5">Calls history:</Typography>
+      {!isSessionsLoading && (sessions?.length || 0) > 0 && (
+        <Typography variant="h5">Calls history:</Typography>
+      )}
       <>
         {isSessionsLoading ? (
           <ListPlaceholder />
