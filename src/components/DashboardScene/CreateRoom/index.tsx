@@ -10,14 +10,13 @@ import { Button, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { DashboardSceneType } from '@/components/DashboardScene';
-import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
-import { api } from '@/utils/api';
-
 import {
   goToDashboardScene,
   goToDashboard,
   goToPreviewPage,
 } from '@/routing/index';
+import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
+import { api } from '@/utils/api';
 
 const DashboardCreateRoom: FC = () => {
   const router = useRouter();
@@ -30,9 +29,7 @@ const DashboardCreateRoom: FC = () => {
 
   const handleCreateRoomClick = async (): Promise<boolean> => {
     const { id: newRoomId } = await createRoom(getValues());
-    return goToDashboardScene(DashboardSceneType.Rooms, {
-      room_id: newRoomId,
-    });
+    return goToDashboardScene(DashboardSceneType.Rooms, { room_id: newRoomId });
   };
 
   const handleCreateAndJoinClick = async (): Promise<boolean> => {

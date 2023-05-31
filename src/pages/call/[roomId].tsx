@@ -63,15 +63,15 @@ const Call: FC<Props> = (props) => {
     }
 
     hasJoinRequested.current = true;
-    await rtc.join(appId, 'test-channel', null, user.id);
+    await rtc.join(appId, roomId, null, user.id);
 
     const { microphone, camera } = userTracks;
-    // await Promise.all([
-    //   microphone?.enabled
-    //     ? rtc.publish([microphone!.track])
-    //     : Promise.resolve(),
-    //   camera?.enabled ? rtc.publish([camera!.track]) : Promise.resolve(),
-    // ]);
+    await Promise.all([
+      microphone?.enabled
+        ? rtc.publish([microphone!.track])
+        : Promise.resolve(),
+      camera?.enabled ? rtc.publish([camera!.track]) : Promise.resolve(),
+    ]);
 
     rtc.on('user-published', async (user, mediaType) => {
       await rtc.subscribe(user, mediaType);

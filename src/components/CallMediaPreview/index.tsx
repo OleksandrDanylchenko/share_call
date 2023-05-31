@@ -41,10 +41,10 @@ const CallMediaPreview: FC<Props> = (props) => {
 
   const userTracks = useCallTracks((state) => selectTracks(state, user!.id));
 
+  const { devices } = useDevices();
   const { tracks, errorCode: tracksErrorCode } = useMicCamTracks({
     skip: !!userTracks,
   });
-  const { devices } = useDevices();
 
   useEffect(() => {
     const isTracksLive = getSomeAgoraTracksLive(

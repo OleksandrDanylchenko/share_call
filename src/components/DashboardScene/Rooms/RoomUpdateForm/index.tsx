@@ -46,13 +46,7 @@ const RoomUpdateForm: FC<Required<Props>> = (props) => {
 
       const prevRoomData = apiUtils.rooms.getRoom.getData({ id });
       if (prevRoomData) {
-        apiUtils.rooms.getRoom.setData(
-          { id },
-          {
-            ...prevRoomData,
-            ...updated,
-          },
-        );
+        apiUtils.rooms.getRoom.setData({ id }, { ...prevRoomData, ...updated });
       }
 
       return { prevRoomsData, prevRoomData };
