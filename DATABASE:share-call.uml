@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>44b64a58-4103-4342-a384-38c9c124966a.DATABASE:share-call</OriginalElement>
+  <nodes>
+    <node x="-9.971583676354214" y="190.3409182761149">44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.users</node>
+    <node x="11.028416323645786" y="8.537383331995358">44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.sessions</node>
+    <node x="301.924188830577" y="-79.63195768799494">44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.note</node>
+    <node x="-276.5" y="476.5">44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public._prisma_migrations</node>
+    <node x="600.0284163236458" y="150.9999182761149">44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.room_sessions</node>
+    <node x="-136.48712434087497" y="-125.15445169274551">44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.verification_tokens</node>
+    <node x="292.5284163236458" y="156.9999182761149">44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.rooms</node>
+    <node x="311.7324326671361" y="361.63179424022474">44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.session_participants</node>
+    <node x="-282.4715836763542" y="26.340918276114905">44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.accounts</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.rooms" target="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.users" relationship="REFERENCES">
+      <point x="-92.52841632364579" y="6.500081723885103" />
+      <point x="240.0" y="245.0" />
+      <point x="240.0" y="308.3457943925234" />
+      <point x="98.85008834925151" y="47.50487611640847" />
+    </edge>
+    <edge source="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.session_participants" target="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.users" relationship="REFERENCES">
+      <point x="-95.7324326671361" y="24.868205759775265" />
+      <point x="90.02841632364579" y="446.0" />
+      <point x="0.0" y="70.5" />
+    </edge>
+    <edge source="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.accounts" target="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.users" relationship="REFERENCES">
+      <point x="92.5" y="87.0" />
+      <point x="-100.0" y="0.0" />
+    </edge>
+    <edge source="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.session_participants" target="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.room_sessions" relationship="REFERENCES">
+      <point x="94.2675673328639" y="47.868205759775265" />
+      <point x="691.0284163236458" y="469.0" />
+      <point x="0.0" y="70.5" />
+    </edge>
+    <edge source="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.note" target="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.users" relationship="REFERENCES">
+      <point x="-87.42418883057701" y="55.13195768799494" />
+      <point x="241.27841632364579" y="68.0" />
+      <point x="241.27841632364579" y="226.31152647975074" />
+      <point x="181.0" y="226.31152647975074" />
+      <point x="90.97158367635421" y="-57.840918276114905" />
+    </edge>
+    <edge source="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.room_sessions" target="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.rooms" relationship="REFERENCES">
+      <point x="-88.02841632364584" y="-26.499918276114897" />
+      <point x="580.0" y="195.0" />
+      <point x="580.0" y="308.0" />
+      <point x="92.47158367635421" y="69.5000817238851" />
+    </edge>
+    <edge source="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.note" target="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.rooms" relationship="REFERENCES">
+      <point x="89.57581116942299" y="11.131957687994941" />
+      <point x="519.8130841121496" y="24.0" />
+      <point x="519.8130841121496" y="238.5" />
+      <point x="89.99958367635423" y="8.172388510274686E-5" />
+    </edge>
+    <edge source="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.note" target="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.room_sessions" relationship="REFERENCES">
+      <point x="88.5" y="-15.000042312005064" />
+      <point x="691.0284163236458" y="-2.132000000000005" />
+      <point x="0.0" y="-70.5" />
+    </edge>
+    <edge source="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.sessions" target="44b64a58-4103-4342-a384-38c9c124966a.TABLE:share-call.public.users" relationship="REFERENCES">
+      <point x="0.0" y="59.5" />
+      <point x="0.0" y="-70.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="250.0" y="351.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Comments</Category>
+    <Category>Key columns</Category>
+  </Categories>
+</Diagram>
+
