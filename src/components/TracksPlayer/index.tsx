@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef } from 'react';
 
+import { css } from '@emotion/react';
 import { Box } from '@mui/material';
 
 import { fullParent } from '@/styles/mixins';
@@ -37,12 +38,16 @@ const TracksPlayer: FC<Props> = (props) => {
   return (
     <Box
       ref={playerContainerRef}
-      css={fullParent}
+      css={[fullParent, tracksPlayer]}
       className={className}
       borderRadius={8}
       overflow="hidden"
     />
   );
 };
+
+const tracksPlayer = css`
+  background-color: black;
+`;
 
 export default TracksPlayer;
