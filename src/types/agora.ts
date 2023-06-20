@@ -115,6 +115,7 @@ export type DeviceType = 'microphone' | 'camera';
 export interface DeviceLocalTrackState<T = AgoraTrack> {
   track: T;
   enabled: boolean;
+  published: boolean;
   deviceId: string; // Available only for local tracks
 }
 

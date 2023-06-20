@@ -1,15 +1,13 @@
 import React, { FC } from 'react';
 
 import { Button, Stack } from '@mui/material';
-import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 
 import DeviceToggleButton from '@/components/DeviceToggleButton';
+import { goToPreviewPage } from '@/routing/index';
 import { selectLocalTrackState, useCallTracks } from '@/store/callTracks';
 import { shadowBorder } from '@/styles/mixins';
 import { DeviceType } from '@/types/agora';
-
-import { goToPreviewPage } from '@/routing/index';
 
 interface Props {
   roomId: string;

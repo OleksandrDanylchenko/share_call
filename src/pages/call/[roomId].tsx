@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import {
   Box,
@@ -24,6 +24,12 @@ import {
   useCallTracks,
 } from '@/store/callTracks';
 import { doubleColorGradient, fullHeight, fullViewport } from '@/styles/mixins';
+import {
+  AgoraTrack,
+  DeviceLocalTracksState,
+  DeviceLocalTrackState,
+  DeviceType,
+} from '@/types/agora';
 import { api } from '@/utils/api';
 import CallControls from 'components/CallControls';
 import CallHeader from 'components/CallHeader';
@@ -46,8 +52,11 @@ const Call: FC<Props> = (props) => {
   const addTrack = useCallTracks.use.addTrack();
   const removeTrack = useCallTracks.use.removeTrack();
   const removeTracks = useCallTracks.use.removeTracks();
+  const setTrackPublished = useCallTracks.use.setTrackPublished();
 
   const hasJoinRequested = useRef(false);
+  const [roomJoined, setRoomJoined] = useState(false);
+
   const {
     isLoading: isLoadingRtcClient,
     client: rtc,
@@ -67,10 +76,18 @@ const Call: FC<Props> = (props) => {
 
     const { microphone, camera } = userTracks;
     await Promise.all([
-      microphone?.enabled
-        ? rtc.publish([microphone!.track])
-        : Promise.resolve(),
-      camera?.enabled ? rtc.publish([camera!.track]) : Promise.resolve(),
+      async () => {
+        if (microphone?.enabled) {
+          setTrackPublished(user.id, 'microphone');
+          await rtc.publish([microphone.track]);
+        }
+      },
+      async () => {
+        if (camera?.enabled) {
+          setTrackPublished(user.id, 'camera');
+          await rtc.publish([camera.track]);
+        }
+      },
     ]);
 
     rtc.on('user-published', async (user, mediaType) => {
@@ -83,11 +100,13 @@ const Call: FC<Props> = (props) => {
           return addTrack(userId, 'camera', {
             track: videoTrack!,
             enabled: true,
+            published: true,
           });
         case 'audio':
           return addTrack(userId, 'microphone', {
             track: audioTrack!,
             enabled: true,
+            published: true,
           });
       }
     });
@@ -100,7 +119,35 @@ const Call: FC<Props> = (props) => {
     );
 
     rtc.on('user-left', (user) => removeTracks(String(user.uid)));
-  }, [addTrack, removeTrack, removeTracks, rtc, user.id, userTracks]);
+
+    setRoomJoined(true);
+  }, [addTrack, removeTrack, removeTracks, roomId, rtc, user.id]);
+
+  useEffect(() => {
+    if (!rtc || !roomJoined) return;
+
+    const publishTrack = async <T extends DeviceType>(
+      trackState: DeviceLocalTracksState[T],
+      deviceType: T,
+    ): Promise<void> => {
+      const { enabled, published, track } = trackState;
+      if (enabled && !published) {
+        if (track.enabled) {
+          setTrackPublished(user.id, deviceType);
+          await rtc.publish([track]);
+        } else {
+          await new Promise((res) => setTimeout(res, 1000));
+          publishTrack(trackState, deviceType);
+        }
+      }
+    };
+
+    const { microphone, camera } = userTracks;
+    Promise.all([
+      publishTrack(microphone!, 'microphone'),
+      publishTrack(camera!, 'camera'),
+    ]);
+  }, [rtc, userTracks, roomJoined, setTrackPublished, user.id]);
 
   const apiUtils = api.useContext();
   const { mutateAsync: disconnectParticipant } =
