@@ -44,7 +44,7 @@ const RoomJoin: FC<{ activeRoomId: string }> = (props) => {
   const { activeRoomId } = props;
   return (
     <PillContainer active>
-      <Typography variant="h5">Join the room</Typography>
+      <Typography variant="h5">Join the call</Typography>
       <IconButton size="large" onClick={() => goToPreviewPage(activeRoomId)}>
         <LoginIcon fontSize="large" />
       </IconButton>
