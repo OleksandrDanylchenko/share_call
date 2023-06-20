@@ -7,6 +7,7 @@ import { getServerSession, Session } from 'next-auth';
 
 import SignInForm from '@/components/SignInForm';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { goToDashboard } from '@/routing/index';
 import { prisma } from '@/server/db';
 import {
   blurBackgroundContainer,
@@ -17,8 +18,6 @@ import {
   fullWidth,
   shadowBorder,
 } from '@/styles/mixins';
-
-import { goToDashboard } from '@/routing/index';
 
 interface Props {
   session: Session | null;
