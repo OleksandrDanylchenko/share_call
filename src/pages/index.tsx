@@ -61,6 +61,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
   const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (session && 'emailVerified' in session.user!) {
+    delete session.user.emailVerified; // Non-serializable
+  }
   return { props: { session } };
 };
 

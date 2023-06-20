@@ -11,10 +11,9 @@ import { first } from 'lodash';
 import { useRouter } from 'next/router';
 import { ObjectTyped } from 'object-typed';
 
+import { goToDashboard, goToPreviewPage } from '@/routing/index';
 import { fullParent, shadowBorder, textFieldEllipsis } from '@/styles/mixins';
 import { api } from '@/utils/api';
-
-import { goToDashboard, goToPreviewPage } from '@/routing/index';
 
 interface JoinCallForm {
   inviteCode: string;
