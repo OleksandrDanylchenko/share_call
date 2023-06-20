@@ -38,6 +38,7 @@ export const useAgoraRtcClient = (
 
     // The client is already in a channel
     if (client.uid) {
+      await client.unpublish();
       client.removeAllListeners();
       await client.leave();
     }

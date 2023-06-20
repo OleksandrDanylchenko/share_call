@@ -87,8 +87,6 @@ const useCallStateBase = create<Store>()(
       }),
     setTrackPublished: (userId, deviceType) =>
       set((state) => {
-        console.log('GGG');
-
         const trackState = state.tracks[userId]?.[deviceType];
         if (!trackState) return;
 

@@ -76,18 +76,18 @@ const Call: FC<Props> = (props) => {
 
     const { microphone, camera } = userTracks;
     await Promise.all([
-      async () => {
+      (async () => {
         if (microphone?.enabled) {
           setTrackPublished(user.id, 'microphone');
           await rtc.publish([microphone.track]);
         }
-      },
-      async () => {
+      })(),
+      (async () => {
         if (camera?.enabled) {
           setTrackPublished(user.id, 'camera');
           await rtc.publish([camera.track]);
         }
-      },
+      })(),
     ]);
 
     rtc.on('user-published', async (user, mediaType) => {
@@ -118,7 +118,9 @@ const Call: FC<Props> = (props) => {
       ),
     );
 
-    rtc.on('user-left', (user) => removeTracks(String(user.uid)));
+    rtc.on('user-left', (user) => {
+      removeTracks(String(user.uid));
+    });
 
     setRoomJoined(true);
   }, [addTrack, removeTrack, removeTracks, roomId, rtc, user.id]);
