@@ -32,7 +32,11 @@ interface Actions {
     deviceType: DeviceType,
     enabled: boolean,
   ) => void;
-  setTrackPublished: (userId: string, deviceType: DeviceType) => void;
+  setTrackPublished: (
+    userId: string,
+    deviceType: DeviceType,
+    published?: boolean,
+  ) => void;
   setTrackDevice: (
     userId: string,
     deviceType: DeviceType,
@@ -85,14 +89,14 @@ const useCallStateBase = create<Store>()(
           trackState.enabled = enabled;
         }
       }),
-    setTrackPublished: (userId, deviceType) =>
+    setTrackPublished: (userId, deviceType, published = true) =>
       set((state) => {
         const trackState = state.tracks[userId]?.[deviceType];
         if (!trackState) return;
 
         const { track } = trackState;
         if (isLocalTrack(track)) {
-          trackState.published = true;
+          trackState.published = published;
         }
       }),
     setTrackDevice: (userId, deviceType, deviceId) =>
